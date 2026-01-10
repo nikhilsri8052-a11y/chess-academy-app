@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+<div class="admin-container">
+    <h1>Admin section </h1>
+
+    <div class="admin-buttons">
+
+        <!-- VIEW ENQUIRIES -->
+        <a href="{{ url_for('admin.admin_enquiries') }}" class="admin-btn">
+            View Enquiries
+            {% if new_enquiry_count > 0 %}
+                <span class="count-badge">{{ new_enquiry_count }}</span>
+            {% endif %}
+        </a>
+
+        <!-- NEW APPLICANTS -->
+        <a href="{{ url_for('admin.new_applicants') }}" class="admin-btn">
+            New Applicants
+            {% if new_applicant_count > 0 %}
+                <span class="count-badge">{{ new_applicant_count }}</span>
+            {% endif %}
+        </a>
+
+        <a href="{{ url_for('admin.admin_payments_view') }}" class="admin-btn">
+            Fees Payment
+            {% if new_payment_count > 0 %}
+                <span class="count-badge">{{ new_payment_count }}</span>
+            {% endif %}
+        </a>
+
+        <a href="{{ url_for('admin.admin_notices') }}" class="admin-btn">
+            Manage Notices
+        </a>
+
+        <a href="{{ url_for('admin.admin_students') }}" class="admin-btn">
+            Manage Students
+        </a>
+
+        <a href="{{ url_for('admin.admin_study_materials') }}" class="admin-btn">
+            Study Materials
+        </a>   
+
+    </div>
+</div>
+{% endblock %}
+

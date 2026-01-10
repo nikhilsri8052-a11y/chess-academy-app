@@ -1,0 +1,119 @@
+/* layout */
+.page-heading {
+  margin-left: 40px;
+  font-size: 28px;
+  margin-top: 10px;
+}
+.learn-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr 480px;
+  gap: 36px;
+  align-items: start;
+  padding: 20px 40px;
+}
+
+/* teacher */
+.teacher-panel {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 10px;
+}
+.teacher-panel img {
+  max-width: 240px;
+  height: auto;
+  border-radius: 6px;
+}
+
+/* explanation */
+.solution-panel { position: relative; }
+.solution-text {
+  background: linear-gradient(145deg,#ffb219,#ceda67);
+  color: #4f3d2a;
+  padding: 20px;
+  border-radius: 12px;
+  min-height: 180px;
+  font-size: 16px;
+  line-height: 1.6;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* board and navigation */
+.board-panel { display: flex; flex-direction: column; align-items: center; }
+.simple-board {
+  display: grid;
+  grid-template-columns: repeat(8, 56px);
+  grid-template-rows: repeat(8, 56px);
+  border: 2px solid #333;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+}
+.square {
+  width: 56px;
+  height: 56px;
+  position: relative;
+  user-select: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 28px;
+  cursor: pointer;
+}
+.square.light { background: #f0d9b5; }
+.square.dark  { background: #b58863; }
+
+/* piece appearance (unicode) */
+.piece {
+  pointer-events: none;
+  line-height: 1;
+}
+
+/* selected and hint */
+.square.selected { outline: 3px solid rgba(50,150,250,0.7); box-sizing: border-box; }
+
+/* THIS IS THE PART THAT MAKES THE DOTS APPEAR */
+/* ... other css ... */
+
+.square.hint::after {
+  content: "";
+  width: 14px;
+  height: 14px;
+  background: rgba(0, 150, 255, 0.8);
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 10; /* Added z-index just to be safe */
+}
+
+/* navigation buttons */
+.lesson-navigation {
+  margin-top: 12px;
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  width: 100%;
+}
+.lesson-navigation button {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background: #c9a24d;
+  color: #111;
+  font-weight: 600;
+}
+.lesson-navigation button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* responsive */
+@media (max-width: 980px) {
+  .learn-layout { grid-template-columns: 1fr; gap: 18px; padding: 12px; }
+  .teacher-panel { order: 1; }
+  .solution-panel { order: 2; }
+  .board-panel { order: 3; }
+  .simple-board { transform: scale(0.85); transform-origin: left top; }
+}

@@ -1,0 +1,173 @@
+.applicants-list {
+    margin-top: 30px;
+}
+
+.applicant-card {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.applicant-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 10px;
+}
+
+.badge {
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.8em;
+    font-weight: 600;
+}
+
+.badge-warning {
+    background: #ffc107;
+    color: #212529;
+}
+
+.badge-danger {
+    background: #dc3545;
+    color: white;
+}
+
+.badge-success {
+    background: #28a745;
+    color: white;
+}
+
+.applicant-details {
+    margin-bottom: 20px;
+}
+
+.applicant-details p {
+    margin: 5px 0;
+}
+
+.payment-details {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    margin-top: 15px;
+    border-left: 4px solid #007bff;
+}
+
+.payment-details.no-payment {
+    border-left-color: #dc3545;
+}
+
+.payment-details h4 {
+    margin-top: 0;
+    color: #333;
+}
+
+.payment-status-submitted {
+    color: #ffc107;
+    font-weight: bold;
+}
+
+.payment-status-verified {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.payment-status-rejected {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.rejection-info {
+    background: #fff3cd;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+    border-left: 3px solid #ffc107;
+}
+
+.payment-actions {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+}
+
+.batch-assignment {
+    background: #e3f2fd;
+    padding: 15px;
+    border-radius: 5px;
+    margin-top: 15px;
+    border-left: 4px solid #2196F3;
+}
+
+.batch-assignment h4 {
+    margin-top: 0;
+    color: #1976D2;
+}
+
+.batch-note {
+    color: #ff9800;
+    font-size: 0.85em;
+    margin: 5px 0;
+}
+
+.batch-select {
+    padding: 8px 15px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    margin-right: 10px;
+    min-width: 250px;
+}
+
+.btn {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+.btn-sm {
+    padding: 5px 15px;
+    font-size: 0.85em;
+}
+
+.btn-primary {
+    background: #007bff;
+    color: white;
+}
+
+.btn-success {
+    background: #28a745;
+    color: white;
+}
+
+.btn-danger {
+    background: #dc3545;
+    color: white;
+}
+
+.btn-info {
+    background: #17a2b8;
+    color: white;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn:hover:not(:disabled) {
+    opacity: 0.9;
+}
+
+.no-applicants {
+    text-align: center;
+    padding: 40px;
+    background: white;
+    border-radius: 10px;
+    color: #28a745;
+}

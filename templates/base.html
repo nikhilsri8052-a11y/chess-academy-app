@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>{% block title %}My Website{% endblock %}</title>
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+      {% block extra_head %}{% endblock %}
+  </head>
+  <body>
+      <nav class="navbar">
+          <div class="left">
+            {% if is_admin %}
+              <a href="{{ url_for('admin.admin_dashboard') }}" class="nav-button">Admin Dashboard</a>
+              <a href="{{ url_for('auth.admin_logout') }}" class="nav-button">Logout</a>
+
+            {% elif is_student %}
+              <a href="{{ url_for('student.student_dashboard') }}" class="nav-button">Dashboard</a>
+              <a href="{{ url_for('auth.student_logout') }}" class="nav-button">Logout</a>
+
+            {% else %}
+              <div class="dropdown">
+                <a href="{{ url_for('auth.student_login')}}" class="nav-button">Login</a>
+                <div class="dropdown-menu">
+                  <a href="{{ url_for('auth.student_login') }}">Student Login</a>
+                  <a href="{{ url_for('auth.admin_login') }}">Admin Login</a>
+                </div>
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="center">
+            <a href="{{ url_for('main.about') }}" class="nav-button2">About</a>
+            <a href="{{ url_for('main.learn') }}" class="nav-button2">Learn</a>
+            <a href="{{ url_for('main.home') }}" class="nav-logo"><img class="logo-img" src="{{ url_for('static', filename='images/logo.png') }}" alt="Chess logo"></a>
+            <a href="{{ url_for('main.home_batches') }}" class="nav-button2">Batches</a>
+            <a href="{{ url_for('auth.enquiry') }}" class="nav-button2">Contact</a>
+          </div>
+          <div class="right">
+            <a href="{{ url_for('auth.student_register_page') }}" class="nav-button">Sign Up</a>
+          </div>
+      </nav>
+      
+      <main>
+          {% block content %}
+          {% endblock %}
+          {% block scripts %}{% endblock %}
+      </main>
+      
+      <footer>
+          <p>&copy; </p>
+      </footer>
+  </body>
+</html>

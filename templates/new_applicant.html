@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block title %}New Applicants - Admin{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/new_applicant.css') }}">
+<div class="admin-container">
+    <h1>New Applicants</h1>
+    
+    <div class="applicants-list">
+        {% for student in students %}
+        <div class="applicant-card">
+            <div class="applicant-header">
+                <h3>{{ student.name }}</h3>
+                <span class="applicant-status badge
+                    {% if student.payment_verified %}
+                        badge-success
+                    {% elif student.fees_paid %}
+                        badge-warning
+                    {% else %}
+                        badge-danger
+                    {% endif %}">
+                    
+                    {% if student.payment_verified %}
+                        ✓ Payment Verified
+                    {% elif student.fees_paid %}
+                        ⏳ Verification Pending
+                    {% else %}
+                        ✗ Payment Not Submitted
+                    {% endif %}
+                </span>
+            </div>
+            
+            <div class="applicant-details">
+                <p><strong>Email:</strong> {{ student.email }}</p>
+                <p><strong>Phone:</strong> {{ student.phone }}</p>
+                <p><strong>Age:</strong> {{ student.age }}</p>
+                <p><strong>Parent:</strong> {{ student.parent_name }}</p>
+                <p><strong>Current Batch:</strong> {{ student.batch or 'Not Assigned' }}</p>
+                <p><strong>Registered:</strong> {{ student.registration_date.strftime('%d %b %Y %H:%M') if student.registration_date else 'N/A' }}</p>
+                
+                {% if student.payment %}
+                <div class="payment-details">
+                    <h4>💰 Payment Details</h4>
+                    <p><strong>Amount:</strong> ₹{{ student.payment.amount }}</p>
+                    <p><strong>Plan:</strong> {{ student.payment.plan }}</p>
+                    <p><strong>Status:</strong> <span class="payment-status-{{ student.payment.status }}">{{ student.payment.status.upper() }}</span></p>
+                    <p><strong>Submitted:</strong> {{ student.payment.submitted_at.strftime('%d %b %Y %H:%M') if student.payment.submitted_at else 'N/A' }}</p>
+                    
+
+                    
+                    {% if student.payment.status == 'submitted' and not student.payment_verified %}
+                    <div class="payment-actions">
+                        <button class="btn btn-success verify-payment" 
+                                data-student-id="{{ student.id }}"
+                                data-payment-id="{{ student.payment.payment_id }}">
+                            ✓ Verify Payment
+                        </button>
+                        <button class="btn btn-danger reject-payment"
+                                data-student-id="{{ student.id }}"
+                                data-payment-id="{{ student.payment.payment_id }}">
+                            ✗ Reject Payment
+                        </button>
+                    </div>
+                    {% endif %}
+                    
+                    {% if student.payment.status == 'rejected' %}
+                    <div class="rejection-info">
+                        <p><strong>Rejection Reason:</strong> {{ student.payment.rejection_reason }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+                {% else %}
+                <div class="payment-details no-payment">
+                    <p>⚠️ No payment submitted yet</p>
+                </div>
+                {% endif %}
+            </div>
+            
+            <!-- Batch assignment - available regardless of payment status -->
+            <div class="batch-assignment">
+                <h4>📚 Assign Batch</h4>
+
+                {% if not student.payment_verified %}
+                    <p class="batch-note"><small>⚠️ Payment not verified yet. You can still assign a batch.</small></p>
+                {% endif %}
+
+                <select class="batch-select form-control" data-student-id="{{ student.id }}">
+                    <option value="">-- Select Batch --</option>
+                    <option value="online1" {% if student.batch == 'online1' %}selected{% endif %}>Online Batch 1 (4–5 PM)</option>
+                    <option value="online2" {% if student.batch == 'online2' %}selected{% endif %}>Online Batch 2 (6–7 PM)</option>
+                    <option value="offline_advance" {% if student.batch == 'offline_advance' %}selected{% endif %}>Offline Advance</option>
+                    <option value="offline_base" {% if student.batch == 'offline_base' %}selected{% endif %}>Offline Base</option>
+                </select>
+
+                <!-- ALWAYS include type="button" -->
+                <button type="button"
+                        class="btn btn-primary assign-batch mt-2"
+                        data-student-id="{{ student.id }}">
+                    Assign Batch
+                </button>
+            </div>
+        </div>
+        {% else %}
+        <div class="no-applicants">
+            <p>✓ No new applicants found.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/new_applicant.js') }}"></script>
+{% endblock %}

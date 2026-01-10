@@ -1,0 +1,90 @@
+/* Global Container */
+.admin-container { max-width: 1400px; margin: 40px auto; padding: 0 20px; font-family: 'Segoe UI', sans-serif; }
+
+/* Header & Filter Styles */
+.page-header h1 { font-size: 32px; font-weight: 700; margin-bottom: 25px; color: #1e293b; }
+
+.filter-card { background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+.filter-group { display: flex; gap: 15px; flex-wrap: wrap; }
+.search-wrapper { flex: 1; min-width: 250px; }
+
+input, select, textarea {
+    width: 100%; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px;
+    outline: none; transition: border-color 0.2s;
+}
+input:focus, select:focus, textarea:focus { border-color: #2563eb; }
+
+/* Tabs */
+.tabs-nav { margin-bottom: 20px; border-bottom: 2px solid #f0f0f0; display: flex; gap: 10px; }
+.tab-btn {
+    padding: 12px 24px; background: none; border: none; border-bottom: 3px solid transparent;
+    font-size: 16px; font-weight: 600; color: #64748b; cursor: pointer;
+}
+.tab-btn.active { color: #2563eb; border-bottom: 3px solid #2563eb; }
+.badge { background: #ef4444; color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px; margin-left: 5px; vertical-align: middle;}
+
+.tab-content { display: none; }
+.tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+
+/* Table Grid System */
+.table-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+
+.grid-header {
+    display: grid; gap: 20px; padding: 16px 24px; background: #f8fafc; 
+    font-weight: 600; color: #475569; border-bottom: 2px solid #e2e8f0; font-size: 14px;
+}
+
+.grid-row {
+    display: grid; gap: 20px; padding: 20px 24px; border-bottom: 1px solid #f0f0f0; align-items: center;
+}
+
+/* Grid Columns Configuration */
+.pending-cols { grid-template-columns: 200px 1fr 180px 120px 180px; }
+.history-cols { grid-template-columns: 200px 1fr 180px 150px 120px; }
+
+/* Column Styles */
+.date-text { font-weight: 500; color: #64748b; }
+.col-name strong { display: block; color: #1e293b; font-size: 15px; }
+.col-name small, .col-date small { color: #94a3b8; font-size: 13px; display: block; margin-top: 2px; }
+
+.plan-badge { font-weight: 500; color: #475569; }
+.batch-tag { display: block; color: #64748b; font-size: 13px; margin-top: 2px; }
+
+.col-amount { font-size: 18px; font-weight: 700; color: #1e293b; }
+.col-amount.large { font-size: 22px; }
+
+.status-verified { color: #10b981; font-weight: 700; }
+
+/* Buttons */
+.btn { padding: 8px 16px; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+.btn-verify { background: #10b981; color: white; }
+.btn-verify:hover { background: #059669; }
+.btn-reject { background: #ef4444; color: white; }
+.btn-reject:hover { background: #dc2626; }
+.btn-secondary { background: #f1f5f9; color: #64748b; }
+.btn-secondary:hover { background: #e2e8f0; }
+
+.col-actions { display: flex; gap: 8px; }
+
+.empty-msg { padding: 60px; text-align: center; color: #94a3b8; font-size: 16px; }
+
+/* Modal */
+.modal-overlay {
+    display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;
+}
+.modal-box { background: white; padding: 30px; border-radius: 12px; max-width: 500px; width: 90%; }
+.modal-actions { display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end; }
+
+/* Animation */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .pending-cols, .history-cols { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .grid-header { display: none; }
+    .grid-row { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; position: relative; padding: 15px; }
+    .col-actions { width: 100%; display: grid; grid-template-columns: 1fr 1fr; margin-top: 10px; }
+    .btn { padding: 12px; }
+    .col-amount { position: absolute; top: 15px; right: 15px; }
+}

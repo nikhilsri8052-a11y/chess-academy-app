@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}Payment - Chess Class (SRIVASTAVA){% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/payment_page.css') }}">
+
+<div class="chess-pay-wrapper">
+    
+    <header class="pay-header text-center">
+        <h1>Complete Your Registration</h1>
+        <p class="subtitle">Welcome, <strong>{{ name }}</strong>. Select your preferred training plan to proceed.</p>
+    </header>
+
+    {% if has_pending %}
+    <div class="chess-notice">
+        <div class="icon">ℹ</div>
+        <div class="text">
+            <strong>Payment Pending:</strong> You have a submitted payment waiting for admin verification.
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="chess-plans-grid">
+        
+        <article class="chess-card plan-standard" data-plan="1month" data-amount="3000">
+            <div class="card-header">
+                <h2>Monthly</h2>
+                <div class="price">
+                    <span class="currency">₹</span>3,000
+                    <span class="period">/mo</span>
+                </div>
+            </div>
+            <ul class="feature-list">
+                <li><span class="check">✓</span> Full Course Access</li>
+                <li><span class="check">✓</span> Live Interactive Sessions</li>
+                <li><span class="check">✓</span> Practice Material</li>
+                <li class="disabled"><span class="cross">×</span> Doesn't save ₹1,500</li>
+            </ul>
+            <button class="btn-chess btn-outline select-plan" type="button">Select Plan</button>
+        </article>
+
+        <article class="chess-card plan-popular" data-plan="3months" data-amount="7500">
+            <div class="popular-badge">Most Popular</div>
+            <div class="card-header">
+                <h2>Quarterly</h2>
+                <div class="price">
+                    <span class="currency">₹</span>7,500
+                    <span class="period">/3 mo</span>
+                </div>
+                <div class="savings-tag">Save ₹1,500 instantly</div>
+            </div>
+            <ul class="feature-list">
+                <li><span class="check">✓</span> <strong>Full Course Access</strong></li>
+                <li><span class="check">✓</span> Live Interactive Sessions</li>
+                <li><span class="check">✓</span> Practice Material</li>
+                <li><span class="check">✓</span> <span class="gold-text">Saves ₹1,500</span></li>
+            </ul>
+            <button class="btn-chess btn-gold select-plan" type="button">Select Plan</button>
+        </article>
+    </div>
+
+    <section id="instructions-panel" class="payment-instructions hidden" aria-live="polite">
+        <div class="instructions-content">
+            <div class="payment-header">
+                <h3><span class="step-num">2</span> Scan & Verify</h3>
+                <p>Please complete the payment and share the proof.</p>
+            </div>
+            
+            <div class="split-layout">
+                <div class="qr-box">
+                    <div class="qr-frame">
+                        <img src="{{ url_for('static', filename='images/qr.jpeg') }}" alt="Payment QR" class="qr-img">
+                    </div>
+                    <div class="pay-methods">
+                        <span>UPI</span> • <span>GPay</span> • <span>PhonePe</span>
+                    </div>
+                    <p class="pay-number">8830435532</p>
+                </div>
+
+                <div class="details-box">
+                    <div class="batch-info">
+                        <h4>Offline & Online Batches</h4>
+                        <ul>
+                            <li><strong>Advance:</strong> Tue/Thu/Sat (5PM–8PM)</li>
+                            <li><strong>Intermediate:</strong> Mon/Wed/Fri (5PM–8PM)</li>
+                            <li><strong>Online:</strong> Batch 1 (4-5PM) / Batch 2 (6-7PM)</li>
+                        </ul>
+                    </div>
+
+                    <div class="action-area">
+                        <p id="instruction-msg" class="instruction-text">Payment record created. Please pay and send screenshot.</p>
+                        
+                        <div class="btn-group">
+                            <button id="open-wa" class="btn-whatsapp" type="button">
+                                <span class="wa-icon">💬</span> Open WhatsApp
+                            </button>
+                            <button id="mark-sent" class="btn-confirm" type="button" disabled>
+                                I have sent the screenshot
+                            </button>
+                        </div>
+                        <div id="panel-feedback" class="feedback-msg"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script src="{{ url_for('static', filename='js/payment_page.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+{% block title %}Student Dashboard{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/student_dashboard.css') }}">
+<div class="dashboard-wrapper">
+    <!-- Enhanced Header -->
+    <header class="dashboard-header">
+        <div class="welcome-text">
+            <h1>Welcome back, <span>{{ student.name }}!</span></h1>
+            <p>Here's what's happening with your learning journey today.</p>
+        </div>
+    </header>
+
+    <div class="dashboard-grid">
+        <!-- Main Content Area -->
+        <div class="main-content-area">
+            <!-- Stats Overview -->
+            <div class="stats-row">
+                <!-- Status Card -->
+                <div class="stat-card">
+                    <span class="stat-label">Registration Status</span>
+                    <div class="status-badge {% if student.status == 'active' %}active{% else %}pending{% endif %}">
+                        {{ student.status|title }}
+                    </div>
+                    
+                    {% if student.status != 'active' %}
+                    <div class="fee-status-container">
+                        <div class="fee-status-header">
+                            <h3>Fee Payment Required</h3>
+                            <a href="{{ url_for('student.payment_page') }}" class="btn-pay-small">
+                                💰 Pay Now
+                            </a>
+                        </div>
+                        <p class="status-note">
+                            Complete your payment to unlock all features including Study Materials and Assignments.
+                        </p>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Batch Card -->
+                {% if student.batch %}
+                <div class="stat-card">
+                    <span class="stat-label">Current Batch</span>
+                    <div class="batch-name-display">
+                        {% if student.batch == 'online1' %}Online Batch 1
+                        {% elif student.batch == 'online2' %}Online Batch 2
+                        {% elif student.batch == 'offline_advance' %}Offline Advance
+                        {% elif student.batch == 'offline_base' %}Offline Base
+                        {% else %}{{ student.batch|title }}
+                        {% endif %}
+                    </div>
+                    <small class="schedule-text">
+                        {% if student.batch == 'online1' %}Tuesday, Thursday, Saturday (4PM-5PM)
+                        {% elif student.batch == 'online2' %}Monday, Wednesday, Friday (6PM-7PM)
+                        {% elif student.batch == 'offline_advance' %}Tuesday, Thursday, Saturday (5PM-8PM)
+                        {% elif student.batch == 'offline_base' %}Monday, Wednesday, Friday (5PM-8PM)
+                        {% else %}Check with admin for schedule
+                        {% endif %}
+                    </small>
+                </div>
+                {% endif %}
+                
+                <!-- Rating Card (if rating exists) -->
+                {% if student.rating is defined %}
+                <div class="stat-card">
+                    <span class="stat-label">Current Rating</span>
+                    <div class="batch-name-display">
+                        {{ student.rating }}
+                    </div>
+                    <small class="schedule-text">
+                        {% if student.rating >= 1500 %}
+                        Excellent! Keep up the great work! 🎯
+                        {% elif student.rating >= 1000 %}
+                        Good progress! Aim higher! ⭐
+                        {% else %}
+                        Let's work on improving your score! 💪
+                        {% endif %}
+                    </small>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Learning Portal -->
+            <h2 class="section-title">Learning Portal</h2>
+            <div class="action-grid">
+                {% if student.status == 'active' %}
+                <!-- Active Student Actions -->
+                <a href="{{ url_for('student.student_study_materials_page') }}" class="action-card">
+                    <div class="icon-circle">📚</div>
+                    <h3>Study Materials</h3>
+                    <p>Access notes, resources, and learning materials</p>
+                </a>
+                
+                <a href="{{ url_for('student.student_assignments') }}" class="action-card">
+                    <div class="icon-circle">📝</div>
+                    <h3>Assignments</h3>
+                    <p>Submit and track your assignments</p>
+                </a>
+                
+                <a href="{{ url_for('student.student_profile') }}" class="action-card">
+                    <div class="icon-circle">👤</div>
+                    <h3>My Profile</h3>
+                    <p>View and manage your profile</p>
+                </a>
+                
+                <a href="{{ url_for('student.payment_page') }}" class="action-card">
+                    <div class="icon-circle">💳</div>
+                    <h3>Pay Fees</h3>
+                    <p>Pay fees in advance</p>
+                </a>
+                
+                {% else %}
+                <!-- Locked State -->
+                <div class="locked-card">
+                    <p>🌟 <strong>Complete your payment to unlock the Learning Portal!</strong></p>
+                    <p>Once activated, you'll get access to Study Materials, Assignments, and more features.</p>
+                    <a href="{{ url_for('student.payment_page') }}" class="btn-pay-now">
+                        Unlock Learning Portal
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="secondary-actions">
+                <a href="{{ url_for('student.student_payment_history') }}" class="btn-outline">
+                    🕒 View Payment History
+                </a>
+            </div>
+        </div>
+
+        <!-- Notices Sidebar -->
+        <aside class="notices-sidebar">
+            <div class="notices-card" id="noticesSection">
+                <div class="notices-header">
+                    <h2>Latest Updates</h2>
+                </div>
+                <div class="notices-body">
+                    <div class="loading">Loading announcements...</div>
+                </div>
+            </div>
+            
+            <!-- Quick Stats (Optional) -->
+            {% if student.status == 'active' %}
+            <div class="stat-card" style="margin-top: 1.5rem;">
+                <span class="stat-label">Quick Stats</span>
+                <div class="status-badge active" style="margin: 0.5rem 0;">
+                    Active Student
+                </div>
+                <p class="status-note" style="margin-top: 0.5rem;">
+                    ✅ Full access granted<br>
+                    📚 All materials available<br>
+                    📝 Assignments accessible
+                </p>
+            </div>
+            {% endif %}
+        </aside>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/student_dashboard.js') }}"></script>
+{% endblock %}

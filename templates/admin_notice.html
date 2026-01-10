@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block title %}Admin - Notice Board{% endblock %}
+
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/phosphor-icons"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_notice.css') }}">
+
+<div class="admin-wrapper">
+    <header class="page-header">
+        <div class="header-content">
+            <div class="header-title">
+                <h1><i class="ph-megaphone-simple"></i> Notice Board</h1>
+                <p>Manage announcements and broadcast updates to specific batches.</p>
+            </div>
+            <div class="header-actions">
+                <span class="date-badge"><i class="ph-calendar-blank"></i> <span id="currentDate"></span></span>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-layout">
+        <aside class="creator-panel">
+            <div class="panel-card">
+                <div class="card-header">
+                    <h2><i class="ph-plus-circle"></i> Create Notice</h2>
+                </div>
+                <form id="createNoticeForm">
+                    <div class="input-group">
+                        <label for="noticeTitle">Subject</label>
+                        <div class="input-wrapper">
+                            <i class="ph-text-t input-icon"></i>
+                            <input type="text" id="noticeTitle" placeholder="e.g. Exam Schedule Change" required>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="noticeContent">Message</label>
+                        <textarea id="noticeContent" placeholder="Type your announcement details here..." rows="6" required></textarea>
+                    </div>
+                    
+                    <div class="row-group">
+                        <div class="input-group">
+                            <label for="noticeBatch">Target Audience</label>
+                            <div class="select-wrapper">
+                                <select id="noticeBatch" required>
+                                    <option value="all">🌍 All Batches</option>
+                                    <option value="online1">💻 Online Batch 1</option>
+                                    <option value="online2">💻 Online Batch 2</option>
+                                    <option value="offline_advance">🏢 Offline Advance</option>
+                                    <option value="offline_base">🏠 Offline Base</option>
+                                </select>
+                                <i class="ph-caret-down select-arrow"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="noticePriority">Priority</label>
+                            <div class="select-wrapper">
+                                <select id="noticePriority">
+                                    <option value="normal">🔵 Normal</option>
+                                    <option value="important">🟡 Important</option>
+                                    <option value="urgent">🔴 Urgent</option>
+                                </select>
+                                <i class="ph-caret-down select-arrow"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn-submit">
+                        <span class="btn-text">Publish Notice</span>
+                        <i class="ph-paper-plane-right"></i>
+                    </button>
+                </form>
+            </div>
+        </aside>
+
+            <div class="kanban-wrapper">
+              <div class="kanban-grid">
+                {% set batches = [
+                    ('all', 'Global', 'globe'),
+                    ('online1', 'Online B1', 'laptop'),
+                    ('online2', 'Online B2', 'laptop'),
+                    ('offline_advance', 'Offline Adv', 'buildings'),
+                    ('offline_base', 'Offline Base', 'house')
+                ] %}
+
+                {% for id, label, icon in batches %}
+                <div class="kanban-column">
+                    <div class="column-header">
+                        <div class="header-left">
+                            <i class="ph-{{ icon }}"></i>
+                            <h3>{{ label }}</h3>
+                        </div>
+                        <span class="count-pill" id="count-{{ id }}">0</span>
+                    </div>
+                    <div class="column-body custom-scroll" id="notices-{{ id }}">
+                        <div class="loading-state">
+                            <i class="ph-spinner-gap ph-spin"></i>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/admin_notice.js') }}"></script>
+{% endblock %}

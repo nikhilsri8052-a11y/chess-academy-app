@@ -1,0 +1,482 @@
+.students-container {
+    max-width: 1400px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.page-header h1 {
+    font-size: 2.2rem;
+    color: #1a1a1a;
+    font-weight: 800;
+}
+
+.export-btn {
+    background: #1a1a1a;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.export-btn:hover {
+    background: #333;
+    transform: translateY(-2px);
+}
+
+/* Filters Section */
+.filters-section {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    margin-bottom: 2rem;
+}
+
+.filters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.filter-group label {
+    font-weight: 700;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.filter-group input,
+.filter-group select {
+    padding: 10px;
+    border: 2px solid #eee;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    transition: border-color 0.3s;
+}
+
+.filter-group input:focus,
+.filter-group select:focus {
+    outline: none;
+    border-color: #D3AE55;
+}
+
+.filter-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+}
+
+.btn-filter {
+    background: #D3AE55;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-filter:hover {
+    background: #bf9b45;
+    transform: translateY(-2px);
+}
+
+.btn-clear {
+    background: #f0f0f0;
+    color: #666;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-clear:hover {
+    background: #e0e0e0;
+}
+
+/* Students Table */
+.students-table-wrapper {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+
+.students-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.students-table th {
+    background: #f8f9fa;
+    padding: 1rem;
+    text-align: left;
+    font-weight: 700;
+    color: #666;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.students-table td {
+    padding: 1rem;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.students-table tr:hover {
+    background: #fffcf5;
+}
+
+/* Status Badges */
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    display: inline-block;
+}
+
+.status-badge.active {
+    background: #e6f4ea;
+    color: #1e7e34;
+}
+
+.status-badge.disabled {
+    background: #fdecea;
+    color: #d93025;
+}
+
+.status-badge.new {
+    background: #fff4e5;
+    color: #b45d00;
+}
+
+.fee-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.fee-badge.paid {
+    background: #e6f4ea;
+    color: #1e7e34;
+}
+
+.fee-badge.unpaid {
+    background: #fdecea;
+    color: #d93025;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.btn-action {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-view {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.btn-view:hover {
+    background: #bbdefb;
+}
+
+.btn-toggle {
+    background: #fff3e0;
+    color: #e65100;
+}
+
+.btn-toggle:hover {
+    background: #ffe0b2;
+}
+
+.btn-batch {
+    background: #f3e5f5;
+    color: #7b1fa2;
+}
+
+.btn-batch:hover {
+    background: #e1bee7;
+}
+
+.btn-add-payment {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.btn-add-payment:hover {
+    background: #c8e6c9;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.modal-header h2 {
+    font-size: 1.5rem;
+    color: #1a1a1a;
+}
+
+.close-modal {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #666;
+}
+
+.modal-body {
+    margin-bottom: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #eee;
+    border-radius: 8px;
+    font-size: 0.95rem;
+}
+
+.btn-submit {
+    background: #D3AE55;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.3s;
+}
+
+.btn-submit:hover {
+    background: #bf9b45;
+    transform: translateY(-2px);
+}
+
+/* Loading & Empty States */
+.loading {
+    text-align: center;
+    padding: 3rem;
+    color: #666;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: #666;
+}
+
+.empty-state h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Fee History Table */
+.fee-history-table {
+    width: 100%;
+    margin-top: 1rem;
+    border-collapse: collapse;
+}
+
+.fee-history-table th,
+.fee-history-table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.fee-history-table th {
+    background: #f8f9fa;
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .students-table {
+        font-size: 0.85rem;
+    }
+
+    .students-table th,
+    .students-table td {
+        padding: 0.5rem;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+}
+
+.rating-badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    display: inline-block;
+    min-width: 50px;
+    text-align: center;
+}
+
+.rating-high { background-color: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; } /* Green */
+.rating-mid { background-color: #fff3e0; color: #ef6c00; border: 1px solid #ffcc80; }  /* Orange */
+.rating-low { background-color: #ffebee; color: #c62828; border: 1px solid #ef9a9a; }  /* Red */
+
+/* Responsive table adjustment */
+.students-table th, .students-table td {
+    padding: 12px 8px;
+    text-align: left;
+}
+
+/* New Rating Button Style */
+.btn-rating {
+    background: #fff3e0;
+    color: #e65100;
+    border: 1px solid #ffcc80;
+}
+
+.btn-rating:hover {
+    background: #ffe0b2;
+    border-color: #e65100;
+}
+
+/* Rating Modal Styles */
+.rating-preview {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 15px 0;
+    text-align: center;
+}
+
+#newRating:focus {
+    border-color: #D3AE55;
+    outline: none;
+}
+
+/* Quick rating buttons */
+.quick-rating-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.quick-rating-btn {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.quick-rating-btn:hover {
+    transform: translateY(-2px);
+}
+
+.quick-rating-btn.low {
+    border-color: #ef9a9a;
+    color: #c62828;
+}
+
+.quick-rating-btn.low:hover {
+    background: #ffebee;
+}
+
+.quick-rating-btn.mid {
+    border-color: #ffcc80;
+    color: #ef6c00;
+}
+
+.quick-rating-btn.mid:hover {
+    background: #fff3e0;
+}
+
+.quick-rating-btn.high {
+    border-color: #a5d6a7;
+    color: #2e7d32;
+}
+
+.quick-rating-btn.high:hover {
+    background: #e8f5e9;
+}

@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Batches & Fees{% endblock %}
+
+{% block content %}
+<div class="batches-container">
+    <section class="batches-intro">
+        <h1 style="text-align:center">Class Batches & Fees</h1>
+        <p>Expert-led chess coaching for every skill level. We'll assign the perfect group after a professional assessment. Note: batches will be provided according to the student's skill level.</p>
+    </section>
+
+    <div class="batches-grid">
+        <div class="batch-column">
+            <div class="column-header">
+                <i class="fas fa-users"></i>
+                <h2>Offline Classes</h2>
+            </div>
+            <div class="batch-card premium">
+                <div class="batch-badge">Intensive</div>
+                <h3>Advance</h3>
+                <div class="batch-time">
+                    <span class="days">Tue, Thu, Sat</span>
+                    <span class="hours">5:00 PM — 8:00 PM</span>
+                </div>
+            </div>
+            <div class="batch-card">
+                <h3>Intermediate / Basic</h3>
+                <div class="batch-time">
+                    <span class="days">Mon, Wed, Fri</span>
+                    <span class="hours">5:00 PM — 8:00 PM</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="batch-column">
+            <div class="column-header">
+                <i class="fas fa-laptop"></i>
+                <h2>Online Classes</h2>
+            </div>
+            <div class="batch-card">
+                <h3>Batch 1</h3>
+                <div class="batch-time">
+                    <span class="days">Tue, Thu, Sat</span>
+                    <span class="hours">4:00 PM — 5:00 PM</span>
+                </div>
+            </div>
+            <div class="batch-card">
+                <h3>Batch 2</h3>
+                <div class="batch-time">
+                    <span class="days">Mon, Wed, Fri</span>
+                    <span class="hours">6:00 PM — 7:00 PM</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="tournament-highlight">
+        <div class="tournament-content">
+            <div class="tournament-icon">🏆</div>
+            <div>
+                <h2>Weekly Swiss Tournament</h2>
+                <p>Every Sunday, students participate in international standard tournaments to sharpen their competitive edge.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="fees-section">
+        <h2>Flexible Pricing</h2>
+        <div class="pricing-cards">
+            <div class="price-card">
+                <span class="plan-name">Monthly</span>
+                <div class="amount">₹3,000<span>/month</span></div>
+                <p>Standard billing per student</p>
+            </div>
+            <div class="price-card featured">
+                <div class="save-badge">Save ₹1,500</div>
+                <span class="plan-name">Quarterly</span>
+                <div class="amount">₹7,500<span>/3 months</span></div>
+                <p>One-time payment</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="action-footer">
+        <div class="cta-group">
+            <div class="cta-box">
+                <p>Have questions about the assessment?</p>
+                <a href="{{ url_for('auth.enquiry') }}" class="btn-secondary">Contact Us</a>
+            </div>
+            <div class="cta-box">
+                <p>Ready to start the journey?</p>
+                <a href="{{ url_for('auth.student_register') }}" class="btn-secondary">Enroll Now!</a>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

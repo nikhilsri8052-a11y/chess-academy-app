@@ -1,0 +1,229 @@
+{% extends "base.html" %}
+{% block title %}Students{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_students.css') }}">
+<div class="students-container">
+    <!-- Header -->
+    <div class="page-header">
+        <h1>Student Management</h1>
+        <button class="export-btn" onclick="exportStudents()">📥 Export CSV</button>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-section">
+        <div class="filters-grid">
+            <div class="filter-group">
+                <label>Search</label>
+                <input type="text" id="searchInput" placeholder="Name, email, or phone...">
+            </div>
+            <div class="filter-group">
+                <label>Batch</label>
+                <select id="batchFilter">
+                    <option value="">All Batches</option>
+                    <option value="online1">Online 1</option>
+                    <option value="online2">Online 2</option>
+                    <option value="offline_advance">Offline Advanced</option>
+                    <option value="offline_base">Offline Base</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Fee Status</label>
+                <select id="feesFilter">
+                    <option value="">All</option>
+                    <option value="paid">Paid</option>
+                    <option value="unpaid">Unpaid</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Status</label>
+                <select id="statusFilter">
+                    <option value="">All</option>
+                    <option value="active">Active</option>
+                    <option value="disabled">Disabled</option>
+                    <option value="new">New</option>
+                </select>
+            </div>
+            <!-- NEW: Sort Filter -->
+            <div class="filter-group">
+                <label>Sort By</label>
+                <select id="sortFilter" onchange="loadStudents()">
+                    <option value="newest">Newest First</option>
+                    <option value="rating_high">Rating: High to Low</option>
+                    <option value="rating_low">Rating: Low to High</option>
+                    <option value="name">Name (A-Z)</option>
+                </select>
+            </div>
+        </div>
+        <div class="filter-actions">
+            <button class="btn-clear" onclick="clearFilters()">Clear Filters</button>
+            <button class="btn-filter" onclick="loadStudents()">Apply Filters</button>
+        </div>
+    </div>
+
+    <!-- Students Table -->
+    <div class="students-table-wrapper">
+        <div id="loadingState" class="loading">
+            <p>Loading students...</p>
+        </div>
+        <div id="emptyState" class="empty-state" style="display: none;">
+            <h3>No students found</h3>
+            <p>Try adjusting your filters</p>
+        </div>
+        <table class="students-table" id="studentsTable" style="display: none;">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Rating</th>
+                    <th>Phone</th>
+                    <th>Batch</th>
+                    <th>Status</th>
+                    <th>Fee Status</th>
+                    <th>Fee Expiry</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="studentsTableBody">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Fee History Modal -->
+<div class="modal" id="feeHistoryModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Fee Payment History</h2>
+            <button class="close-modal" onclick="closeFeeHistoryModal()">×</button>
+        </div>
+        <div class="modal-body">
+            <div id="studentInfo" style="margin-bottom: 1rem;">
+                <p><strong>Name:</strong> <span id="modalStudentName"></span></p>
+                <p><strong>Batch:</strong> <span id="modalStudentBatch"></span></p>
+            </div>
+            <div id="feeHistoryContent"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Update Batch Modal -->
+<div class="modal" id="batchModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Update Batch</h2>
+            <button class="close-modal" onclick="closeBatchModal()">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label>Student Name</label>
+                <p id="batchModalStudentName" style="font-weight: 600; color: #1a1a1a;"></p>
+            </div>
+            <div class="form-group">
+                <label>Select Batch</label>
+                <select id="batchSelect">
+                    <option value="online1">Online 1</option>
+                    <option value="online2">Online 2</option>
+                    <option value="offline_advance">Offline Advanced</option>
+                    <option value="offline_base">Offline Base</option>
+                </select>
+            </div>
+            <button class="btn-submit" onclick="updateBatch()">Update Batch</button>
+        </div>
+    </div>
+</div>
+
+<!-- Update Rating Modal -->
+<div class="modal" id="ratingModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Update Student Rating</h2>
+            <button class="close-modal" onclick="closeRatingModal()">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label>Student Name</label>
+                <p id="ratingModalStudentName" style="font-weight: 600; color: #1a1a1a;"></p>
+            </div>
+            <div class="form-group">
+                <label>Current Rating</label>
+                <p id="currentRatingDisplay" style="font-size: 1.2rem; font-weight: 700; color: #D3AE55;"></p>
+            </div>
+            <div class="form-group">
+                <label>New Rating <span style="color: red;">*</span></label>
+                <input type="number" id="newRating" 
+                       min="0" max="3000" step="10" 
+                       placeholder="Enter rating (0-3000)"
+                       style="width: 100%; padding: 10px; border: 2px solid #eee; border-radius: 8px; font-size: 1rem;">
+                <small style="color: #666; font-size: 0.85rem; display: block; margin-top: 5px;">
+                    Rating scale: 0-3000 (Typically: &lt;1000=Beginner, 1000-1500=Intermediate, &gt;1500=Advanced)
+                </small>
+            </div>
+            <div class="rating-preview">
+                <h4 style="margin-bottom: 10px;">Preview:</h4>
+                <span id="ratingPreview" class="rating-badge rating-low" style="font-size: 1rem; padding: 8px 15px;">0</span>
+                <span id="ratingLevel" style="margin-left: 10px; font-weight: 600; color: #666;">Beginner</span>
+            </div>
+            <div class="quick-rating-buttons">
+                <button type="button" class="quick-rating-btn low" onclick="setQuickRating(800)">800 (Low)</button>
+                <button type="button" class="quick-rating-btn mid" onclick="setQuickRating(1200)">1200 (Mid)</button>
+                <button type="button" class="quick-rating-btn high" onclick="setQuickRating(1800)">1800 (High)</button>
+                <button type="button" class="quick-rating-btn" onclick="setQuickRating(0)">Reset to 0</button>
+            </div>
+            <button class="btn-submit" type="button" onclick="updateRating()">Update Rating</button>
+        </div>
+    </div>
+</div>
+
+<!-- Offline Payment Modal -->
+<div class="modal" id="offlinePaymentModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Add Offline Payment</h2>
+            <button class="close-modal" onclick="closeOfflinePaymentModal()">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label>Student Name</label>
+                <p id="offlinePaymentStudentName" style="font-weight: 600; color: #1a1a1a;"></p>
+            </div>
+            <div class="form-group">
+                <label>Payment Plan <span style="color: red;">*</span></label>
+                <select id="offlinePlanSelect">
+                    <option value="1month">1 Month - ₹3,000</option>
+                    <option value="3months">3 Months - ₹7,500</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Payment Method</label>
+                <select id="offlinePaymentMethod">
+                    <option value="cash">Cash</option>
+                    <option value="bank_transfer">Bank Transfer</option>
+                    <option value="cheque">Cheque</option>
+                    <option value="upi">UPI (Offline)</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Notes (Optional)</label>
+                <textarea id="offlinePaymentNotes" placeholder="Add any additional notes..." style="width: 100%; min-height: 80px; padding: 10px; border: 2px solid #eee; border-radius: 8px; font-family: inherit; resize: vertical;"></textarea>
+            </div>
+            <div style="background: #fff3e0; padding: 12px; border-radius: 8px; margin: 15px 0; font-size: 0.9rem;">
+                <strong>⚠️ Important:</strong> 
+                <ul style="margin: 8px 0 0 20px; padding: 0;">
+                    <li>Payment will be immediately verified</li>
+                    <li>Student status will be set to <strong>ACTIVE</strong></li>
+                    <li>If fees already paid, expiry extends from current expiry date</li>
+                    <li>If fees expired/unpaid, expiry starts from today</li>
+                </ul>
+            </div>
+            <button class="btn-submit" onclick="submitOfflinePayment()">Add Payment & Verify</button>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/admin_students.js') }}"></script>
+{% endblock %}

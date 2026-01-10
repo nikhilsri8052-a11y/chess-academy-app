@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+{% block title %}My Profile{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/student_profile.css') }}">
+<div class="profile-container">
+    <!-- Header -->
+    <div class="page-header">
+        <h1>My Profile</h1>
+        <div class="header-actions">
+            <button class="btn-export" onclick="exportProfile()">📥 Export Profile</button>
+        </div>
+    </div>
+
+    <!-- Profile Content -->
+    <div class="profile-content">
+        <!-- Left Column: Profile Information -->
+        <div class="profile-left">
+            <!-- Profile Card -->
+            <div class="profile-card">
+                <div class="profile-header">
+                    <div class="profile-avatar">
+                        <span class="avatar-text" id="avatarInitials">JD</span>
+                    </div>
+                    <div class="profile-info">
+                        <h2 id="studentName">Loading...</h2>
+                        <p class="student-email" id="studentEmail">Loading email...</p>
+                        <div class="rating-display">
+                            <span class="rating-badge" id="ratingBadge">0</span>
+                            <span class="rating-label">Current Rating</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Profile Stats -->
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Batch</span>
+                        <span class="stat-value" id="studentBatch">-</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Status</span>
+                        <span class="status-badge" id="studentStatus">Loading...</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Fee Status</span>
+                        <span class="fee-badge" id="feeStatus">Loading...</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Member Since</span>
+                        <span class="stat-value" id="memberSince">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Personal Information Card -->
+            <div class="info-card">
+                <h3>Personal Information</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Full Name</span>
+                        <span class="info-value" id="infoName">Loading...</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Email</span>
+                        <span class="info-value" id="infoEmail">Loading...</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Phone</span>
+                        <span class="info-value" id="infoPhone">Loading...</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Age</span>
+                        <span class="info-value" id="infoAge">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Parent's Name</span>
+                        <span class="info-value" id="infoParent">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Registration Date</span>
+                        <span class="info-value" id="infoRegDate">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Batch Updated</span>
+                        <span class="info-value" id="infoBatchUpdated">-</span>
+                    </div>
+                </div>
+                <button class="btn-edit" onclick="openEditModal()">Edit Profile</button>
+            </div>
+        </div>
+
+        <!-- Right Column: Rating and Actions -->
+        <div class="profile-right">
+            <!-- Rating Information Card -->
+            <div class="rating-card">
+                <h3>Rating Information</h3>
+                <div class="rating-scale">
+                    <div class="scale-item">
+                        <span class="scale-color rating-high"></span>
+                        <span class="scale-label">High Rating</span>
+                        <span class="scale-value">≥ 1500</span>
+                    </div>
+                    <div class="scale-item">
+                        <span class="scale-color rating-mid"></span>
+                        <span class="scale-label">Medium Rating</span>
+                        <span class="scale-value">≥ 1000</span>
+                    </div>
+                    <div class="scale-item">
+                        <span class="scale-color rating-low"></span>
+                        <span class="scale-label">Low Rating</span>
+                        <span class="scale-value">&lt; 1000</span>
+                    </div>
+                </div>
+                <div class="rating-tips">
+                    <h4>How to Improve Rating:</h4>
+                    <ul>
+                        <li>Complete assignments on time</li>
+                        <li>Participate in class discussions</li>
+                        <li>Score well in tests</li>
+                        <li>Attend classes regularly</li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Actions and Fee Status Card -->
+            <div class="actions-card">
+                <h3>Quick Actions</h3>
+                <button class="btn-action" onclick="openChangePasswordModal()">
+                    🔒 Change Password
+                </button>
+                <button class="btn-action" onclick="window.location.href='/student/payment/history'">
+                    💳 View Payment History
+                </button>
+                <button class="btn-action" onclick="window.location.href='/student/assignments'">
+                    📝 View Assignments
+                </button>
+                <button class="btn-action" onclick="window.location.href='/student/study-materials-page'">
+                    📚 Study Materials
+                </button>
+            </div>
+
+            <!-- Fee Status Card -->
+            <div class="fee-card">
+                <h3>Fee Status Details</h3>
+                <div class="fee-details">
+                    <div class="fee-item">
+                        <span class="fee-label">Fee Paid</span>
+                        <span class="fee-value" id="feePaidStatus">-</span>
+                    </div>
+                    <div class="fee-item">
+                        <span class="fee-label">Expiry Date</span>
+                        <span class="fee-value" id="feeExpiry">-</span>
+                    </div>
+                    <div class="fee-item">
+                        <span class="fee-label">Days Remaining</span>
+                        <span class="fee-value" id="daysRemaining">-</span>
+                    </div>
+                </div>
+                <button class="btn-pay" onclick="window.location.href='/student/payment'">
+                    💰 Pay Fees
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Profile Modal -->
+<div class="modal" id="editModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Edit Profile</h2>
+            <button class="close-modal" onclick="closeEditModal()">×</button>
+        </div>
+        <div class="modal-body">
+            <form id="editProfileForm">
+                <div class="form-group">
+                    <label>Age</label>
+                    <input type="number" id="editAge" min="5" max="100" placeholder="Enter your age">
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" id="editPhone" placeholder="Enter 10-digit phone number" 
+                           pattern="[0-9]{10}" maxlength="10">
+                    <small>Format: 10 digits only</small>
+                </div>
+                <div class="form-group">
+                    <label>Parent's Name</label>
+                    <input type="text" id="editParentName" placeholder="Enter parent's name">
+                </div>
+                <div class="form-notice">
+                    <strong>Note:</strong> Other details like name, email, and batch can only be changed by admin.
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="closeEditModal()">Cancel</button>
+                    <button type="submit" class="btn-save">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Change Password Modal -->
+<div class="modal" id="changePasswordModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Change Password</h2>
+            <button class="close-modal" onclick="closeChangePasswordModal()">×</button>
+        </div>
+        <div class="modal-body">
+            <form id="changePasswordForm">
+                <div class="form-group">
+                    <label>Current Password</label>
+                    <input type="password" id="currentPassword" placeholder="Enter current password" required>
+                </div>
+                <div class="form-group">
+                    <label>New Password</label>
+                    <input type="password" id="newPassword" placeholder="Enter new password" required minlength="6">
+                    <small>Must be at least 6 characters long</small>
+                </div>
+                <div class="form-group">
+                    <label>Confirm New Password</label>
+                    <input type="password" id="confirmPassword" placeholder="Confirm new password" required>
+                </div>
+                <div class="password-strength" id="passwordStrength">
+                    <div class="strength-bar"></div>
+                    <div class="strength-text">Password strength</div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="closeChangePasswordModal()">Cancel</button>
+                    <button type="submit" class="btn-save">Change Password</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/student_profile.js') }}"></script>
+{% endblock %}

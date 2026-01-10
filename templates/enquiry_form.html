@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Enquiry Form - Chess Class{% endblock %}
+
+{% block content %}
+
+<section class="enquiry-container">
+  <div class="enquiry-wrapper">
+    <div class="enquiry-header">
+      <h1>Get in Touch</h1>
+      <p>Have questions about our classes? Fill out the form below and we'll get back to you soon.</p>
+    </div>
+
+    <div class="enquiry-content">
+      <!-- Contact Details -->
+      <div class="contact-info">
+        <h2>Contact Details</h2>
+        
+        <div class="contact-item">
+          <div class="contact-icon">📍</div>
+          <div class="contact-details">
+            <h3>Address</h3>
+            <p>Flat No. 104, Vithal Rukmini Apartments<br>Nagpur, Maharashtra</p>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <div class="contact-icon">📱</div>
+          <div class="contact-details">
+            <h3>Phone / WhatsApp</h3>
+            <p><a href="tel:8830435532">8830435532, 094221 49220</a></p>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <div class="contact-icon">⏰</div>
+          <div class="contact-details">
+            <h3>Timing</h3>
+            <p>Classes start at 5:00 PM</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Enquiry Form -->
+      <div class="enquiry-form-wrapper">
+        <form class="enquiry-form" id="enquiryForm">
+          <div class="form-group">
+            <label for="name">Full Name *</label>
+            <input type="text" id="name" name="name" required placeholder="Your name">
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address *</label>
+            <input type="email" id="email" name="email" required placeholder="your@email.com">
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Phone Number *</label>
+            <input type="tel" id="phone" name="phone" required placeholder="10-digit number">
+          </div>
+
+          <div class="form-group">
+            <label for="batch">Interested Batch</label>
+            <select id="batch" name="batch">
+              <option value="">Select a batch</option>
+              <option value="offline-advance">Offline - Advance (TTS)</option>
+              <option value="offline-basic">Offline - Intermediate/Basic (MWF)</option>
+              <option value="online-batch1">Online - Batch 1 (TTS)</option>
+              <option value="online-batch2">Online - Batch 2 (MWF)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="message">Message / Enquiry *</label>
+            <textarea id="message" name="message" required placeholder="Tell us about your interest in chess classes..." rows="5"></textarea>
+          </div>
+
+          <button type="submit" class="btn-submit">Submit Enquiry</button>
+        </form>
+
+        <div id="formMessage" class="form-message" style="display: none;"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="{{ url_for('static', filename='js/enquiry_form.js') }}"></script>
+{% endblock %}

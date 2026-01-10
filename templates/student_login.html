@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Student Login{% endblock %}
+
+{% block extra_head %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="admin-login-container">
+  <h2>Student Login</h2>
+  <div id="error" class="form-error"></div>
+
+  <label for="email">Email</label>
+  <input id="email" placeholder="Email">
+
+  <label for="password">Password</label>
+  <input id="password" type="password" placeholder="Password">
+
+  <button id="student-login-btn">Login</button>
+</div>
+{% endblock %}
+
+{% block scripts %}
+  <script type="module" src="{{ url_for('static', filename='js/student_login.js') }}"></script>
+{% endblock %}

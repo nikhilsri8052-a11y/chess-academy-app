@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+
+{% block title %}Admin - Manage Payments{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_view_payment.css') }}">
+<div class="admin-container">
+    <div class="page-header">
+        <h1>Payment Verification</h1>
+    </div>
+
+    <div class="filter-card">
+        <div class="filter-group">
+            <div class="search-wrapper">
+                <input type="text" id="searchInput" placeholder="🔍 Search by student name or ID..." onkeyup="filterPayments()">
+            </div>
+            
+            <div class="select-wrapper">
+                <select id="planFilter" onchange="filterPayments()">
+                    <option value="all">All Plans</option>
+                    <option value="1month">Monthly (₹3000)</option>
+                    <option value="3month">Quarterly (₹7500)</option>
+                </select>
+            </div>
+
+            <div class="select-wrapper month-filter-container" style="display: none;">
+                <select id="monthFilter" onchange="filterPayments()">
+                    <option value="all">All Months</option>
+                    <option value="01">January</option>
+                    <option value="02">February</option>
+                    <option value="03">March</option>
+                    <option value="04">April</option>
+                    <option value="05">May</option>
+                    <option value="06">June</option>
+                    <option value="07">July</option>
+                    <option value="08">August</option>
+                    <option value="09">September</option>
+                    <option value="10">October</option>
+                    <option value="11">November</option>
+                    <option value="12">December</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="tabs-nav">
+        <button class="tab-btn active" onclick="switchTab('pending')">
+            🔔 New Payments
+            <span id="pending-count" class="badge">0</span>
+        </button>
+        <button class="tab-btn" onclick="switchTab('history')">
+            📋 Payment History
+        </button>
+    </div>
+
+    <div id="tab-pending" class="tab-content active">
+        <div class="table-card">
+            <div class="grid-header pending-cols">
+                <div>Date & Time</div>
+                <div>Student Name</div>
+                <div>Plan / Batch</div>
+                <div>Amount</div>
+                <div>Action</div>
+            </div>
+
+            <div id="pending-list">
+                {% for p in payments %}
+                {% if p.status in ['submitted', 'pending'] %}
+                <div class="grid-row pending-cols pay-row" id="row-{{ p.id }}" 
+                     data-name="{{ p.student_name|lower }}" 
+                     data-plan="{{ p.plan }}">
+                    
+                    <div class="col-date">
+                        <div class="date-text">{{ p.date_str }}</div>
+                        <small>Via {{ p.submitted_via|default('Request') }}</small>
+                    </div>
+
+                    <div class="col-name">
+                        <strong>{{ p.student_name }}</strong>
+                        <small>ID: ...{{ p.student_id[-5:] }}</small>
+                    </div>
+
+                    <div class="col-plan">
+                        <span class="plan-badge">
+                            {% if p.plan == '1month' %} Monthly {% else %} Quarterly {% endif %}
+                        </span>
+                        {% if p.batch %}
+                        <small class="batch-tag">{{ p.batch.replace('_', ' ').title() }}</small>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-amount">
+                        ₹{{ p.amount }}
+                    </div>
+
+                    <div class="col-actions">
+                        <button class="btn btn-verify" onclick="verifyPayment('{{ p.id }}')">✓ Verify</button>
+                        <button class="btn btn-reject" onclick="openRejectModal('{{ p.id }}', '{{ p.student_id }}')">✗ Reject</button>
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+
+                <div class="empty-msg" style="display: none;">
+                    ✅ No pending payments found.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="tab-history" class="tab-content">
+        <div class="table-card">
+            <div class="grid-header history-cols">
+                <div>Date & Time</div>
+                <div>Student Name</div>
+                <div>Plan / Batch</div>
+                <div>Amount</div>
+                <div>Status</div>
+            </div>
+
+            <div id="history-list">
+                {% for p in payments %}
+                {% if p.status == 'verified' %}
+                <div class="grid-row history-cols pay-row" 
+                     data-name="{{ p.student_name|lower }}" 
+                     data-plan="{{ p.plan }}">
+                    
+                    <div class="col-date">
+                        <div class="date-text">{{ p.date_str }}</div>
+                    </div>
+
+                    <div class="col-name">
+                        <strong>{{ p.student_name }}</strong>
+                    </div>
+
+                    <div class="col-plan">
+                        <span class="plan-badge">
+                            {% if p.plan == '1month' %} Monthly {% else %} Quarterly {% endif %}
+                        </span>
+                        {% if p.batch %}
+                        <small class="batch-tag">{{ p.batch.replace('_', ' ').title() }}</small>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-amount large">
+                        ₹{{ p.amount }}
+                    </div>
+
+                    <div class="col-status">
+                        <span class="status-verified">✓ Verified</span>
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+
+                <div class="empty-msg" style="display: none;">
+                    📭 No payment history found.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="rejectModal" class="modal-overlay">
+    <div class="modal-box">
+        <h2>Reject Payment</h2>
+        <p>Please provide a reason for rejecting this payment.</p>
+        <textarea id="rejectionReason" rows="4" placeholder="Enter rejection reason..."></textarea>
+        <div class="modal-actions">
+            <button class="btn btn-secondary" onclick="closeRejectModal()">Cancel</button>
+            <button class="btn btn-reject" onclick="confirmRejectPayment()">Reject Payment</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/admin_view_payments.js') }}"></script>
+{% endblock %}

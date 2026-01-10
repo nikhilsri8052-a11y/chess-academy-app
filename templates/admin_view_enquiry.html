@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}All Enquiries{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/view_enquiry.css') }}">
+
+<div class="view-enquiries-container">
+  <section class="batches-intro">
+    <h1>All Enquiries</h1>
+  </section>
+
+  {% if enquiries %}
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Batch</th>
+            <th>Message</th>
+            <th>Contact</th>
+            <th>Date</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for enquiry in enquiries %}
+          <tr id="enquiry-{{ enquiry.id }}">
+            <td>
+              <strong>{{ enquiry.name }}</strong>
+              {% if enquiry.status == 'new' %}
+                <span class="ribbon">NEW</span>
+              {% endif %}
+            </td>
+            <td><span class="days">{{ enquiry.batch }}</span></td>
+            <td style="max-width: 250px;">{{ enquiry.message }}</td>
+            <td>
+              <span>{{ enquiry.email }}</span><br>
+              <span>{{ enquiry.phone }}</span>
+            </td>
+            <td>{{ enquiry.created_at.strftime('%Y-%m-%d') if enquiry.created_at else '' }}</td>
+            <td>
+              <button class="complete-btn" data-id="{{ enquiry.id }}">✓ Complete</button>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="no-enquiries">
+      <p>No enquiries found. You're all caught up!</p>
+    </div>
+  {% endif %}
+
+  <!-- Back button -->
+  <div style="margin-top: 20px;">
+    <a href="{{ url_for('admin.admin_dashboard') }}" class="back-btn">← Back to Dashboard</a>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="module" src="{{ url_for('static', filename='js/admin_view_enquiry.js') }}"></script>
+{% endblock %}
+

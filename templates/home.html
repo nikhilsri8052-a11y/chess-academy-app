@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}Home Page{% endblock %}
+
+{% block content %}
+<div class="home-image-slider">
+    <div class="slider-container">
+        <div class="slider">
+            <!-- Slide 1 -->
+            <div class="slide active">
+                <img src="{{ url_for('static', filename='images/front-images/1.webp') }}" alt="Slide 1">
+            </div>
+            <!-- Slide 2 -->
+            <div class="slide">
+                <img src="{{ url_for('static', filename='images/front-images/2.webp') }}" alt="Slide 2">
+            </div>
+            <!-- Slide 3 -->
+            <div class="slide">
+                <img src="{{ url_for('static', filename='images/front-images/3.webp') }}" alt="Slide 3">
+            </div>
+            <!-- Slide 4 -->
+            <div class="slide">
+                <img src="{{ url_for('static', filename='images/front-images/4.webp') }}" alt="Slide 4">
+            </div>
+            <!-- Slide 5 -->
+            <div class="slide">
+                <img src="{{ url_for('static', filename='images/front-images/5.webp') }}" alt="Slide 5">
+            </div>
+            <!-- Slide 6 -->
+            <div class="slide">
+                <img src="{{ url_for('static', filename='images/front-images/6.webp') }}" alt="Slide 6">
+            </div>
+            <!-- Slide 7 -->
+            <div class="slide">
+                <img src="{{ url_for('static', filename='images/front-images/7.webp') }}" alt="Slide 7">
+            </div>
+        </div>
+        
+        <!-- Navigation buttons -->
+        <button class="slider-btn prev-btn" aria-label="Previous slide">
+            <span>&#10094;</span>
+        </button>
+        <button class="slider-btn next-btn" aria-label="Next slide">
+            <span>&#10095;</span>
+        </button>
+        
+        <!-- Dots indicator -->
+        <div class="slider-dots">
+            <span class="dot active" data-slide="0"></span>
+            <span class="dot" data-slide="1"></span>
+            <span class="dot" data-slide="2"></span>
+            <span class="dot" data-slide="3"></span>
+            <span class="dot" data-slide="4"></span>
+            <span class="dot" data-slide="5"></span>
+            <span class="dot" data-slide="6"></span>
+        </div>
+    </div>
+</div>
+<div class="home-content">
+    <h1>Welcome to Our Chess Learning Platform</h1>
+    <p>Discover the joy of chess with our comprehensive learning resources, interactive lessons, and engaging community. Whether you're a beginner or an experienced player, we have something for everyone.</p>
+    <div class="cta-buttons">
+        <a href="{{ url_for('main.about') }}" class="cta-button"><button>More About Us</button></a>
+        <a href="{{ url_for('main.home_batches') }}" class="cta-button"><button>Batches</button></a>
+    </div>
+</div>
+<section class="features">
+    <div class="feature">
+        <h2>Interactive Lessons</h2>
+        <p>Learn chess strategies and tactics through engaging lessons.</p>
+    </div>
+    <div class="feature">
+        <h2>Practice Games</h2>
+        <p>Play other players to improve your skills.</p>
+    </div>
+    <div class="feature">
+        <h2>Community</h2>
+        <p>Join a community of chess enthusiasts to share tips and strategies.</p>
+    </div>
+</section>
+<div class="reviews">
+    <h2>User Reviews</h2>
+    <div class="review-cards">
+        <div class="review-card">
+            <p>⭐⭐⭐⭐⭐</p>
+            <p>"I am so grateful to be a student of this Coaching.Teachers are so kind and generous .I think best in The Nagpur for Chess. Anyone who wants to get better in this game can definitely join this coaching they'll provide you PDFs of books, take tournaments, tests and many more activities regularly. I so love the environment there kids and childrens are so talented and how teachers guide you and help you in So Better Way Very supportive. I am Thankful ❤️❤️"</p>
+            <h4>- Alfiya Nafeesh</h4>
+        </div>
+        <div class="review-card">
+            <p>⭐⭐⭐⭐⭐</p>
+            <p>"This is a really good classs.I used to play few years ago but I did not play for 2 to 3 years. After joining the class,my game got even better than before. I would recommend this class"</p>
+            <h4>- Kirti Maniyar</h4>
+        </div>
+        <div class="review-card">
+            <p>⭐⭐⭐⭐⭐</p>
+            <p>"I am a very old student of shrivastav sir's class...and I can say that this is the best class for chess one can ever find in nagpur....shrivastav maam and sir also always supported me for playing chess...and due to the guidance of shrivastav sir and maam I was able to get my rating"</p>
+            <h4>-Pradipt Dongre</h4>
+        </div>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='js/slide.js') }}"></script>
+{% endblock %}

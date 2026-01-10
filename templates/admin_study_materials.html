@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% block title %}Admin - Study Materials{% endblock %}
+
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/phosphor-icons"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_notice.css') }}">
+
+<div class="admin-wrapper">
+    <header class="page-header">
+        <div class="header-content">
+            <div class="header-title">
+                <h1><i class="ph-books"></i> Study Materials</h1>
+                <p>Upload and manage study resources for different batches.</p>
+            </div>
+            <div class="header-actions">
+                <span class="date-badge"><i class="ph-calendar-blank"></i> <span id="currentDate"></span></span>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-layout">
+        <aside class="creator-panel">
+            <div class="panel-card">
+                <div class="card-header">
+                    <h2><i class="ph-plus-circle"></i> Upload Material</h2>
+                </div>
+                <form id="uploadMaterialForm">
+                    <div class="input-group">
+                        <label for="materialTitle">Title</label>
+                        <div class="input-wrapper">
+                            <i class="ph-text-t input-icon"></i>
+                            <input type="text" id="materialTitle" placeholder="e.g. Chapter 1- Mate in 1" required>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="materialDescription">Description</label>
+                        <textarea id="materialDescription" placeholder="Brief description of the material..." rows="4" required></textarea>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="materialLink">Google Drive Link</label>
+                        <div class="input-wrapper">
+                            <i class="ph-link input-icon"></i>
+                            <input type="url" id="materialLink" placeholder="https://drive.google.com/..." required>
+                        </div>
+                        <small style="color: #64748b; font-size: 12px; margin-top: 4px; display: block;">
+                            <i class="ph-info"></i> Make sure the link has viewing permissions enabled
+                        </small>
+                    </div>
+                    
+                    <div class="row-group">
+                        <div class="input-group">
+                            <label for="materialBatch">Target Batch</label>
+                            <div class="select-wrapper">
+                                <select id="materialBatch" required>
+                                    <option value="all">🌍 All Batches</option>
+                                    <option value="online1">💻 Online Batch 1</option>
+                                    <option value="online2">💻 Online Batch 2</option>
+                                    <option value="offline_advance">🏢 Offline Advance</option>
+                                    <option value="offline_base">🏠 Offline Base</option>
+                                </select>
+                                <i class="ph-caret-down select-arrow"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="materialType">Material Type</label>
+                            <div class="select-wrapper">
+                                <select id="materialType">
+                                    <option value="notes">📝 Notes</option>
+                                    <option value="assignment">📋 Assignment</option>
+                                    <option value="video">🎥 Video</option>
+                                    <option value="practice">💡 Practice</option>
+                                    <option value="other">📦 Other</option>
+                                </select>
+                                <i class="ph-caret-down select-arrow"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn-submit">
+                        <span class="btn-text">Upload Material</span>
+                        <i class="ph-upload-simple"></i>
+                    </button>
+                </form>
+            </div>
+        </aside>
+
+        <div class="kanban-wrapper">
+            <div class="kanban-grid">
+                {% set batches = [
+                    ('all', 'Global', 'globe'),
+                    ('online1', 'Online B1', 'laptop'),
+                    ('online2', 'Online B2', 'laptop'),
+                    ('offline_advance', 'Offline Adv', 'buildings'),
+                    ('offline_base', 'Offline Base', 'house')
+                ] %}
+
+                {% for id, label, icon in batches %}
+                <div class="kanban-column">
+                    <div class="column-header">
+                        <div class="header-left">
+                            <i class="ph-{{ icon }}"></i>
+                            <h3>{{ label }}</h3>
+                        </div>
+                        <span class="count-pill" id="count-{{ id }}">0</span>
+                    </div>
+                    <div class="column-body custom-scroll" id="materials-{{ id }}">
+                        <div class="loading-state">
+                            <i class="ph-spinner-gap ph-spin"></i>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/admin_study_materials.js') }}"></script>
+{% endblock %}

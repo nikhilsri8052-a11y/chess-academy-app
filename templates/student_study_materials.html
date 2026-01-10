@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Study Materials{% endblock %}
+
+{% block content %}
+<script src="https://unpkg.com/phosphor-icons"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/student_study_materials.css') }}">
+
+<div class="materials-container">
+    <div class="page-header">
+        <h1><i class="ph-books"></i> Study Materials</h1>
+        <p>Access notes, assignments, and recordings for your batch.</p>
+    </div>
+
+    <div class="filter-bar">
+        <button class="filter-btn active" data-type="all">
+            <i class="ph-stack"></i> All
+        </button>
+        <button class="filter-btn" data-type="notes">
+            <i class="ph-note"></i> Notes
+        </button>
+        <button class="filter-btn" data-type="assignment">
+            <i class="ph-clipboard-text"></i> Assignments
+        </button>
+        <button class="filter-btn" data-type="video">
+            <i class="ph-video"></i> Videos
+        </button>
+        <button class="filter-btn" data-type="practice">
+            <i class="ph-lightbulb"></i> Practice
+        </button>
+    </div>
+
+    <div class="materials-grid" id="materialsGrid">
+        <div class="loading-state">
+            <i class="ph-spinner-gap"></i>
+            <p style="margin-top: 10px; font-size: 14px;">Loading materials...</p>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/student_study_materials.js') }}"></script>
+{% endblock %}

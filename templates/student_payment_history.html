@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Student Payment History{% endblock %}
+
+{% block content %}
+<div class="payment-history-container">
+    <div class="history-header">
+        <h1>Payment History</h1>
+    </div>
+
+    <div class="history-controls">
+        <div class="search-box">
+            <label for="monthFilter">Filter by Month:</label>
+            <input type="month" id="monthFilter" class="filter-input">
+            <button onclick="clearFilter()" class="btn-clear">Clear</button>
+        </div>
+        
+        <div class="history-summary">
+            <div class="summary-item">
+                <span class="label">Total Payments</span>
+                <span class="value" id="totalCount">{{ payments|length }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-wrapper">
+        <table class="payment-history-table" id="paymentTable">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Plan</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for payment in payments %}
+                <tr class="payment-row" data-month="{{ payment.created_at_iso }}">
+                    <td class="date-cell">
+                        <span class="calendar-icon">📅</span> 
+                        {{ payment.created_at_str }}
+                    </td>
+                    <td><span class="plan-badge">{{ payment.plan }}</span></td>
+                    <td class="amount-cell">₹{{ payment.amount }}</td>
+                    <td>
+                        <span class="status-pill {{ payment.status|lower }}">
+                            {{ payment.status|title }}
+                        </span>
+                    </td>
+                </tr>
+                {% else %}
+                <tr class="no-data">
+                    <td colspan="4">No payment history available.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="history-footer">
+        <a href="{{ url_for('student.student_dashboard') }}" class="back-link">
+            <span class="arrow">←</span> Back to Dashboard
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/student_payment_history.js') }}"></script>
+{% endblock %}

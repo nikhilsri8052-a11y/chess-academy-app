@@ -1,0 +1,133 @@
+/* --- View Enquiries Admin Page --- */
+.view-equiries-container {
+    padding: 2rem;
+    background: #f8f9fa;
+    min-height: 80vh;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    margin-top: 2rem;
+}
+
+.view-equiries-container h1 {
+    font-size: 2rem;
+    color: #1a1a1a;
+    margin-bottom: 2rem;
+    text-align: left;
+    border-left: 5px solid #D3AE55;
+    padding-left: 15px;
+}
+
+/* Table Wrapper for Responsiveness */
+.table-responsive {
+    overflow-x: auto;
+    border-radius: 12px;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    font-size: 0.95rem;
+}
+
+thead tr {
+    background: #1a1a1a;
+    color: #ffffff;
+    text-align: left;
+}
+
+th, td {
+    padding: 1rem 1.2rem;
+    border-bottom: 1px solid #eee;
+}
+
+tbody tr {
+    transition: background 0.2s ease;
+}
+
+tbody tr:hover {
+    background-color: #fffdf7;
+}
+
+/* Status Badges */
+.status-pill {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    background: #e9ecef;
+    color: #495057;
+}
+
+/* Buttons */
+.complete-btn {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.complete-btn:hover {
+    background: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.2);
+}
+
+.back-btn {
+    display: inline-block;
+    margin-top: 2rem;
+    background: #1a1a1a;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background 0.3s;
+}
+
+.back-btn:hover {
+    background: #585858;
+}
+
+/* Empty State */
+.no-enquiries {
+    text-align: center;
+    padding: 4rem;
+    color: #888;
+}
+
+.new-ribbon {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: red;
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 2px 5px;
+    border-radius: 3px;
+    z-index: 10;
+}
+
+/* Ribbon style */
+.ribbon {
+    display: inline-block;
+    background-color: #e74c3c;
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 5px;
+    vertical-align: middle;
+}

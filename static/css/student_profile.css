@@ -1,0 +1,541 @@
+.profile-container {
+    max-width: 1400px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.page-header h1 {
+    font-size: 2.2rem;
+    color: #1a1a1a;
+    font-weight: 800;
+}
+
+.btn-export {
+    background: #1a1a1a;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-export:hover {
+    background: #333;
+    transform: translateY(-2px);
+}
+
+.profile-content {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 2rem;
+}
+
+@media (max-width: 1024px) {
+    .profile-content {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Profile Card */
+.profile-card {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    margin-bottom: 1.5rem;
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.profile-avatar {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.avatar-text {
+    font-size: 2rem;
+    font-weight: 700;
+    color: white;
+}
+
+.profile-info h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #1a1a1a;
+}
+
+.student-email {
+    color: #666;
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+}
+
+.rating-display {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.rating-label {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* Rating Badges */
+.rating-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    min-width: 60px;
+    text-align: center;
+}
+
+.rating-high { 
+    background-color: #e8f5e9; 
+    color: #2e7d32; 
+    border: 1px solid #a5d6a7; 
+}
+
+.rating-mid { 
+    background-color: #fff3e0; 
+    color: #ef6c00; 
+    border: 1px solid #ffcc80; 
+}
+
+.rating-low { 
+    background-color: #ffebee; 
+    color: #c62828; 
+    border: 1px solid #ef9a9a; 
+}
+
+/* Profile Stats */
+.profile-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #eee;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    color: #666;
+    font-weight: 600;
+}
+
+.stat-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1a1a1a;
+}
+
+/* Status Badges */
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    display: inline-block;
+}
+
+.status-badge.active {
+    background: #e6f4ea;
+    color: #1e7e34;
+}
+
+.status-badge.disabled {
+    background: #fdecea;
+    color: #d93025;
+}
+
+.status-badge.new {
+    background: #fff4e5;
+    color: #b45d00;
+}
+
+.fee-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.fee-badge.paid {
+    background: #e6f4ea;
+    color: #1e7e34;
+}
+
+.fee-badge.unpaid {
+    background: #fdecea;
+    color: #d93025;
+}
+
+/* Info Card */
+.info-card {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.info-card h3 {
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+    color: #1a1a1a;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.info-label {
+    font-size: 0.85rem;
+    color: #666;
+    font-weight: 600;
+}
+
+.info-value {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #1a1a1a;
+}
+
+.btn-edit {
+    background: #D3AE55;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.3s;
+}
+
+.btn-edit:hover {
+    background: #bf9b45;
+    transform: translateY(-2px);
+}
+
+/* Right Column Cards */
+.rating-card,
+.actions-card,
+.fee-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    margin-bottom: 1.5rem;
+}
+
+.rating-card h3,
+.actions-card h3,
+.fee-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    color: #1a1a1a;
+}
+
+.rating-scale {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.scale-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.scale-color {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+}
+
+.scale-label {
+    flex: 1;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.scale-value {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #1a1a1a;
+}
+
+.rating-tips h4 {
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+    color: #1a1a1a;
+}
+
+.rating-tips ul {
+    margin: 0;
+    padding-left: 1.5rem;
+}
+
+.rating-tips li {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 0.5rem;
+}
+
+/* Actions Card */
+.btn-action {
+    background: white;
+    color: #1a1a1a;
+    border: 2px solid #eee;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 0.75rem;
+    text-align: left;
+    transition: all 0.3s;
+}
+
+.btn-action:hover {
+    border-color: #D3AE55;
+    background: #fffcf5;
+    transform: translateX(5px);
+}
+
+/* Fee Card */
+.fee-details {
+    margin-bottom: 1.5rem;
+}
+
+.fee-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #eee;
+}
+
+.fee-item:last-child {
+    border-bottom: none;
+}
+
+.fee-label {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.fee-value {
+    font-weight: 600;
+    color: #1a1a1a;
+}
+
+.btn-pay {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.3s;
+}
+
+.btn-pay:hover {
+    background: #43a047;
+    transform: translateY(-2px);
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.modal-header h2 {
+    font-size: 1.5rem;
+    color: #1a1a1a;
+}
+
+.close-modal {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #666;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #eee;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #D3AE55;
+}
+
+.form-group small {
+    display: block;
+    margin-top: 0.25rem;
+    color: #666;
+    font-size: 0.85rem;
+}
+
+.form-notice {
+    background: #fff3e0;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    color: #b45d00;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.btn-cancel {
+    background: #f0f0f0;
+    color: #666;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    flex: 1;
+    transition: all 0.3s;
+}
+
+.btn-cancel:hover {
+    background: #e0e0e0;
+}
+
+.btn-save {
+    background: #D3AE55;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    flex: 1;
+    transition: all 0.3s;
+}
+
+.btn-save:hover {
+    background: #bf9b45;
+}
+
+/* Password Strength Meter */
+.password-strength {
+    margin-bottom: 1.5rem;
+}
+
+.strength-bar {
+    height: 4px;
+    background: #eee;
+    border-radius: 2px;
+    margin-bottom: 0.5rem;
+    overflow: hidden;
+}
+
+.strength-bar::after {
+    content: '';
+    display: block;
+    height: 100%;
+    width: 0;
+    background: #4CAF50;
+    transition: width 0.3s;
+}
+
+.strength-text {
+    font-size: 0.85rem;
+    color: #666;
+}

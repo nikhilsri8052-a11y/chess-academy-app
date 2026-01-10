@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}My Assignments{% endblock %}
+{% block content %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/student_assignments.css') }}">
+
+<div class="container">
+    <h1>📘 My Assignments</h1>
+
+    <input
+        type="text"
+        id="searchInput"
+        class="search-box"
+        placeholder="Search assignment by name..."
+        onkeyup="searchAssignments()"
+        autofocus
+    >
+
+    <div id="assignmentsContainer">
+        {% for a in assignments %}
+        <div class="assignment-card" data-title="{{ a.title | lower | e }}">
+            <div class="assignment-title">{{ a.title }}</div>
+            <div class="assignment-desc">{{ a.description }}</div>
+            <div class="assignment-meta">
+                Created by {{ a.created_by_name }}
+            </div>
+            <a class="assignment-link" href="{{ a.link }}" target="_blank" rel="noopener noreferrer">
+                Open Assignment
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if assignments|length == 0 %}
+        <div class="no-results">No assignments found.</div>
+    {% endif %}
+</div>
+
+<script src="{{ url_for('static', filename='js/student_assignments.js') }}"></script>
+{% endblock %}

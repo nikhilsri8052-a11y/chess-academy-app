@@ -1,0 +1,508 @@
+:root {
+    /* Modern Palette */
+    --primary: #4f46e5;       /* Indigo 600 */
+    --primary-hover: #4338ca; /* Indigo 700 */
+    --bg-app: #f3f4f6;        /* Cool Gray 100 */
+    --bg-surface: #ffffff;
+    
+    /* Text Colors */
+    --text-main: #111827;     /* Gray 900 */
+    --text-muted: #6b7280;    /* Gray 500 */
+    --border-color: #e5e7eb;  /* Gray 200 */
+
+    /* Priority Colors */
+    --prio-urgent-bg: #fee2e2;
+    --prio-urgent-text: #991b1b;
+    --prio-imp-bg: #fef3c7;
+    --prio-imp-text: #92400e;
+    --prio-norm-bg: #e0e7ff;
+    --prio-norm-text: #3730a3;
+
+    /* Spacing & Radius */
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --font-stack: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+body {
+    background-color: var(--bg-app);
+    font-family: var(--font-stack);
+    color: var(--text-main);
+    margin: 0;
+}
+
+.admin-wrapper {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* --- Header --- */
+.page-header {
+    margin-bottom: 2.5rem;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.header-title h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--text-main);
+}
+
+.header-title p {
+    color: var(--text-muted);
+    margin: 0;
+    font-size: 1rem;
+}
+
+.date-badge {
+    background: white;
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+}
+
+/* --- Layout Grid --- */
+.main-layout {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 2rem;
+    align-items: start;
+}
+
+/* --- Creator Panel (Form) --- */
+.panel-card {
+    background: var(--bg-surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    padding: 1.5rem;
+    position: sticky;
+    top: 2rem;
+}
+
+.card-header h2 {
+    font-size: 1.25rem;
+    margin: 0 0 1.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-main);
+}
+
+/* Form Elements */
+.input-group { margin-bottom: 1.25rem; }
+.row-group { display: flex; gap: 1rem; }
+.row-group .input-group { flex: 1; }
+
+.input-group label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 0.5rem;
+}
+
+.input-wrapper, .select-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon {
+    position: absolute;
+    left: 12px;
+    color: var(--text-muted);
+}
+
+.select-arrow {
+    position: absolute;
+    right: 12px;
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+input, textarea, select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-family: var(--font-stack);
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    background: #f9fafb;
+    box-sizing: border-box; /* Fixes padding issues */
+}
+
+.input-wrapper input { padding-left: 36px; }
+
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--primary);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+textarea { resize: vertical; }
+select { appearance: none; cursor: pointer; }
+
+/* Submit Button */
+.btn-submit {
+    width: 100%;
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+    font-size: 1rem;
+    margin-top: 1rem;
+}
+
+.btn-submit:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+}
+
+/* --- Kanban Board --- */
+.kanban-grid {
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    padding-bottom: 2rem; /* Space for scrollbar */
+}
+
+.kanban-column {
+    background: #eef2f6; /* Slightly darker than body */
+    min-width: 320px;
+    max-width: 320px;
+    border-radius: var(--radius-lg);
+    display: flex;
+    flex-direction: column;
+    height: 75vh;
+}
+
+.column-header {
+    padding: 1rem 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+}
+
+.header-left h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+.count-pill {
+    background: rgba(0,0,0,0.06);
+    color: var(--text-main);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.column-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* --- Notice Cards --- */
+.notice-card {
+    background: white;
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 1px solid transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+.notice-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+}
+
+/* Priority Styling (Left Border Accent) */
+.notice-card.urgent { border-left: 4px solid #ef4444; }
+.notice-card.important { border-left: 4px solid #f59e0b; }
+.notice-card.normal { border-left: 4px solid #6366f1; }
+
+.card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+}
+
+.priority-badge {
+    font-size: 0.7rem;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.notice-card.urgent .priority-badge { background: var(--prio-urgent-bg); color: var(--prio-urgent-text); }
+.notice-card.important .priority-badge { background: var(--prio-imp-bg); color: var(--prio-imp-text); }
+.notice-card.normal .priority-badge { background: var(--prio-norm-bg); color: var(--prio-norm-text); }
+
+.delete-btn {
+    background: transparent;
+    border: none;
+    color: #d1d5db;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.delete-btn:hover {
+    background: #fee2e2;
+    color: #ef4444;
+}
+
+.card-title {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--text-main);
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+}
+
+.card-desc {
+    font-size: 0.875rem;
+    color: #4b5563;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+}
+
+.card-footer {
+    border-top: 1px solid #f3f4f6;
+    padding-top: 0.75rem;
+    font-size: 0.75rem;
+    color: #9ca3af;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Scrollbar Styling */
+.custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+.custom-scroll::-webkit-scrollbar-track { background: transparent; }
+.custom-scroll::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
+.custom-scroll::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    color: #9ca3af;
+    padding: 2rem 0;
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .main-layout { grid-template-columns: 1fr; }
+    .panel-card { position: static; margin-bottom: 2rem; }
+    .kanban-grid { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 1rem; }
+}
+
+/* --- Layout fixes to avoid navbar overlap and unwanted page scrollbars --- */
+
+/* 1) define navbar height once and use it for sticky offsets */
+:root {
+  --site-navbar-height: 72px; /* adjust to match your navbar height (56-90px) */
+}
+
+/* make sure the page content starts below the sticky navbar */
+
+/* 2) ensure the admin wrapper doesn't get hidden under the navbar,
+   and keep a little breathing room */
+.admin-wrapper {
+  padding-top: 1rem; /* keeps internal spacing */
+  max-width: 1600px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* 3) place sticky panel card below the navbar (so it doesn't sit under it) */
+.panel-card {
+  position: sticky;
+  top: calc(var(--site-navbar-height) + 1rem); /* pushes it below navbar */
+  z-index: 5; /* ensure it's above kanban but below navbar if needed */
+}
+
+/* 4) confine horizontal scrolling to the kanban area only */
+.main-layout {
+  /* prevent grid from producing page-level overflow */
+  overflow: visible; 
+}
+
+/* wrap the kanban area in its own scroller (keeps page scrollbar gone) */
+/* --- Kanban Wrapper (The Scroll Container) --- */
+.kanban-wrapper {
+    /* 1. Enable horizontal scrolling */
+    overflow-x: auto;
+    
+    /* 2. THE TRICK: Flip the container upside down */
+    transform: rotateX(180deg);
+    
+    /* 3. Adjust spacing: Scrollbar is now at the 'top', so we need padding there */
+    padding-top: 0; 
+    padding-bottom: 0.5rem; /* This creates space between scrollbar and columns */
+    
+    width: 100%;
+}
+
+/* preserve the original kanban-grid behavior but avoid forcing page scroll */
+/* --- Kanban Grid (The Content) --- */
+.kanban-grid {
+    display: flex;
+    gap: 1.5rem;
+    
+    /* 4. THE FIX: Flip the content back to normal */
+    transform: rotateX(180deg);
+    
+    /* Ensure content aligns properly after flip */
+    min-width: 100%;
+    padding-bottom: 0; /* Remove bottom padding here */
+}
+
+/* 5) columns: don't force huge fixed height on the column which causes vertical overflow.
+   Instead, allow column to size and let the column body scroll internally. */
+.kanban-column {
+  background: #eef2f6;
+  min-width: 320px;
+  max-width: 320px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  /* remove height: 75vh; so it won't overflow the page */
+  height: auto;
+}
+
+/* limit the column body height to viewport minus navbar and header space so each column has its own vertical scroll */
+.column-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-height: calc(100vh - var(--site-navbar-height) - 220px); 
+  /* 220px approximates header/top spacing + form card height; tweak if needed */
+}
+
+/* 6) ensure notice cards don't cause weird widths */
+.notice-card {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* 7) small nicety: custom scrollbar only on internal scrollers */
+.column-body::-webkit-scrollbar,
+.kanban-wrapper::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+.column-body::-webkit-scrollbar-thumb,
+.kanban-wrapper::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 8px;
+}
+
+/* --- NEW: Dynamic Color Coding --- */
+
+/* 1. Batch Colors (Left Border Accent) */
+/* Defines the border color based on which batch the material belongs to */
+.material-card.batch-all { border-left: 4px solid #6366f1; }       /* Indigo */
+.material-card.batch-online1 { border-left: 4px solid #0ea5e9; }   /* Sky Blue */
+.material-card.batch-online2 { border-left: 4px solid #8b5cf6; }   /* Violet */
+.material-card.batch-offline_advance { border-left: 4px solid #f43f5e; } /* Rose */
+.material-card.batch-offline_base { border-left: 4px solid #10b981; }    /* Emerald */
+
+/* 2. Material Type Badges */
+.type-badge {
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    border-radius: 50px; /* Pill shape */
+    font-weight: 600;
+    text-transform: capitalize;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Specific Colors for Types */
+/* Notes: Blue (Information) */
+.type-badge.type-notes { 
+    background-color: #e0f2fe; 
+    color: #0369a1; 
+}
+
+/* Assignment: Amber (Action Item) */
+.type-badge.type-assignment { 
+    background-color: #fff7ed; 
+    color: #c2410c; 
+}
+
+/* Video: Red (YouTube style) */
+.type-badge.type-video { 
+    background-color: #fee2e2; 
+    color: #991b1b; 
+}
+
+/* Practice: Green (Growth) */
+.type-badge.type-practice { 
+    background-color: #dcfce7; 
+    color: #15803d; 
+}
+
+/* Other: Gray (Neutral) */
+.type-badge.type-other { 
+    background-color: #f3f4f6; 
+    color: #374151; 
+}

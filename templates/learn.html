@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Learn Chess{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/learn.css') }}">
+
+<h2 class="page-heading" style="text-align: center; color: goldenrod;">Learn Chess</h2>
+
+<div class="learn-layout">
+
+  <aside class="teacher-panel">
+    <img src="{{ url_for('static', filename='images/teacher/teacher2.png') }}" alt="Teacher">
+  </aside>
+
+  <main class="solution-panel">
+    <div id="solution" class="solution-text">
+      Welcome — use Next to go through lessons.
+    </div>
+  </main>
+
+  <section class="board-panel">
+    <div id="board" class="simple-board" aria-label="Chess board"></div>
+
+    <div class="lesson-navigation">
+      <button id="prevLesson" disabled>Previous</button>
+      <button id="nextLesson">Next</button>
+    </div>
+    <a href="{{ url_for('main.home_batches') }}"><button class="cta-btn">Learn more!</button></a>
+  </section>
+  
+
+</div>
+
+<script type="module" src="/static/js/firebase.js"></script>
+<script src="/static/js/chess-engine.js"></script>
+<script type="module" src="/static/js/learn.js"></script>
+
+
+{% endblock %}
