@@ -2,3 +2,5 @@
 firebase-admin.json
 __pycache__/
 *.pyc
+
+static/js/student_register.js
