@@ -5,6 +5,8 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>{% block title %}My Website{% endblock %}</title>
       <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+      <!-- Chat CSS for all pages -->
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
       {% block extra_head %}{% endblock %}
   </head>
   <body>
@@ -44,11 +46,88 @@
       <main>
           {% block content %}
           {% endblock %}
-          {% block scripts %}{% endblock %}
       </main>
+      
+      <!-- Chat Widget (Floating on all pages) -->
+      <button class="chat-toggle-btn" onclick="toggleChat()">
+          <div class="chat-icon">
+              <div class="chess-icon">♟️</div>
+              <div class="pulse-ring"></div>
+          </div>
+      </button>
+
+      <div id="chat-box" class="chat-hidden">
+          <div id="chat-header">
+              <div class="ai-status">
+                  <div class="status-indicator"></div>
+                  <span class="ai-name">♟️ Chess AI Assistant</span>
+              </div>
+              <div class="header-controls">
+                  <button class="header-btn" onclick="clearChat()" title="Clear chat">
+                      🗑️
+                  </button>
+                  <button class="header-btn close-btn" onclick="toggleChat()" title="Close">
+                      ✕
+                  </button>
+              </div>
+          </div>
+          
+          <div id="chat-body">
+              <div class="welcome-message">
+                  <div class="message bot-msg typing-animation">
+                      <div class="message-header">
+                          <div class="bot-avatar">AI</div>
+                          <div class="message-info">
+                              <span class="sender-name">Chess Assistant</span>
+                              <span class="message-time">Just now</span>
+                          </div>
+                      </div>
+                      <div class="message-content">
+                          <div class="typing-indicator">
+                              <span></span>
+                              <span></span>
+                              <span></span>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+          <div id="chat-input-area">
+              <div class="suggestion-chips">
+                  <button class="chip" onclick="quickAction('batches')">📅 Batches & Timing</button>
+                  <button class="chip" onclick="quickAction('fees')">💰 Fee Structure</button>
+                  <button class="chip" onclick="quickAction('enroll')">📝 How to Join</button>
+                  <button class="chip" onclick="quickAction('contact')">📞 Contact Info</button>
+              </div>
+              <div class="input-wrapper">
+                  <input type="text" id="user-input" 
+                         placeholder="Ask about chess coaching..." 
+                         onkeypress="handleEnter(event)"
+                         autocomplete="off">
+                  <button class="send-btn" onclick="sendMessage()" id="send-button">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                          <path d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13" 
+                                stroke="currentColor" stroke-width="2" 
+                                stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                  </button>
+                  <button class="mic-btn" onclick="toggleVoice()" title="Voice input">
+                      🎤
+                  </button>
+              </div>
+              <div class="input-footer">
+                  <small>Chess AI • Ask about batches, fees, or tournaments</small>
+              </div>
+          </div>
+      </div>
       
       <footer>
           <p>&copy; </p>
       </footer>
+      
+      <!-- Scripts -->
+      <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+      {% block scripts %}{% endblock %}
   </body>
 </html>
