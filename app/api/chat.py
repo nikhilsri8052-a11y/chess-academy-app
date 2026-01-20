@@ -1,3 +1,4 @@
+#Help taken from deepseek to fill the deatials. 
 from flask import Blueprint, request, jsonify
 import re
 import random
