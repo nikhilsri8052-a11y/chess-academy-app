@@ -1340,3 +1340,110 @@ footer {
         align-items: flex-start;
     }
 }
+
+/* =========================
+   MOBILE RESPONSIVE FIXES
+   ========================= */
+@media (max-width: 768px) {
+
+    /* Global spacing */
+    body {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    /* Containers */
+    .container,
+    .admin-container,
+    .dashboard-container,
+    .content-wrapper {
+        width: 100%;
+        padding: 10px;
+        margin: 0;
+    }
+
+    /* Headings */
+    h1 {
+        font-size: 1.4rem;
+        text-align: center;
+    }
+
+    h2 {
+        font-size: 1.2rem;
+    }
+
+    /* Cards */
+    .card,
+    .student-card,
+    .assignment-card,
+    .applicant-card {
+        width: 100%;
+        margin-bottom: 12px;
+        padding: 12px;
+    }
+
+    /* Buttons */
+    button,
+    .btn {
+        width: 100%;
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    /* Forms */
+    input,
+    select,
+    textarea {
+        width: 100%;
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    /* Tables → make scrollable */
+    table {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    th, td {
+        padding: 8px;
+        font-size: 13px;
+    }
+
+    /* Navbar */
+    .navbar {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 10px;
+    }
+
+    .navbar a {
+        padding: 10px;
+        text-align: center;
+    }
+
+    /* Sidebar → move to top */
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        padding: 10px 0;
+    }
+
+    .sidebar a {
+        padding: 8px;
+        font-size: 13px;
+    }
+
+    /* Main content when sidebar exists */
+    .main-content {
+        margin-left: 0;
+        width: 100%;
+    }
+
+}
