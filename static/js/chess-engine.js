@@ -63,7 +63,10 @@
         const el = this.boardEl.querySelector(`[data-square="${sq}"]`);
         if (!el) continue;
         const span = document.createElement('div');
-        span.className = 'piece';
+        // add piece id (e.g. "wp", "br") so it's easier to debug / style if needed
+        span.className = 'piece ' + piece; 
+        // add a readable class for colour based on piece side
+        span.classList.add(piece.startsWith('w') ? 'white' : 'black');
         span.textContent = this.unicode[piece] || '?';
         el.appendChild(span);
       }
