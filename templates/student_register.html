@@ -1,13 +1,17 @@
 {% extends "base.html" %}
-{% block title %}Register{% endblock %}
+{% block title %}Register - SS Chess Academy{% endblock %}
 
 {% block content %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
-<div class="registration-container">
-    <h2>Student Registration</h2>
+<div class="registration-container" style="margin: 2rem auto; max-width: 600px; width: 90%;">
     
-    <div id="error" class="form-error" style="display: none;"></div>
-    <div id="success" class="form-success" style="display: none;"></div>
+    <h2 style="text-align: center; margin-bottom: 2rem; color: var(--text-dark); font-size: 2rem; font-weight: 800; position: relative; padding-bottom: 0.8rem;">
+        Sign Up today!
+        <div style="content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 80px; height: 3px; background: linear-gradient(90deg, var(--primary-gold) 0%, var(--dark-gold) 100%); border-radius: 2px;"></div>
+    </h2>
+    
+    <div id="error-box" class="form-message form-error" style="display: none;"></div>
+    <div id="success-box" class="form-message form-success" style="display: none;"></div>
 
     <form id="register-form" class="registration-form" novalidate>
         <div class="form-group">
@@ -26,7 +30,6 @@
             <label for="password">Password *</label>
             <input type="password" id="password" name="password" placeholder="Create a strong password" required>
             <small class="field-hint">Minimum 8 characters with uppercase, number, and special character</small>
-            <div id="password-strength"></div>
         </div>
         
         <div class="form-group">
@@ -56,7 +59,8 @@
         </div>
         
         <button type="submit" id="register-btn" class="register-btn">
-            Create Account
+            <span id="btn-text">Create Account</span>
+            <div id="btn-spinner" class="spinner"></div>
         </button>
         
         <div class="form-footer">
@@ -67,5 +71,5 @@
 {% endblock %}
 
 {% block scripts %}
-  <script type="module" src="{{ url_for('static', filename='js/student_register.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/student_register.js') }}"></script>
 {% endblock %}

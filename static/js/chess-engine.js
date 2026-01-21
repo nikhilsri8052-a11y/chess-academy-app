@@ -1,11 +1,19 @@
+/**
+ * Enhanced Chess Engine for Interactive Learning
+ * Handles piece movement, validation, and special moves
+ */
+
 (function () {
-  class SimpleChessBoard {
-    constructor(boardElement, options = {}) {
+  class EnhancedChessBoard {
+    constructor(boardElement) {
       this.boardEl = boardElement;
       this.files = "abcdefgh";
-      this.pieces = {}; 
+      this.pieces = {};
       this.selected = null;
-      this.lesson = options.lesson || 1;
+      this.lesson = 1;
+      this.task = 'move_piece';
+      this.correctMoves = [];
+      this.targetSquare = null;
 
       this.unicode = {
         'wp': '♙', 'wr': '♖', 'wn': '♘', 'wb': '♗', 'wq': '♕', 'wk': '♔',
@@ -39,17 +47,17 @@
     setPieces(map) {
       this.pieces = Object.assign({}, map);
       this.selected = null;
-      this.render(); // Render clears hints automatically
+      this.render();
     }
 
     render() {
-      // 1. Reset all squares (remove pieces, remove highlights/hints)
+      // Reset all squares
       this.boardEl.querySelectorAll('.square').forEach(sq => {
-        sq.classList.remove('selected', 'hint');
+        sq.classList.remove('selected', 'hint', 'target', 'correct-move', 'wrong-move');
         sq.innerHTML = '';
       });
 
-      // 2. Draw pieces
+      // Draw pieces
       for (const sq in this.pieces) {
         const piece = this.pieces[sq];
         const el = this.boardEl.querySelector(`[data-square="${sq}"]`);
@@ -60,38 +68,45 @@
         el.appendChild(span);
       }
 
-      // 3. Highlight selected square
+      // Highlight selected square
       if (this.selected) {
         const sEl = this.boardEl.querySelector(`[data-square="${this.selected}"]`);
         if (sEl) sEl.classList.add('selected');
       }
+      
+      // Highlight target square
+      if (this.targetSquare) {
+        const tEl = this.boardEl.querySelector(`[data-square="${this.targetSquare}"]`);
+        if (tEl) tEl.classList.add('target');
+      }
     }
 
     onSquareClick(square) {
-      // A. Clicking a piece to select it
+      // A. Selecting a piece
       if (this.selected === null) {
         if (this.pieces[square]) {
-          if (this.pieces[square].startsWith('b')) return; // Ignore black pieces
+          // Ignore black pieces
+          if (this.pieces[square].startsWith('b')) return;
           
           this.selected = square;
-          this.render();             // 1. Render selection
-          this.showHintsFor(square); // 2. Show hints AFTER render
+          this.render();
+          this.showHintsFor(square);
         }
         return;
       }
 
-      // B. Clicking the already selected piece (Deselect)
+      // B. Deselecting (clicking same square)
       if (this.selected === square) {
         this.selected = null;
-        this.render(); // Clears everything
+        this.render();
         return;
       }
 
-      // C. Clicking a different friendly piece (Change selection)
+      // C. Changing selection (clicking another friendly piece)
       if (this.pieces[square] && this.pieces[square][0] === this.pieces[this.selected][0]) {
         this.selected = square;
-        this.render();             // 1. Render new selection
-        this.showHintsFor(square); // 2. Show new hints
+        this.render();
+        this.showHintsFor(square);
         return;
       }
 
@@ -100,32 +115,98 @@
       const to = square;
       const piece = this.pieces[from];
 
-      if (this.isMoveAllowedByLesson(piece, from, to)) {
-        // Handle Pawn Promotion (auto-queen for simplicity unless prompted)
-        if (piece === 'wp' && to[1] === '8') {
-            const choice = this.askPromotion();
-            this.pieces[to] = this.promotionCodeFromChoice(choice);
+      const moveResult = this.validateMove(piece, from, to);
+      
+      if (moveResult.valid) {
+        // Animate correct move
+        const toEl = this.boardEl.querySelector(`[data-square="${to}"]`);
+        if (toEl) toEl.classList.add('correct-move');
+
+        // Handle special moves
+        if (moveResult.special === 'promotion') {
+          const choice = prompt("Promote to (q, r, b, n)?", "q") || 'q';
+          this.pieces[to] = this.promotionCodeFromChoice(choice);
+        } else if (moveResult.special === 'castle_kingside') {
+          this.pieces[to] = piece;
+          this.pieces['f1'] = 'wr';
+          delete this.pieces['h1'];
+        } else if (moveResult.special === 'castle_queenside') {
+          this.pieces[to] = piece;
+          this.pieces['d1'] = 'wr';
+          delete this.pieces['a1'];
+        } else if (moveResult.special === 'en_passant') {
+          this.pieces[to] = piece;
+          const captureSquare = to[0] + from[1];
+          delete this.pieces[captureSquare];
         } else {
-            this.pieces[to] = piece;
+          this.pieces[to] = piece;
         }
         
         delete this.pieces[from];
         this.selected = null;
+        this.render();
         
-        this.render(); // Redraw board in new state
-        
-        if (this.onMoveAccepted) this.onMoveAccepted({ piece, from, to });
+        if (this.onMoveAccepted) {
+          this.onMoveAccepted({ piece, from, to, lesson: this.lesson });
+        }
       } else {
-        // Invalid move
+        // Animate wrong move
+        const toEl = this.boardEl.querySelector(`[data-square="${to}"]`);
+        if (toEl) {
+          toEl.classList.add('wrong-move');
+          setTimeout(() => toEl.classList.remove('wrong-move'), 600);
+        }
+        
         this.selected = null;
-        this.render(); // Clear selection/hints
-        if (this.onMoveRejected) this.onMoveRejected({ piece, from, to });
+        this.render();
+        
+        if (this.onMoveRejected) {
+          this.onMoveRejected({ piece, from, to, reason: moveResult.reason });
+        }
       }
     }
 
-    askPromotion() {
-      let ch = prompt("Promote to (q, r, b, n)?", "q");
-      return ch ? ch.toLowerCase() : 'q';
+    validateMove(piece, from, to) {
+      // Check if move is legal according to chess rules
+      const legalMoves = this.legalMovesFor(piece, from);
+      if (!legalMoves.includes(to)) {
+        return { valid: false, reason: 'illegal' };
+      }
+
+      // For free practice, any legal move is valid
+      if (this.task === 'free_practice' || this.task === 'none') {
+        return { valid: true };
+      }
+
+      // Check if move matches lesson requirements
+      if (this.correctMoves.length > 0) {
+        const isCorrect = this.correctMoves.some(
+          move => move[0] === from && move[1] === to
+        );
+        
+        if (!isCorrect) {
+          return { valid: false, reason: 'wrong_move' };
+        }
+      }
+
+      // Check target square requirement
+      if (this.targetSquare && to !== this.targetSquare) {
+        return { valid: false, reason: 'wrong_target' };
+      }
+
+      // Check for special moves
+      let special = null;
+      
+      if (piece === 'wp' && to[1] === '8') {
+        special = 'promotion';
+      } else if (piece === 'wk' && from === 'e1') {
+        if (to === 'g1') special = 'castle_kingside';
+        if (to === 'c1') special = 'castle_queenside';
+      } else if (piece === 'wp' && Math.abs(this.files.indexOf(from[0]) - this.files.indexOf(to[0])) === 1 && !this.pieces[to]) {
+        special = 'en_passant';
+      }
+
+      return { valid: true, special };
     }
 
     promotionCodeFromChoice(c) {
@@ -142,10 +223,12 @@
       const moves = this.legalMovesFor(piece, square);
       
       moves.forEach(to => {
-        // Only show hint if the lesson actually allows this move
-        if (this.isMoveAllowedByLesson(piece, square, to)) {
-            const el = this.boardEl.querySelector(`[data-square="${to}"]`);
-            if (el) el.classList.add('hint');
+        // Only show hints for valid moves in the current lesson
+        if (this.task === 'free_practice' || this.task === 'none' || 
+            this.correctMoves.length === 0 ||
+            this.correctMoves.some(move => move[0] === square && move[1] === to)) {
+          const el = this.boardEl.querySelector(`[data-square="${to}"]`);
+          if (el) el.classList.add('hint');
         }
       });
     }
@@ -156,116 +239,119 @@
       const results = [];
       const files = this.files;
       const occupied = (sq) => !!this.pieces[sq];
+      const fileIdx = files.indexOf(file);
 
-      // -- Pawn --
+      // Pawn
       if (piece === 'wp') {
         const one = file + (rank + 1);
         if (rank < 8 && !occupied(one)) results.push(one);
         const two = file + (rank + 2);
         if (rank === 2 && !occupied(one) && !occupied(two)) results.push(two);
+        
         // Captures
-        const fIdx = files.indexOf(file);
-        if (fIdx > 0) {
-            const capL = files[fIdx - 1] + (rank + 1);
-            if (this.pieces[capL] && this.pieces[capL].startsWith('b')) results.push(capL);
+        if (fileIdx > 0) {
+          const capL = files[fileIdx - 1] + (rank + 1);
+          if (this.pieces[capL] && this.pieces[capL].startsWith('b')) results.push(capL);
         }
-        if (fIdx < 7) {
-            const capR = files[fIdx + 1] + (rank + 1);
-            if (this.pieces[capR] && this.pieces[capR].startsWith('b')) results.push(capR);
+        if (fileIdx < 7) {
+          const capR = files[fileIdx + 1] + (rank + 1);
+          if (this.pieces[capR] && this.pieces[capR].startsWith('b')) results.push(capR);
+        }
+        
+        // En passant
+        if (rank === 5) {
+          if (fileIdx > 0 && this.pieces[files[fileIdx - 1] + 5] === 'bp') {
+            results.push(files[fileIdx - 1] + 6);
+          }
+          if (fileIdx < 7 && this.pieces[files[fileIdx + 1] + 5] === 'bp') {
+            results.push(files[fileIdx + 1] + 6);
+          }
         }
       }
 
-      // -- Rook --
+      // Rook
       if (piece === 'wr' || piece === 'wq') {
-        // Up
         for (let r = rank + 1; r <= 8; r++) { 
-            const s = file + r; results.push(s); if (occupied(s)) break; 
+          const s = file + r; results.push(s); if (occupied(s)) break; 
         }
-        // Down
         for (let r = rank - 1; r >= 1; r--) { 
-            const s = file + r; results.push(s); if (occupied(s)) break; 
+          const s = file + r; results.push(s); if (occupied(s)) break; 
         }
-        // Right
-        for (let i = files.indexOf(file) + 1; i < 8; i++) { 
-            const s = files[i] + rank; results.push(s); if (occupied(s)) break; 
+        for (let i = fileIdx + 1; i < 8; i++) { 
+          const s = files[i] + rank; results.push(s); if (occupied(s)) break; 
         }
-        // Left
-        for (let i = files.indexOf(file) - 1; i >= 0; i--) { 
-            const s = files[i] + rank; results.push(s); if (occupied(s)) break; 
+        for (let i = fileIdx - 1; i >= 0; i--) { 
+          const s = files[i] + rank; results.push(s); if (occupied(s)) break; 
         }
       }
 
-      // -- Bishop --
+      // Bishop
       if (piece === 'wb' || piece === 'wq') {
-        const fIdx = files.indexOf(file);
-        // NE
-        for (let i = 1; fIdx + i < 8 && rank + i <= 8; i++) {
-            const s = files[fIdx + i] + (rank + i); results.push(s); if (occupied(s)) break;
+        for (let i = 1; fileIdx + i < 8 && rank + i <= 8; i++) {
+          const s = files[fileIdx + i] + (rank + i); results.push(s); if (occupied(s)) break;
         }
-        // NW
-        for (let i = 1; fIdx - i >= 0 && rank + i <= 8; i++) {
-            const s = files[fIdx - i] + (rank + i); results.push(s); if (occupied(s)) break;
+        for (let i = 1; fileIdx - i >= 0 && rank + i <= 8; i++) {
+          const s = files[fileIdx - i] + (rank + i); results.push(s); if (occupied(s)) break;
         }
-        // SE
-        for (let i = 1; fIdx + i < 8 && rank - i >= 1; i++) {
-            const s = files[fIdx + i] + (rank - i); results.push(s); if (occupied(s)) break;
+        for (let i = 1; fileIdx + i < 8 && rank - i >= 1; i++) {
+          const s = files[fileIdx + i] + (rank - i); results.push(s); if (occupied(s)) break;
         }
-        // SW
-        for (let i = 1; fIdx - i >= 0 && rank - i >= 1; i++) {
-            const s = files[fIdx - i] + (rank - i); results.push(s); if (occupied(s)) break;
+        for (let i = 1; fileIdx - i >= 0 && rank - i >= 1; i++) {
+          const s = files[fileIdx - i] + (rank - i); results.push(s); if (occupied(s)) break;
         }
       }
 
-      // -- Knight --
+      // Knight
       if (piece === 'wn') {
         const moves = [[1,2],[2,1],[2,-1],[1,-2],[-1,-2],[-2,-1],[-2,1],[-1,2]];
         moves.forEach(([df, dr]) => {
-            const f = files.indexOf(file) + df;
-            const r = rank + dr;
-            if (f >= 0 && f < 8 && r >= 1 && r <= 8) results.push(files[f] + r);
+          const f = fileIdx + df;
+          const r = rank + dr;
+          if (f >= 0 && f < 8 && r >= 1 && r <= 8) results.push(files[f] + r);
         });
       }
 
-      // -- King --
+      // King
       if (piece === 'wk') {
         const moves = [[1,0],[1,1],[0,1],[-1,1],[-1,0],[-1,-1],[0,-1],[1,-1]];
         moves.forEach(([df, dr]) => {
-            const f = files.indexOf(file) + df;
-            const r = rank + dr;
-            if (f >= 0 && f < 8 && r >= 1 && r <= 8) results.push(files[f] + r);
+          const f = fileIdx + df;
+          const r = rank + dr;
+          if (f >= 0 && f < 8 && r >= 1 && r <= 8) results.push(files[f] + r);
         });
+        
+        // Castling
+        if (from === 'e1') {
+          // Kingside
+          if (this.pieces['h1'] === 'wr' && !occupied('f1') && !occupied('g1')) {
+            results.push('g1');
+          }
+          // Queenside
+          if (this.pieces['a1'] === 'wr' && !occupied('d1') && !occupied('c1') && !occupied('b1')) {
+            results.push('c1');
+          }
+        }
       }
 
-      // Final Filter: Unique & No Self Capture
+      // Filter: No self-capture
       return [...new Set(results)].filter(sq => {
-          if (this.pieces[sq] && this.pieces[sq].startsWith('w')) return false;
-          return true;
+        if (this.pieces[sq] && this.pieces[sq].startsWith('w')) return false;
+        return true;
       });
     }
 
-    isMoveAllowedByLesson(piece, from, to) {
-      if (!this.legalMovesFor(piece, from).includes(to)) return false;
-
-      const l = this.lesson;
-      if (l === 1 || l === 7) return piece === 'wp'; // Pawn
-      if (l === 2 || l === 8) return piece === 'wr'; // Rook
-      if (l === 3) return piece === 'wb';            // Bishop
-      if (l === 4) return piece === 'wn';            // Knight
-      if (l === 5) return piece === 'wq';            // Queen
-      if (l === 6) return piece === 'wk';            // King
-      
-      // Combined/Free Practice
-      if (l === 9 || l === 10) return true;
-
-      return false;
-    }
-
-    setLesson(n) {
-      this.lesson = n;
+    setLesson(id, task = 'move_piece', correctMoves = [], targetSquare = null) {
+      this.lesson = id;
+      this.task = task;
+      this.correctMoves = correctMoves;
+      this.targetSquare = targetSquare;
       this.selected = null;
       this.render();
     }
   }
 
-  if (typeof window !== 'undefined') window.SimpleChessBoard = SimpleChessBoard;
+  // Export to window
+  if (typeof window !== 'undefined') {
+    window.EnhancedChessBoard = EnhancedChessBoard;
+  }
 })();
