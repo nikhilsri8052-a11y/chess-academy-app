@@ -3,6 +3,7 @@ Admin Routes
 """
 from flask import Blueprint, render_template, request, jsonify, make_response
 from datetime import datetime, timedelta, timezone
+from collections import defaultdict
 from firebase_admin import auth, firestore
 from app.utils.firebase_init import db
 from app.utils.helpers import now_utc, coerce_dt, calculate_fee_status
@@ -14,34 +15,129 @@ bp = Blueprint('admin', __name__, url_prefix='/admin')
 @bp.route("/")
 @admin_required
 def admin_dashboard():
-    # 🔹 New enquiries (Keep as is)
-    new_enquiry_count = len(list(
-        db.collection("enquiries").where("status", "==", "new").stream()
-    ))
+    try:
+        current_time = now_utc()
+        
+        stats = {
+            'total_students': 0,
+            'active_students': 0,
+            'new_students': 0,
+            'disabled_students': 0,
+            'fees_paid_count': 0,
+            'fees_unpaid_count': 0,
+            'batch_distribution': defaultdict(int),
+            'recent_registrations': [],
+            'new_enquiry_count': 0,
+            'new_applicant_count': 0,
+            'new_payment_count': 0,
+            'recent_activities': []
+        }
 
-    # 🔹 New applicants
-    # FIX: We now use a direct query for status == 'new'.
-    # This removes the overlap. If an existing student makes a payment, 
-    # they won't show up here, only in the payments section.
-    new_applicant_count = len(list(
-        db.collection("users")
-        .where("role", "==", "student")
-        .where("status", "==", "new")
-        .stream()
-    ))
+        try:
+            all_students = list(db.collection("users").where("role", "==", "student").stream())
+            stats['total_students'] = len(all_students)
+            
+            for doc in all_students:
+                student = doc.to_dict()
+                student_id = doc.id
+                
+                status = student.get('status', 'new')
+                if status == 'active':
+                    stats['active_students'] += 1
+                elif status == 'new':
+                    stats['new_students'] += 1
+                elif status == 'disabled':
+                    stats['disabled_students'] += 1
+                
+                try:
+                    fee_status = calculate_fee_status(student_id, current_time)
+                    if fee_status.get('is_paid'):
+                        stats['fees_paid_count'] += 1
+                    else:
+                        stats['fees_unpaid_count'] += 1
+                except Exception:
+                    stats['fees_unpaid_count'] += 1
+                
+                batch = student.get('batch', 'Unassigned')
+                if not batch: 
+                    batch = 'Unassigned'
+                stats['batch_distribution'][batch] += 1
+                
+                reg_date = coerce_dt(student.get('registration_date'))
+                if reg_date:
+                    days_diff = (current_time - reg_date).days
+                    if days_diff <= 30:
+                        stats['recent_registrations'].append({
+                            'name': student.get('name', 'Unknown'),
+                            'date': reg_date.strftime('%d %b'),
+                            'batch': batch
+                        })
 
-    # 🔹 New payments (pending verification)
-    new_payment_count = len(list(
-        db.collection("payments").where("status", "==", "submitted").stream()
-    ))
+            stats['recent_registrations'].sort(key=lambda x: x['date'], reverse=True)
+            stats['recent_registrations'] = stats['recent_registrations'][:5]
+            
+            stats['batch_distribution'] = dict(stats['batch_distribution'])
 
-    return render_template(
-        "admin_dashboard.html",
-        new_enquiry_count=new_enquiry_count,
-        new_applicant_count=new_applicant_count,
-        new_payment_count=new_payment_count
-    )
+        except Exception as e:
+            print(f"Error processing students: {e}")
 
+        try:
+            stats['new_enquiry_count'] = len(list(
+                db.collection("enquiries").where("status", "==", "new").stream()
+            ))
+            
+            stats['new_applicant_count'] = len(list(
+                db.collection("users")
+                .where("role", "==", "student")
+                .where("status", "==", "new")
+                .stream()
+            ))
+            
+            stats['new_payment_count'] = len(list(
+                db.collection("payments").where("status", "==", "submitted").stream()
+            ))
+        except Exception as e:
+            print(f"Error processing counts: {e}")
+
+        try:
+            recent_notices = []
+            for doc in db.collection("notices").order_by("created_at", direction=firestore.Query.DESCENDING).limit(3).stream():
+                notice = doc.to_dict()
+                created = coerce_dt(notice.get('created_at'))
+                recent_notices.append({
+                    'type': 'notice',
+                    'title': notice.get('title', 'Untitled'),
+                    'time': created.strftime('%d %b, %I:%M %p') if created else 'Recently'
+                })
+            
+            recent_materials = []
+            for doc in db.collection("study_materials").order_by("created_at", direction=firestore.Query.DESCENDING).limit(2).stream():
+                material = doc.to_dict()
+                created = coerce_dt(material.get('created_at'))
+                recent_materials.append({
+                    'type': 'material',
+                    'title': material.get('title', 'Untitled'),
+                    'time': created.strftime('%d %b, %I:%M %p') if created else 'Recently'
+                })
+            
+            stats['recent_activities'] = recent_notices + recent_materials
+            stats['recent_activities'] = stats['recent_activities'][:5]
+        except Exception as e:
+            print(f"Error processing activities: {e}")
+
+        return render_template("admin_dashboard.html", stats=stats, now_utc=now_utc)
+        
+    except Exception as e:
+        print(f"CRITICAL Dashboard error: {e}")
+        import traceback
+        traceback.print_exc()
+        return render_template("admin_dashboard.html", stats={
+            'total_students': 0, 'active_students': 0, 'new_students': 0,
+            'fees_paid_count': 0, 'fees_unpaid_count': 0,
+            'batch_distribution': {}, 'recent_registrations': [], 'recent_activities': [],
+            'new_enquiry_count': 0, 'new_applicant_count': 0, 'new_payment_count': 0
+        }, now_utc=now_utc)
+        
 @bp.route("/enquiries")
 @admin_required
 def admin_enquiries():
@@ -54,6 +150,7 @@ def admin_enquiries():
     )
 
     batch = db.batch()
+    batch_has_updates = False
 
     for doc in docs:
         data = doc.to_dict()
@@ -63,8 +160,9 @@ def admin_enquiries():
         # auto new → seen
         if data.get("status") == "new":
             batch.update(doc.reference, {"status": "seen"})
+            batch_has_updates = True
 
-    if enquiries:
+    if batch_has_updates:
         batch.commit()
 
     return render_template(
@@ -96,8 +194,6 @@ def delete_enquiry(enquiry_id):
 def new_applicants():
     """
     Show ONLY students whose status is 'new'.
-    Students disappear from this list once their status becomes 'active'
-    (which happens when batch is assigned).
     """
     try:
         # JSON count (dashboard)
@@ -215,10 +311,6 @@ def reject_payment():
 @bp.route("/assign-batch", methods=["POST"])
 @admin_required
 def assign_batch():
-    """
-    Assign batch to student.
-    This action activates the student.
-    """
     try:
         data = request.get_json()
         student_id = data.get("student_id")
@@ -322,44 +414,41 @@ def admin_verify_payment():
 
         payment_data = payment_doc.to_dict()
         student_id = payment_data.get("student_id")
-        plan = payment_data.get("plan", "1month") # Default to 1month if missing
+        plan = payment_data.get("plan", "1month") 
 
         if not student_id:
             return jsonify({"success": False, "error": "Student ID missing"}), 400
 
-        # --- 🟢 FIX STARTS HERE ---
         current_time = now_utc()
 
-        # 1. Check existing status to see if we need to extend or start fresh
+        # 1. Check existing status 
         current_status = calculate_fee_status(student_id, current_time)
         
-        # Determine Start Date (Stack if active, start today if expired)
+        # Determine Start Date
         base_date = current_time
         if current_status['is_paid'] and current_status['expires_at']:
-            # If they are already active, add the new time to the end of their current expiry
-            base_date = current_status['expires_at']
+            # Check if expiry is in future, if so extend from there
+            if current_status['expires_at'] > current_time:
+                 base_date = current_status['expires_at']
 
         # 2. Calculate New Expiry
         if plan == "3months":
             new_expiry = base_date + relativedelta(months=3)
         else:
-            # Default to 1 month
             new_expiry = base_date + relativedelta(months=1)
 
-        # 3. Update payment with verified status AND the calculated expiry
+        # 3. Update payment 
         payment_ref.update({
             "status": "verified",
             "verified_at": current_time,
-            "expires_at": new_expiry  # <--- Vital for admin_students view
+            "expires_at": new_expiry 
         })
-        # --- 🟢 FIX ENDS HERE ---
 
         # 4. Update user
         user_ref = db.collection("users").document(student_id)
         user_ref.update({
             "fees_paid": True,
             "payment_verified": True,
-            # Optional: You can update status to active here too just in case
             "status": "active",
             "status_updated_at": current_time
         })
@@ -374,7 +463,6 @@ def admin_verify_payment():
 @bp.route("/notices")
 @admin_required
 def admin_notices():
-    """Admin notice management page"""
     return render_template("admin_notice.html")
 
 
@@ -390,15 +478,13 @@ def create_notice():
         if not title or not content:
             return jsonify({"success": False, "error": "Title and content are required"}), 400
         
-        # Get admin info
         session_cookie = request.cookies.get("session")
         decoded = auth.verify_session_cookie(session_cookie)
         admin_id = decoded["uid"]
         
         admin_doc = db.collection("users").document(admin_id).get()
-        admin_name = admin_doc.to_dict().get("name", "Admin")
+        admin_name = admin_doc.to_dict().get("name", "Admin") if admin_doc.exists else "Admin"
         
-        # Create notice
         notice_data = {
             "title": title,
             "content": content,
@@ -421,13 +507,11 @@ def create_notice():
 @bp.route("/notices/list")
 @admin_required
 def list_admin_notices():
-    """Get notices for admin panel (last 5 per batch)"""
     try:
         batches = ["all", "online1", "online2", "offline_advance", "offline_base"]
         notices_by_batch = {}
         
         for batch in batches:
-            # Get last 5 notices for each batch
             batch_notices = (
                 db.collection("notices")
                 .where("batch", "in", [batch, "all"]) 
@@ -441,7 +525,6 @@ def list_admin_notices():
                 notice_data = doc.to_dict()
                 notice_data["id"] = doc.id
                 
-                # Format date
                 created = coerce_dt(notice_data.get("created_at"))
                 if created:
                     notice_data["created_at_str"] = created.strftime("%d %b %Y, %I:%M %p")
@@ -473,30 +556,21 @@ def delete_notice(notice_id):
 @bp.route("/students")
 @admin_required
 def admin_students():
-    """
-    Main student management page with search, filters, and fee tracking
-    """
     return render_template("admin_students.html")
 
 
 @bp.route("/students/list")
 @admin_required
 def list_students():
-    """
-    API endpoint to fetch students with filters
-    """
     try:
-        # Get query parameters
         search = request.args.get('search', '').strip().lower()
         batch_filter = request.args.get('batch', '')
-        fees_filter = request.args.get('fees', '')  # 'paid' or 'unpaid'
-        status_filter = request.args.get('status', '')  # 'active' or 'disabled'
-        sort = request.args.get('sort', 'newest')  # NEW: Get sort parameter
+        fees_filter = request.args.get('fees', '')
+        status_filter = request.args.get('status', '')
+        sort = request.args.get('sort', 'newest')
         
-        # Base query - only get students (not admins)
         students_ref = db.collection("users").where(filter=firestore.FieldFilter("role", "==", "student"))
         
-        # Apply status filter if provided
         if status_filter:
             students_ref = students_ref.where(filter=firestore.FieldFilter("status", "==", status_filter))
         
@@ -507,30 +581,24 @@ def list_students():
             student_data = doc.to_dict()
             student_data["id"] = doc.id
             
-            # Apply batch filter
             if batch_filter and student_data.get("batch") != batch_filter:
                 continue
             
-            # Apply search filter (name, email, phone)
             if search:
                 searchable = f"{student_data.get('name', '').lower()} {student_data.get('email', '').lower()} {student_data.get('phone', '')}"
                 if search not in searchable:
                     continue
             
-            # Calculate fee status
             fee_status = calculate_fee_status(doc.id, current_time)
             student_data["fee_status"] = fee_status
             
-            # Apply fees filter
             if fees_filter == 'paid' and not fee_status['is_paid']:
                 continue
             elif fees_filter == 'unpaid' and fee_status['is_paid']:
                 continue
             
-            # Get rating with default value of 0
             student_data["rating"] = student_data.get("rating", 0)
             
-            # Format registration date
             reg_date = student_data.get("registration_date")
             reg_date = coerce_dt(reg_date)
             if reg_date:
@@ -540,23 +608,16 @@ def list_students():
             
             students.append(student_data)
         
-        # Apply sorting based on sort parameter
         if sort == 'rating_high':
             students.sort(key=lambda x: x.get("rating", 0), reverse=True)
         elif sort == 'rating_low':
             students.sort(key=lambda x: x.get("rating", 0))
         elif sort == 'name':
             students.sort(key=lambda x: x.get("name", "").lower())
-        else:  # 'newest' or default
+        else:
             students.sort(key=lambda x: x.get("registration_date") or datetime.min.replace(tzinfo=timezone.utc), reverse=True)
         
         return jsonify({"success": True, "students": students})
-        
-    except Exception as e:
-        print(f"List students error: {e}")
-        import traceback
-        traceback.print_exc()
-        return jsonify({"success": False, "error": str(e)}), 500
         
     except Exception as e:
         print(f"List students error: {e}")
@@ -579,27 +640,24 @@ def add_offline_payment():
             return jsonify({"success": False, "error": "Invalid plan or missing ID"}), 400
 
         current_time = now_utc()
-        
-        # 1. Get current fee status to check for existing expiry
         current_status = calculate_fee_status(student_id, current_time)
         
-        # 2. Determine Start Date (Stack if active, start today if expired)
         base_date = current_time
         is_extension = False
         
         if current_status['is_paid'] and current_status['expires_at']:
-            base_date = current_status['expires_at']
-            is_extension = True
+            # Only extend if not expired
+            if current_status['expires_at'] > current_time:
+                base_date = current_status['expires_at']
+                is_extension = True
 
-        # 3. Calculate New Expiry (Using relativedelta for calendar-accurate months)
         if plan == "1month":
             new_expiry = base_date + relativedelta(months=1)
             amount = 3000
-        else: # 3months
+        else:
             new_expiry = base_date + relativedelta(months=3)
             amount = 7500
 
-        # 4. Create payment document (store datetimes as timezone-aware)
         payment_data = {
             "student_id": student_id,
             "plan": plan,
@@ -608,16 +666,15 @@ def add_offline_payment():
             "payment_method": payment_method,
             "created_at": current_time,
             "verified_at": current_time,
-            "expires_at": new_expiry, # Store the calculated expiry directly
+            "expires_at": new_expiry, 
             "notes": notes or f"Offline payment ({payment_method})",
             "offline_payment": True
         }
         
         db.collection("payments").add(payment_data)
         
-        # 5. Update student document
         db.collection("users").document(student_id).update({
-            "status": "active", # Auto-activate on payment
+            "status": "active", 
             "status_updated_at": current_time,
             "payment_verified": True
         })
@@ -636,13 +693,10 @@ def add_offline_payment():
 @bp.route("/students/toggle-status", methods=["POST"])
 @admin_required
 def toggle_student_status():
-    """
-    Enable or disable a student
-    """
     try:
         data = request.get_json()
         student_id = data.get("student_id")
-        new_status = data.get("status")  # 'active' or 'disabled'
+        new_status = data.get("status") 
         
         if not student_id or new_status not in ['active', 'disabled']:
             return jsonify({"success": False, "error": "Invalid parameters"}), 400
@@ -662,10 +716,6 @@ def toggle_student_status():
 @bp.route("/students/update-batch", methods=["POST"])
 @admin_required
 def update_student_batch():
-    """
-    Update student's batch (from main students management page)
-    When batch is updated, student status is set to 'active'
-    """
     try:
         data = request.get_json()
         student_id = data.get("student_id")
@@ -674,7 +724,6 @@ def update_student_batch():
         if not student_id or not batch:
             return jsonify({"success": False, "error": "Missing parameters"}), 400
                 
-        # Update student document - set status to active when batch is assigned
         db.collection("users").document(student_id).update({
             "batch": batch,
             "batch_updated_at": now_utc(),
@@ -692,14 +741,9 @@ def update_student_batch():
 @bp.route("/students/fee-history/<student_id>")
 @admin_required
 def student_fee_history(student_id):
-    """
-    Get detailed fee payment history for a student
-    """
     try:
-        payments = []
         current_time = now_utc()
         
-        # Get all payments for this student (no compound query)
         payment_docs = (
             db.collection("payments")
             .where("student_id", "==", student_id)
@@ -710,7 +754,6 @@ def student_fee_history(student_id):
         for doc in payment_docs:
             payment = doc.to_dict()
             
-            # Only include verified payments
             if payment.get("status") != "verified":
                 continue
                 
@@ -720,26 +763,25 @@ def student_fee_history(student_id):
             plan = payment.get("plan")
             
             if verified_at and plan:
-                if plan == "1month":
-                    expiry = verified_at + timedelta(days=30)
-                elif plan == "3months":
-                    expiry = verified_at + timedelta(days=90)
-                else:
-                    expiry = None
+                # Use stored expires_at if available, otherwise calculate
+                expires_at = coerce_dt(payment.get("expires_at"))
+                if not expires_at:
+                    if plan == "1month":
+                        expires_at = verified_at + timedelta(days=30)
+                    elif plan == "3months":
+                        expires_at = verified_at + timedelta(days=90)
                 
                 payment["verified_at_str"] = verified_at.strftime("%d %b %Y")
-                if expiry:
-                    payment["expiry_str"] = expiry.strftime("%d %b %Y")
-                    payment["is_active"] = expiry > current_time
+                if expires_at:
+                    payment["expiry_str"] = expires_at.strftime("%d %b %Y")
+                    payment["is_active"] = expires_at > current_time
                 else:
                     payment["expiry_str"] = "-"
                     payment["is_active"] = False
                 
-                # Store timestamp for sorting
                 payment["verified_at_timestamp"] = verified_at
                 verified_payments.append(payment)
         
-        # Sort by verified_at descending
         verified_payments.sort(key=lambda x: x.get("verified_at_timestamp", datetime.min.replace(tzinfo=timezone.utc)), reverse=True)
         
         return jsonify({"success": True, "payments": verified_payments})
@@ -754,9 +796,6 @@ def student_fee_history(student_id):
 @bp.route("/students/export")
 @admin_required
 def export_students():
-    """
-    Export students data as CSV
-    """
     try:
         import csv
         from io import StringIO
@@ -767,13 +806,11 @@ def export_students():
         output = StringIO()
         writer = csv.writer(output)
         
-        # Write header
         writer.writerow([
             'Name', 'Email', 'Phone', 'Age', 'Batch', 
             'Status', 'Fees Paid', 'Fee Expiry', 'Registration Date'
         ])
         
-        # Write data
         for doc in students_ref:
             student = doc.to_dict()
             fee_status = calculate_fee_status(doc.id, current_time)
@@ -806,7 +843,6 @@ def export_students():
 @bp.route("/study-materials")
 @admin_required
 def admin_study_materials():
-    """Admin study materials management page"""
     return render_template("admin_study_materials.html")
 
 
@@ -816,7 +852,6 @@ def create_study_material():
     try:
         data = request.get_json()
         
-        # Validation
         title = data.get("title", "").strip()
         description = data.get("description", "").strip()
         link = data.get("link", "").strip()
@@ -826,7 +861,6 @@ def create_study_material():
         if not all([title, description, link]):
             return jsonify({"success": False, "error": "Title, Description, and Link are required"}), 400
         
-        # Get Admin Info (Same logic as Notices)
         session_cookie = request.cookies.get("session")
         decoded = auth.verify_session_cookie(session_cookie)
         admin_id = decoded["uid"]
@@ -834,7 +868,6 @@ def create_study_material():
         admin_doc = db.collection("users").document(admin_id).get()
         admin_name = admin_doc.to_dict().get("name", "Admin") if admin_doc.exists else "Admin"
         
-        # Create Data Object
         material_data = {
             "title": title,
             "description": description,
@@ -846,7 +879,6 @@ def create_study_material():
             "created_at": now_utc()
         }
         
-        # Save to Firestore
         db.collection("study_materials").add(material_data)
         
         return jsonify({"success": True})
@@ -860,11 +892,9 @@ def create_study_material():
 @admin_required
 def list_admin_study_materials():
     try:
-        # Define batches to organize data for the Kanban view
         batches = ["all", "online1", "online2", "offline_advance", "offline_base"]
         materials_by_batch = {batch: [] for batch in batches}
         
-        # Query materials (Order by newest first)
         all_materials = db.collection("study_materials").order_by(
             "created_at", direction=firestore.Query.DESCENDING
         ).limit(50).stream()
@@ -873,27 +903,22 @@ def list_admin_study_materials():
             m = doc.to_dict()
             m["id"] = doc.id
             
-            # Format date safely
             ts = coerce_dt(m.get("created_at"))
             if ts:
                 m["created_at_str"] = ts.strftime("%d %b %Y")
             else:
                 m["created_at_str"] = "Recently"
             
-            # Sort into buckets
             item_batch = m.get("batch", "all")
             
-            # Add to its specific batch list
             if item_batch in materials_by_batch:
                 materials_by_batch[item_batch].append(m)
             
-            # If item is for 'all' batches, add it to every specific list for visibility
             if item_batch == "all":
                 for key in batches:
                     if key != "all":
                         materials_by_batch[key].append(m)
             
-            # Also ensure it appears in the 'all' column if it belongs to a specific batch
             if item_batch != "all":
                  materials_by_batch["all"].append(m)
 
@@ -918,8 +943,6 @@ def delete_study_material(material_id):
 def update_student_rating():
     try:
         data = request.get_json(silent=True) or {}
-        print("UPDATE RATING HIT:", data)
-
         student_id = data.get("student_id")
         rating = data.get("rating")
 
