@@ -3,59 +3,115 @@
 {% block title %}Home Page{% endblock %}
 
 {% block content %}
-  <section class="hero">
-      <div class="hero-content">
-          <h1>Welcome to our Chess Learning Platform</h1>
-          <p>Enhance your chess skills with interactive lessons and practice games.</p>
-      </div>
-  </section>
 
-  <section class="features">
-      <div class="feature">
-          <h2>Interactive Lessons</h2>
-          <p>Learn chess strategies and tactics through engaging lessons.</p>
-      </div>
-      <div class="feature">
-          <h2>Practice Games</h2>
-          <p>Play other players to improve your skills.</p>
-      </div>
-      <div class="feature">
-          <h2>Community</h2>
-          <p>Join a community of chess enthusiasts to share tips and strategies.</p>
-      </div>
-  </section>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <h1>Learn Chess the Right Way ♟️</h1>
+    <p>
+      From beginners to competitive players — structured lessons, expert coaching,
+      and a supportive chess community.
+    </p>
 
-  <section class="about-us">
-      <h2>About CHESS CLASS (SRIVASTAVA)</h2>
-      <div class="review-cards">
-          <p class="review-card"><b>CHESS CLASS (SRIVASTAVA)</b> is built on a foundation of community and growth. Students here don't just master the game; they build lifelong friendships and priceless memories. Reviews from past students, with a shining 4.9 rating from 41 reviews, speaks to the engaging and nurturing environment. Each lesson is more than just a chess move; it's an opportunity to learn, laugh, and grow together under the expert guidance of kind and generous instructors.</p>
-          <p class="review-card">Instructors at CHESS CLASS (SRIVASTAVA) are committed to delivering top-notch coaching that is both comprehensive and enjoyable. They provide valuable resources like PDFs of books and customized strategies, ensuring each student gets the support they need to excel. The personalized attention and tailored coaching methods cater to individual learning styles, making the journey of mastering chess both effective and enjoyable.</p>
-          <p class="review-card">CHESS CLASS (SRIVASTAVA) is more than just a coaching center; it's a vibrant community where passion for chess meets a spirit of camaraderie. Whether a seasoned player or just starting out, students find a welcoming home here to enhance their skills and celebrate their love for this timeless game. Join CHESS CLASS (SRIVASTAVA) and become a part of a legacy of excellence and a thriving chess community in Nagpur.</p>
-      </div>
-  </section>
+    <div style="margin-top: 20px;">
+      <a href="{{ url_for('main.home_batches') }}">
+        <button class="cta-btn">Explore Batches</button>
+      </a>
+    </div>
+  </div>
+</section>
 
-  <section class="stats">
-      <div class="stat-item">
-          <h3>4.9</h3>
-          <p>Rating</p>
-      </div>
-      <div class="stat-item">
-          <h3>41+</h3>
-          <p>Reviews</p>
-      </div>
-      <div class="stat-item">
-          <h3>800+</h3>
-          <p>Students Trained</p>
-      </div>
-      <div class="stat-item">
-          <h3>10+</h3>
-          <p>Years Experience</p>
-      </div>
-  </section>
+<!-- FEATURES -->
+<section class="features">
+  <div class="feature">
+    <h2>📘 Structured Lessons</h2>
+    <p>
+      Step-by-step learning paths covering openings, tactics, strategy,
+      endgames, and real game analysis.
+    </p>
+  </div>
 
-  <section class="cta-section">
-      <h2>Ready to Join Us?</h2>
-      <p>Start your chess journey today with expert guidance and a supportive community.</p>
-      <a href="{{ url_for('main.home_batches') }}"><button class="cta-btn">Get Started</button></a>
-  </section>
+  <div class="feature">
+    <h2>♟️ Practical Training</h2>
+    <p>
+      Regular practice games, puzzles, and tournaments to turn theory
+      into real strength on the board.
+    </p>
+  </div>
+
+  <div class="feature">
+    <h2>🤝 Supportive Community</h2>
+    <p>
+      Learn with motivated students, friendly mentors, and a culture
+      that encourages growth and confidence.
+    </p>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about-us">
+  <div class="about-container">
+    <h2>About Chess Class (Srivastava)</h2>
+
+    <p>
+      <b>Chess Class (Srivastava)</b> is more than a coaching institute —
+      it’s a place where students grow intellectually, competitively,
+      and personally through chess.
+    </p>
+
+    <p>
+      With a <b>4.9★ rating from 41+ reviews</b>, our teaching approach
+      focuses on clarity, patience, and enjoyment. Students don’t just
+      memorize moves — they understand ideas.
+    </p>
+
+    <p>
+      Our instructors provide <b>personalized guidance</b>, curated PDFs,
+      and customized strategies based on each student’s level, ensuring
+      steady and confident improvement.
+    </p>
+
+    <p>
+      Whether you are starting your chess journey or aiming to compete,
+      you’ll find a welcoming, disciplined, and motivating environment here.
+    </p>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats">
+  <div class="stat-item">
+    <h3>4.9★</h3>
+    <p>Average Rating</p>
+  </div>
+
+  <div class="stat-item">
+    <h3>41+</h3>
+    <p>Verified Reviews</p>
+  </div>
+
+  <div class="stat-item">
+    <h3>800+</h3>
+    <p>Students Trained</p>
+  </div>
+
+  <div class="stat-item">
+    <h3>10+</h3>
+    <p>Years of Experience</p>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2>Start Your Chess Journey Today</h2>
+  <p>
+    Learn from experienced coaches, practice with purpose,
+    and become a confident chess player.
+  </p>
+
+  <a href="{{ url_for('main.home_batches') }}">
+    <button class="cta-btn">Get Started</button>
+  </a>
+</section>
+
 {% endblock %}

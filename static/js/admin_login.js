@@ -14,16 +14,62 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
+// Display current time
+function updateTime() {
+  const now = new Date();
+  const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const dateString = now.toLocaleDateString([], { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  document.getElementById('current-time').textContent = `${dateString} • ${timeString}`;
+}
+
+// Password visibility toggle
+function setupPasswordToggle() {
+  const toggleBtn = document.getElementById('password-toggle');
+  const passwordInput = document.getElementById('password');
+  const eyeIcon = toggleBtn.querySelector('i');
+  
+  toggleBtn.addEventListener('click', () => {
+    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordInput.setAttribute('type', type);
+    eyeIcon.className = type === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
+  });
+}
+
+// Form validation
+function validateForm(email, password) {
+  const errorDiv = document.getElementById('error');
+  
+  if (!email || !email.includes('@')) {
+    errorDiv.textContent = 'Please enter a valid email address';
+    return false;
+  }
+  
+  if (!password || password.length < 6) {
+    errorDiv.textContent = 'Password must be at least 6 characters';
+    return false;
+  }
+  
+  errorDiv.textContent = '';
+  return true;
+}
+
+// Login function
 async function login() {
   const emailField = document.getElementById("email");
   const passField = document.getElementById("password");
   const errorDiv = document.getElementById("error");
   const loginBtn = document.getElementById("admin-login-btn");
+  const rememberMe = document.getElementById("remember-me");
 
-  // Basic UI Reset
-  errorDiv.innerText = "";
+  // Validate inputs
+  if (!validateForm(emailField.value, passField.value)) {
+    return;
+  }
+
+  // UI updates
+  errorDiv.textContent = "";
+  loginBtn.classList.add("loading");
   loginBtn.disabled = true;
-  loginBtn.innerText = "Verifying...";
 
   try {
     // 1. Client-side Login
@@ -40,9 +86,16 @@ async function login() {
       body: JSON.stringify({ token })
     });
 
-    // inside the login() function
     if (res.ok) {
-      console.log("Login successful, redirecting to dashboard..."); // <--- Check console for this
+      // Success animation
+      loginBtn.classList.remove("loading");
+      loginBtn.classList.add("login-success");
+      loginBtn.innerHTML = '<span class="btn-text"><i class="fas fa-check-circle"></i> Login Successful!</span>';
+      
+      // Brief delay for animation
+      await new Promise(resolve => setTimeout(resolve, 1200));
+      
+      // Redirect to dashboard
       window.location.href = "/admin";
     } else {
       const err = await res.json();
@@ -50,12 +103,86 @@ async function login() {
     }
   } catch (e) {
     console.error(e);
-    errorDiv.innerText = e.message.replace("Firebase: ", ""); // Clean up error message
+    
+    // Clean up error message
+    let errorMessage = e.message.replace("Firebase: ", "").replace("auth/", "");
+    errorMessage = errorMessage.charAt(0).toUpperCase() + errorMessage.slice(1);
+    
+    // Specific error messages
+    if (e.message.includes('invalid-credential') || e.message.includes('wrong-password')) {
+      errorMessage = "Invalid email or password. Please try again.";
+    } else if (e.message.includes('user-not-found')) {
+      errorMessage = "No account found with this email.";
+    } else if (e.message.includes('too-many-requests')) {
+      errorMessage = "Too many failed attempts. Please try again later.";
+    }
+    
+    errorDiv.textContent = errorMessage;
+    
+    // Shake animation for error
+    errorDiv.style.animation = 'none';
+    setTimeout(() => {
+      errorDiv.style.animation = 'shake 0.5s ease';
+    }, 10);
+    
+    // Reset button
+    loginBtn.classList.remove("loading");
     loginBtn.disabled = false;
-    loginBtn.innerText = "Login";
+    loginBtn.innerHTML = '<span class="btn-text">Login to Dashboard</span><span class="btn-icon"><i class="fas fa-arrow-right"></i></span><div class="loading-spinner"></div>';
   }
 }
 
-// Attach to window so HTML button can call it, or use event listener
+// Enter key support
+function setupEnterKey() {
+  const form = document.getElementById('login-form');
+  form.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      login();
+    }
+  });
+}
+
+// Initialize everything when DOM loads
+document.addEventListener('DOMContentLoaded', () => {
+  // Update time initially and every minute
+  updateTime();
+  setInterval(updateTime, 60000);
+  
+  // Setup event listeners
+  setupPasswordToggle();
+  setupEnterKey();
+  
+  // Attach login function to button
+  document.getElementById('admin-login-btn').addEventListener('click', login);
+  
+  // Focus on email field
+  document.getElementById('email').focus();
+  
+  // Check for saved email
+  const savedEmail = localStorage.getItem('admin-email');
+  const rememberMe = document.getElementById('remember-me');
+  
+  if (savedEmail) {
+    document.getElementById('email').value = savedEmail;
+    rememberMe.checked = true;
+  }
+  
+  // Save email if remember me is checked
+  rememberMe.addEventListener('change', function() {
+    if (!this.checked) {
+      localStorage.removeItem('admin-email');
+    }
+  });
+  
+  // Save email on successful login
+  window.addEventListener('beforeunload', () => {
+    const email = document.getElementById('email').value;
+    if (rememberMe.checked && email) {
+      localStorage.setItem('admin-email', email);
+    }
+  });
+});
+
+// Expose login function globally
 window.login = login;
-document.getElementById("admin-login-btn").addEventListener("click", login);

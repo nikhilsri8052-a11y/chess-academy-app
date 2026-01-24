@@ -1,7 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-/* Firebase Config (same project as admin) */
+// Use the same Firebase config as admin
 const firebaseConfig = {
   apiKey: "AIzaSyAXuS_IRyEAPhsg4-qCk6mkFrsDdBB63Mo",
   authDomain: "sschessclass.firebaseapp.com",
@@ -14,54 +14,209 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
+// Display current time
+function updateTime() {
+  const now = new Date();
+  const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const dateString = now.toLocaleDateString([], { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  document.getElementById('current-time').textContent = `${dateString} • ${timeString}`;
+}
+
+// Password visibility toggle
+function setupPasswordToggle() {
+  const toggleBtn = document.getElementById('password-toggle');
+  const passwordInput = document.getElementById('password');
+  const eyeIcon = toggleBtn.querySelector('i');
+  
+  toggleBtn.addEventListener('click', () => {
+    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordInput.setAttribute('type', type);
+    eyeIcon.className = type === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
+  });
+}
+
+// Form validation
+function validateForm(email, password) {
+  const errorDiv = document.getElementById('error');
+  
+  if (!email || !email.includes('@')) {
+    errorDiv.textContent = 'Please enter a valid email address';
+    errorDiv.style.display = 'block';
+    return false;
+  }
+  
+  if (!password || password.length < 6) {
+    errorDiv.textContent = 'Password must be at least 6 characters';
+    errorDiv.style.display = 'block';
+    return false;
+  }
+  
+  errorDiv.textContent = '';
+  errorDiv.style.display = 'none';
+  return true;
+}
+
+// Student login function
 async function login() {
   const emailField = document.getElementById("email");
   const passField = document.getElementById("password");
   const errorDiv = document.getElementById("error");
   const loginBtn = document.getElementById("student-login-btn");
+  const rememberMe = document.getElementById("remember-me");
 
-  // UI reset
-  errorDiv.innerText = "";
+  // Validate inputs
+  if (!validateForm(emailField.value, passField.value)) {
+    return;
+  }
+
+  // UI updates
+  errorDiv.textContent = "";
+  errorDiv.style.display = "none";
+  loginBtn.classList.add("loading");
   loginBtn.disabled = true;
-  loginBtn.innerText = "Verifying...";
 
   try {
-    /* 1️⃣ Firebase Email/Password login */
-    const cred = await signInWithEmailAndPassword(
-      auth,
-      emailField.value,
-      passField.value
-    );
-
-    /* 2️⃣ Get Firebase ID token */
+    // 1. Client-side Login with Firebase
+    const cred = await signInWithEmailAndPassword(auth, emailField.value, passField.value);
+    
+    // 2. Get ID Token
     const token = await cred.user.getIdToken();
 
-    /* 3️⃣ Send token to backend (student session) */
+    // 3. Send to backend to swap for Session Cookie
     const res = await fetch("/student/session", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { 
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      },
       credentials: "same-origin",
-      body: JSON.stringify({ token }),
+      body: JSON.stringify({ token })
     });
 
-    if (res.ok) {
-      console.log("Student login successful, redirecting...");
-      window.location.href = "/student";
-    } else {
-      const err = await res.json();
-      throw new Error(err.error || "Login failed");
+    // Check if response is JSON
+    const contentType = res.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      const text = await res.text();
+      console.error("Non-JSON response:", text.substring(0, 200));
+      throw new Error(`Server returned non-JSON response (${res.status})`);
+    }
+    
+    const data = await res.json();
+    
+    if (!res.ok) {
+      throw new Error(data.error || `Login failed (${res.status})`);
     }
 
+    if (res.ok) {
+      // Success animation
+      loginBtn.classList.remove("loading");
+      loginBtn.classList.add("login-success");
+      loginBtn.innerHTML = '<span class="btn-text"><i class="fas fa-check-circle"></i> Login Successful!</span>';
+      
+      // Brief delay for animation
+      await new Promise(resolve => setTimeout(resolve, 1200));
+      
+      // Redirect to student dashboard
+      window.location.href = "/student/dashboard";
+    }
   } catch (e) {
-    console.error(e);
-    errorDiv.innerText = e.message.replace("Firebase: ", "");
+    console.error("Login error:", e);
+    
+    // Show error message
+    errorDiv.style.display = "block";
+    
+    if (e.message.includes("non-JSON response") || e.message.includes("500")) {
+      errorDiv.textContent = "Server error. Please try again later.";
+    } else if (e.message.includes("Firebase")) {
+      // Clean up Firebase error message
+      let errorMessage = e.message
+        .replace("Firebase: ", "")
+        .replace("auth/", "")
+        .replace(/([A-Z])/g, ' $1')
+        .trim();
+      
+      errorMessage = errorMessage.charAt(0).toUpperCase() + errorMessage.slice(1);
+      
+      // Specific error messages
+      if (e.message.includes('invalid-credential') || e.message.includes('wrong-password')) {
+        errorMessage = "Invalid email or password.";
+      } else if (e.message.includes('user-not-found')) {
+        errorMessage = "No student account found with this email.";
+      } else if (e.message.includes('too-many-requests')) {
+        errorMessage = "Too many failed attempts. Please try again later.";
+      } else if (e.message.includes('network-request-failed')) {
+        errorMessage = "Network error. Please check your connection.";
+      }
+      
+      errorDiv.textContent = errorMessage;
+    } else {
+      errorDiv.textContent = "Invalid email or password. Please try again.";
+    }
+    
+    // Shake animation for error
+    errorDiv.style.animation = 'none';
+    setTimeout(() => {
+      errorDiv.style.animation = 'shake 0.5s ease';
+    }, 10);
+    
+    // Reset button
+    loginBtn.classList.remove("loading");
     loginBtn.disabled = false;
-    loginBtn.innerText = "Login";
+    loginBtn.innerHTML = '<span class="btn-text">Login to Student Portal</span><span class="btn-icon"><i class="fas fa-arrow-right"></i></span><div class="loading-spinner"></div>';
   }
 }
 
-/* Attach click handler */
+// Enter key support
+function setupEnterKey() {
+  const form = document.getElementById('login-form');
+  form.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      login();
+    }
+  });
+}
+
+// Initialize everything when DOM loads
+document.addEventListener('DOMContentLoaded', () => {
+  // Update time initially and every minute
+  updateTime();
+  setInterval(updateTime, 60000);
+  
+  // Setup event listeners
+  setupPasswordToggle();
+  setupEnterKey();
+  
+  // Attach login function to button
+  document.getElementById('student-login-btn').addEventListener('click', login);
+  
+  // Focus on email field
+  document.getElementById('email').focus();
+  
+  // Check for saved email
+  const savedEmail = localStorage.getItem('student-email');
+  const rememberMe = document.getElementById('remember-me');
+  
+  if (savedEmail) {
+    document.getElementById('email').value = savedEmail;
+    rememberMe.checked = true;
+  }
+  
+  // Save email if remember me is checked
+  rememberMe.addEventListener('change', function() {
+    if (!this.checked) {
+      localStorage.removeItem('student-email');
+    }
+  });
+  
+  // Save email on successful login
+  window.addEventListener('beforeunload', () => {
+    const email = document.getElementById('email').value;
+    if (rememberMe.checked && email) {
+      localStorage.setItem('student-email', email);
+    }
+  });
+});
+
+// Expose login function globally
 window.login = login;
-document
-  .getElementById("student-login-btn")
-  .addEventListener("click", login);
