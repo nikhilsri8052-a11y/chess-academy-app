@@ -4,22 +4,43 @@
 {% block content %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_students.css') }}">
 <div class="students-container">
-    <!-- Header -->
+    <!-- Header with Stats -->
     <div class="page-header">
-        <h1>Student Management</h1>
-        <button class="export-btn" onclick="exportStudents()">📥 Export CSV</button>
+        <div class="header-content">
+            <div>
+                <h1><i class="fas fa-users"></i> Student Management</h1>
+                <p class="header-subtitle">Manage student information, fees, and ratings</p>
+            </div>
+            <div id="statsContainer" class="stats-container">
+                <!-- Stats will be loaded dynamically -->
+            </div>
+        </div>
+        <button class="export-btn" onclick="exportStudents()">
+            <i class="fas fa-file-export"></i> Export CSV
+        </button>
     </div>
 
-    <!-- Filters -->
-    <div class="filters-section">
+    <!-- Filters Section -->
+    <div class="filters-card">
+        <div class="filters-header">
+            <h3><i class="fas fa-filter"></i> Filters & Search</h3>
+            <button class="btn-clear" onclick="clearFilters()">
+                <i class="fas fa-redo"></i> Reset
+            </button>
+        </div>
+        
         <div class="filters-grid">
             <div class="filter-group">
-                <label>Search</label>
-                <input type="text" id="searchInput" placeholder="Name, email, or phone...">
+                <label><i class="fas fa-search"></i> Search</label>
+                <div class="search-input-wrapper">
+                    <input type="text" id="searchInput" placeholder="Search by name, email, or phone...">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
             </div>
+            
             <div class="filter-group">
-                <label>Batch</label>
-                <select id="batchFilter">
+                <label><i class="fas fa-layer-group"></i> Batch</label>
+                <select id="batchFilter" class="styled-select">
                     <option value="">All Batches</option>
                     <option value="online1">Online 1</option>
                     <option value="online2">Online 2</option>
@@ -27,197 +48,295 @@
                     <option value="offline_base">Offline Base</option>
                 </select>
             </div>
+            
             <div class="filter-group">
-                <label>Fee Status</label>
-                <select id="feesFilter">
+                <label><i class="fas fa-money-bill-wave"></i> Fee Status</label>
+                <select id="feesFilter" class="styled-select">
                     <option value="">All</option>
                     <option value="paid">Paid</option>
                     <option value="unpaid">Unpaid</option>
+                    <option value="expiring">Expiring Soon (≤7 days)</option>
                 </select>
             </div>
+            
             <div class="filter-group">
-                <label>Status</label>
-                <select id="statusFilter">
+                <label><i class="fas fa-user-circle"></i> Status</label>
+                <select id="statusFilter" class="styled-select">
                     <option value="">All</option>
                     <option value="active">Active</option>
                     <option value="disabled">Disabled</option>
                     <option value="new">New</option>
                 </select>
             </div>
-            <!-- NEW: Sort Filter -->
+            
             <div class="filter-group">
-                <label>Sort By</label>
-                <select id="sortFilter" onchange="loadStudents()">
+                <label><i class="fas fa-sort"></i> Sort By</label>
+                <select id="sortFilter" class="styled-select">
                     <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
                     <option value="rating_high">Rating: High to Low</option>
                     <option value="rating_low">Rating: Low to High</option>
-                    <option value="name">Name (A-Z)</option>
+                    <option value="name_asc">Name (A-Z)</option>
+                    <option value="name_desc">Name (Z-A)</option>
                 </select>
             </div>
         </div>
+        
         <div class="filter-actions">
-            <button class="btn-clear" onclick="clearFilters()">Clear Filters</button>
-            <button class="btn-filter" onclick="loadStudents()">Apply Filters</button>
+            <div class="filter-info" id="filterInfo">
+                Showing all students
+            </div>
+            <button class="btn-primary" onclick="loadStudents()">
+                <i class="fas fa-check"></i> Apply Filters
+            </button>
         </div>
     </div>
 
     <!-- Students Table -->
-    <div class="students-table-wrapper">
-        <div id="loadingState" class="loading">
-            <p>Loading students...</p>
+    <div class="table-card">
+        <div class="table-header">
+            <h3><i class="fas fa-list"></i> Students List</h3>
+            <div class="table-actions">
+                <div class="records-count">
+                    <span id="recordsCount">0</span> students found
+                </div>
+            </div>
         </div>
-        <div id="emptyState" class="empty-state" style="display: none;">
-            <h3>No students found</h3>
-            <p>Try adjusting your filters</p>
+        
+        <div class="table-responsive">
+            <div id="loadingState" class="loading-state">
+                <div class="spinner"></div>
+                <p>Loading students...</p>
+            </div>
+            
+            <div id="emptyState" class="empty-state" style="display: none;">
+                <div class="empty-icon">
+                    <i class="fas fa-user-slash"></i>
+                </div>
+                <h3>No students found</h3>
+                <p>Try adjusting your search or filters</p>
+                <button class="btn-secondary" onclick="clearFilters()">
+                    <i class="fas fa-redo"></i> Clear All Filters
+                </button>
+            </div>
+            
+            <table class="students-table" id="studentsTable" style="display: none;">
+                <thead>
+                    <tr>
+                        <th>Student Details</th>
+                        <th>Contact</th>
+                        <th>Rating</th>
+                        <th>Fees</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="studentsTableBody">
+                    <!-- Students will be loaded here -->
+                </tbody>
+            </table>
         </div>
-        <table class="students-table" id="studentsTable" style="display: none;">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Rating</th>
-                    <th>Phone</th>
-                    <th>Batch</th>
-                    <th>Status</th>
-                    <th>Fee Status</th>
-                    <th>Fee Expiry</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="studentsTableBody">
-            </tbody>
-        </table>
+        
+        <div class="table-footer" id="tableFooter" style="display: none;">
+            <div class="pagination-info">
+                Showing <span id="startCount">1</span> to <span id="endCount">10</span> of 
+                <span id="totalCount">0</span> students
+            </div>
+        </div>
     </div>
 </div>
 
 <!-- Fee History Modal -->
 <div class="modal" id="feeHistoryModal">
-    <div class="modal-content">
+    <div class="modal-content modal-medium">
         <div class="modal-header">
-            <h2>Fee Payment History</h2>
+            <h2><i class="fas fa-history"></i> Fee Payment History</h2>
             <button class="close-modal" onclick="closeFeeHistoryModal()">×</button>
         </div>
         <div class="modal-body">
-            <div id="studentInfo" style="margin-bottom: 1rem;">
-                <p><strong>Name:</strong> <span id="modalStudentName"></span></p>
-                <p><strong>Batch:</strong> <span id="modalStudentBatch"></span></p>
+            <div class="student-info-card">
+                <div class="student-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div>
+                    <h3 id="modalStudentName">-</h3>
+                    <p><i class="fas fa-layer-group"></i> Batch: <span id="modalStudentBatch">-</span></p>
+                </div>
             </div>
-            <div id="feeHistoryContent"></div>
+            
+            <div id="feeHistoryContent" class="fee-history-content">
+                <!-- Content will be loaded here -->
+            </div>
         </div>
     </div>
 </div>
 
 <!-- Update Batch Modal -->
 <div class="modal" id="batchModal">
-    <div class="modal-content">
+    <div class="modal-content modal-small">
         <div class="modal-header">
-            <h2>Update Batch</h2>
+            <h2><i class="fas fa-exchange-alt"></i> Update Batch</h2>
             <button class="close-modal" onclick="closeBatchModal()">×</button>
         </div>
         <div class="modal-body">
             <div class="form-group">
-                <label>Student Name</label>
-                <p id="batchModalStudentName" style="font-weight: 600; color: #1a1a1a;"></p>
+                <label><i class="fas fa-user"></i> Student</label>
+                <p id="batchModalStudentName" class="student-display-name">-</p>
             </div>
             <div class="form-group">
-                <label>Select Batch</label>
-                <select id="batchSelect">
+                <label><i class="fas fa-layer-group"></i> Select New Batch</label>
+                <select id="batchSelect" class="styled-select">
                     <option value="online1">Online 1</option>
                     <option value="online2">Online 2</option>
                     <option value="offline_advance">Offline Advanced</option>
                     <option value="offline_base">Offline Base</option>
                 </select>
             </div>
-            <button class="btn-submit" onclick="updateBatch()">Update Batch</button>
+            <button class="btn-primary btn-block" onclick="updateBatch()">
+                <i class="fas fa-save"></i> Update Batch
+            </button>
         </div>
     </div>
 </div>
 
 <!-- Update Rating Modal -->
 <div class="modal" id="ratingModal">
-    <div class="modal-content">
+    <div class="modal-content modal-medium">
         <div class="modal-header">
-            <h2>Update Student Rating</h2>
+            <h2><i class="fas fa-chart-line"></i> Update Student Rating</h2>
             <button class="close-modal" onclick="closeRatingModal()">×</button>
         </div>
         <div class="modal-body">
             <div class="form-group">
-                <label>Student Name</label>
-                <p id="ratingModalStudentName" style="font-weight: 600; color: #1a1a1a;"></p>
+                <label><i class="fas fa-user"></i> Student</label>
+                <p id="ratingModalStudentName" class="student-display-name">-</p>
             </div>
+            
+            <div class="current-rating-display">
+                <div class="current-rating-label">Current Rating:</div>
+                <div id="currentRatingDisplay" class="current-rating-value">0</div>
+            </div>
+            
             <div class="form-group">
-                <label>Current Rating</label>
-                <p id="currentRatingDisplay" style="font-size: 1.2rem; font-weight: 700; color: #D3AE55;"></p>
+                <label><i class="fas fa-star"></i> New Rating <span class="required">*</span></label>
+                <div class="rating-input-container">
+                    <input type="range" id="ratingSlider" min="0" max="3000" step="10" value="0">
+                    <input type="number" id="newRating" 
+                           min="0" max="3000" step="10" 
+                           placeholder="Enter rating (0-3000)">
+                </div>
+                <div class="rating-scale-info">
+                    <span class="scale-item beginner">Beginner: 0-999</span>
+                    <span class="scale-item intermediate">Intermediate: 1000-1499</span>
+                    <span class="scale-item advanced">Advanced: 1500+</span>
+                </div>
             </div>
-            <div class="form-group">
-                <label>New Rating <span style="color: red;">*</span></label>
-                <input type="number" id="newRating" 
-                       min="0" max="3000" step="10" 
-                       placeholder="Enter rating (0-3000)"
-                       style="width: 100%; padding: 10px; border: 2px solid #eee; border-radius: 8px; font-size: 1rem;">
-                <small style="color: #666; font-size: 0.85rem; display: block; margin-top: 5px;">
-                    Rating scale: 0-3000 (Typically: &lt;1000=Beginner, 1000-1500=Intermediate, &gt;1500=Advanced)
-                </small>
+            
+            <div class="rating-preview-card">
+                <h4><i class="fas fa-eye"></i> Preview</h4>
+                <div class="preview-content">
+                    <div id="ratingPreview" class="rating-preview-badge rating-low">0</div>
+                    <div class="preview-details">
+                        <div id="ratingLevel" class="rating-level">Beginner</div>
+                        <div id="ratingChange" class="rating-change">No change</div>
+                    </div>
+                </div>
             </div>
-            <div class="rating-preview">
-                <h4 style="margin-bottom: 10px;">Preview:</h4>
-                <span id="ratingPreview" class="rating-badge rating-low" style="font-size: 1rem; padding: 8px 15px;">0</span>
-                <span id="ratingLevel" style="margin-left: 10px; font-weight: 600; color: #666;">Beginner</span>
+            
+            <div class="quick-rating-section">
+                <h4><i class="fas fa-bolt"></i> Quick Set</h4>
+                <div class="quick-rating-buttons">
+                    <button type="button" class="quick-rating-btn beginner" onclick="setQuickRating(600)">
+                        600 (Beginner)
+                    </button>
+                    <button type="button" class="quick-rating-btn intermediate" onclick="setQuickRating(1200)">
+                        1200 (Intermediate)
+                    </button>
+                    <button type="button" class="quick-rating-btn advanced" onclick="setQuickRating(1800)">
+                        1800 (Advanced)
+                    </button>
+                    <button type="button" class="quick-rating-btn reset" onclick="setQuickRating(0)">
+                        <i class="fas fa-undo"></i> Reset
+                    </button>
+                </div>
             </div>
-            <div class="quick-rating-buttons">
-                <button type="button" class="quick-rating-btn low" onclick="setQuickRating(800)">800 (Low)</button>
-                <button type="button" class="quick-rating-btn mid" onclick="setQuickRating(1200)">1200 (Mid)</button>
-                <button type="button" class="quick-rating-btn high" onclick="setQuickRating(1800)">1800 (High)</button>
-                <button type="button" class="quick-rating-btn" onclick="setQuickRating(0)">Reset to 0</button>
-            </div>
-            <button class="btn-submit" type="button" onclick="updateRating()">Update Rating</button>
+            
+            <button class="btn-primary btn-block" onclick="updateRating()">
+                <i class="fas fa-check-circle"></i> Update Rating
+            </button>
         </div>
     </div>
 </div>
 
 <!-- Offline Payment Modal -->
 <div class="modal" id="offlinePaymentModal">
-    <div class="modal-content">
+    <div class="modal-content modal-small">
         <div class="modal-header">
-            <h2>Add Offline Payment</h2>
+            <h2><i class="fas fa-money-check-alt"></i> Add Offline Payment</h2>
             <button class="close-modal" onclick="closeOfflinePaymentModal()">×</button>
         </div>
         <div class="modal-body">
             <div class="form-group">
-                <label>Student Name</label>
-                <p id="offlinePaymentStudentName" style="font-weight: 600; color: #1a1a1a;"></p>
+                <label><i class="fas fa-user"></i> Student</label>
+                <p id="offlinePaymentStudentName" class="student-display-name">-</p>
             </div>
+            
             <div class="form-group">
-                <label>Payment Plan <span style="color: red;">*</span></label>
-                <select id="offlinePlanSelect">
-                    <option value="1month">1 Month - ₹3,000</option>
-                    <option value="3months">3 Months - ₹7,500</option>
+                <label><i class="fas fa-calendar-alt"></i> Payment Plan <span class="required">*</span></label>
+                <div class="plan-options">
+                    <div class="plan-option" data-plan="1month" onclick="selectPlan('1month')">
+                        <div class="plan-header">
+                            <h4>1 Month</h4>
+                            <span class="plan-badge popular">Most Popular</span>
+                        </div>
+                        <div class="plan-price">₹3,000</div>
+                        <div class="plan-desc">30 days access</div>
+                    </div>
+                    <div class="plan-option" data-plan="3months" onclick="selectPlan('3months')">
+                        <div class="plan-header">
+                            <h4>3 Months</h4>
+                            <span class="plan-badge save">Save 17%</span>
+                        </div>
+                        <div class="plan-price">₹7,500</div>
+                        <div class="plan-desc">90 days access</div>
+                    </div>
+                </div>
+                <input type="hidden" id="offlinePlanSelect" value="1month">
+            </div>
+            
+            <div class="form-group">
+                <label><i class="fas fa-credit-card"></i> Payment Method</label>
+                <select id="offlinePaymentMethod" class="styled-select">
+                    <option value="cash">💵 Cash</option>
+                    <option value="bank_transfer">🏦 Bank Transfer</option>
+                    <option value="cheque">📄 Cheque</option>
+                    <option value="upi">📱 UPI (Offline)</option>
+                    <option value="other">📝 Other</option>
                 </select>
             </div>
+            
             <div class="form-group">
-                <label>Payment Method</label>
-                <select id="offlinePaymentMethod">
-                    <option value="cash">Cash</option>
-                    <option value="bank_transfer">Bank Transfer</option>
-                    <option value="cheque">Cheque</option>
-                    <option value="upi">UPI (Offline)</option>
-                    <option value="other">Other</option>
-                </select>
+                <label><i class="fas fa-sticky-note"></i> Notes (Optional)</label>
+                <textarea id="offlinePaymentNotes" 
+                          placeholder="Add any additional notes like transaction ID, reference number, etc..."
+                          rows="3"></textarea>
             </div>
-            <div class="form-group">
-                <label>Notes (Optional)</label>
-                <textarea id="offlinePaymentNotes" placeholder="Add any additional notes..." style="width: 100%; min-height: 80px; padding: 10px; border: 2px solid #eee; border-radius: 8px; font-family: inherit; resize: vertical;"></textarea>
-            </div>
-            <div style="background: #fff3e0; padding: 12px; border-radius: 8px; margin: 15px 0; font-size: 0.9rem;">
-                <strong>⚠️ Important:</strong> 
-                <ul style="margin: 8px 0 0 20px; padding: 0;">
+            
+            <div class="payment-notice">
+                <div class="notice-header">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Important Information</span>
+                </div>
+                <ul class="notice-list">
                     <li>Payment will be immediately verified</li>
                     <li>Student status will be set to <strong>ACTIVE</strong></li>
-                    <li>If fees already paid, expiry extends from current expiry date</li>
-                    <li>If fees expired/unpaid, expiry starts from today</li>
+                    <li>If fees already paid, expiry extends from current date</li>
+                    <li>If fees expired/unpaid, starts from today</li>
                 </ul>
             </div>
-            <button class="btn-submit" onclick="submitOfflinePayment()">Add Payment & Verify</button>
+            
+            <button class="btn-success btn-block" onclick="submitOfflinePayment()">
+                <i class="fas fa-check-double"></i> Add Payment & Verify
+            </button>
         </div>
     </div>
 </div>
@@ -225,5 +344,6 @@
 {% endblock %}
 
 {% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
 <script src="{{ url_for('static', filename='js/admin_students.js') }}"></script>
 {% endblock %}
