@@ -1,7 +1,7 @@
 ﻿# ♟️ Chess Web Application
 
 A modern **web-based Chess application** built using **Flask**, **HTML/CSS**, **Firebase** and **JavaScript**, designed to be clean, responsive, and easy to extend. This project focuses on separating game logic from UI, making it ideal for learning, customization, and deployment.
-
+**Experience the website:** https://sschessclass.onrender.com/ (changes and suggestions appriciated and welcomed.) 
 ---
 
 ## ✨ Features
@@ -139,4 +139,5 @@ Passionate about Python, Web Development, Data Science and Problem Solving
 If you like this project, consider giving it a ⭐ on GitHub — it really helps!
 
 Happy Coding ♟️
+
 
