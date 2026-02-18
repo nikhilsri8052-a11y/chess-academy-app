@@ -10,6 +10,15 @@
       {% block extra_head %}{% endblock %}
   </head>
   <body>
+      <div class="chess-bg-animation" aria-hidden="true">
+          <span class="piece piece-1">♞</span>
+          <span class="piece piece-2">♛</span>
+          <span class="piece piece-3">♝</span>
+          <span class="piece piece-4">♜</span>
+          <span class="piece piece-5">♟</span>
+          <span class="piece piece-6">♚</span>
+      </div>
+
       <nav class="navbar">
           <div class="left">
             {% if is_admin %}
