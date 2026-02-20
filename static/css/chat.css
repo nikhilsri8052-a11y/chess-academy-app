@@ -528,3 +528,60 @@
         height: 56px;
     }
 }
+/* Automatic system dark mode support */
+@media (prefers-color-scheme: dark) {
+    .chat-toggle-btn {
+        border-color: #111827;
+    }
+
+    #chat-box {
+        background: #0f172a;
+        border-color: rgba(148, 163, 184, 0.32);
+        box-shadow: 0 20px 60px rgba(2, 6, 23, 0.6);
+    }
+
+    #chat-body {
+        background: linear-gradient(180deg, #0f172a 0%, #111827 100%);
+    }
+
+    #chat-body::-webkit-scrollbar-thumb {
+        background: rgba(148, 163, 184, 0.35);
+    }
+
+    #chat-body::-webkit-scrollbar-thumb:hover {
+        background: rgba(148, 163, 184, 0.5);
+    }
+
+    .message-content {
+        color: #e2e8f0;
+    }
+
+    #chat-input-area {
+        background: #111827;
+        border-top-color: rgba(148, 163, 184, 0.24);
+    }
+
+    #user-input {
+        background: #0b1220;
+        color: #e5e7eb;
+        border-color: rgba(148, 163, 184, 0.35);
+    }
+
+    #user-input::placeholder {
+        color: #94a3b8;
+    }
+
+    .chip {
+        background: #1e293b;
+        color: #e2e8f0;
+        border-color: rgba(148, 163, 184, 0.3);
+    }
+
+    .chip:hover {
+        background: #334155;
+    }
+
+    .input-footer small {
+        color: #94a3b8;
+    }
+}

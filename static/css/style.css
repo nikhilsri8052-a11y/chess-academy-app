@@ -1471,6 +1471,87 @@ body {
     animation: board-shift 18s linear infinite;
 }
 
+/* --- Automatic system theme (no manual toggle) --- */
+:root {
+    color-scheme: light;
+    --app-bg: #f5f7fb;
+    --app-text: #1f2937;
+    --surface: #ffffff;
+    --surface-alt: #f8fafc;
+    --border-soft: rgba(0, 0, 0, 0.1);
+    --navbar-shadow: 0 6px 18px rgba(0, 0, 0, 0.16);
+    --footer-bg: #333;
+    --footer-text: #ffffff;
+    --dropdown-bg: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        color-scheme: dark;
+        --app-bg: #0b1220;
+        --app-text: #e5e7eb;
+        --surface: #111827;
+        --surface-alt: #0f172a;
+        --border-soft: rgba(148, 163, 184, 0.28);
+        --navbar-shadow: 0 10px 26px rgba(0, 0, 0, 0.45);
+        --footer-bg: #020617;
+        --footer-text: #cbd5e1;
+        --dropdown-bg: #111827;
+    }
+}
+
+body {
+    background: var(--app-bg);
+    color: var(--app-text);
+}
+
+main {
+    background: transparent;
+}
+
+.navbar {
+    box-shadow: var(--navbar-shadow);
+}
+
+.nav-button {
+    background: var(--surface);
+    color: var(--app-text);
+    border-color: var(--border-soft);
+}
+
+.dropdown-menu {
+    background: var(--dropdown-bg);
+    border: 1px solid var(--border-soft);
+}
+
+.dropdown-menu a {
+    color: var(--app-text);
+}
+
+footer {
+    background-color: var(--footer-bg);
+    color: var(--footer-text);
+}
+
+@media (prefers-color-scheme: dark) {
+    .nav-button:hover {
+        background: #1f2937;
+    }
+
+    .nav-button2 {
+        color: #e2e8f0;
+        border-color: rgba(211, 174, 85, 0.4);
+    }
+
+    .nav-button2:hover {
+        background: rgba(211, 174, 85, 0.2);
+    }
+
+    .dropdown-menu a:hover {
+        background: rgba(211, 174, 85, 0.24);
+    }
+}
+
 .chess-bg-animation .piece {
     position: absolute;
     color: rgba(50, 34, 12, 0.2);
