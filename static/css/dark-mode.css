@@ -1,0 +1,120 @@
+/* System-driven dark mode overrides (no manual toggle) */
+@media (prefers-color-scheme: dark) {
+    html,
+    body {
+        background: #0b1220 !important;
+        color: #e5e7eb !important;
+    }
+
+    /* Generic layout surfaces used across pages */
+    main,
+    section,
+    article,
+    aside,
+    .container,
+    .dashboard-wrapper,
+    .students-container,
+    .admin-container,
+    .admin-dashboard,
+    .admin-wrapper,
+    .profile-container,
+    .materials-container,
+    .registration-container,
+    .chess-pay-wrapper,
+    .learn-container,
+    .view-equiries-container,
+    .applicants-list {
+        color: #e5e7eb !important;
+    }
+
+    /* Panels/cards */
+    .card,
+    [class*="card"],
+    .panel-card,
+    .table-card,
+    .profile-card,
+    .stat-card,
+    .feature,
+    .review-card,
+    .notices-card,
+    .assignment-card,
+    .material-card,
+    .applicant-card,
+    .chess-card,
+    .filter-card {
+        background: #111827 !important;
+        color: #e5e7eb !important;
+        border-color: rgba(148, 163, 184, 0.3) !important;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35) !important;
+    }
+
+    /* Inputs & controls */
+    input,
+    textarea,
+    select,
+    button,
+    .btn,
+    [class*="btn"] {
+        border-color: rgba(148, 163, 184, 0.35) !important;
+    }
+
+    input,
+    textarea,
+    select,
+    .search-box,
+    .search-wrapper input,
+    .input-group input,
+    .input-group select,
+    .input-group textarea {
+        background: #0f172a !important;
+        color: #e5e7eb !important;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+        color: #94a3b8 !important;
+    }
+
+    /* Tables */
+    table,
+    thead,
+    tbody,
+    tr,
+    th,
+    td,
+    .grid-header,
+    .grid-row {
+        background: transparent !important;
+        color: #e5e7eb !important;
+        border-color: rgba(148, 163, 184, 0.25) !important;
+    }
+
+    /* Links and muted text */
+    a {
+        color: #93c5fd;
+    }
+
+    small,
+    .subtitle,
+    .status-note,
+    .dashboard-subtitle,
+    .student-email,
+    [class*="label"],
+    [class*="meta"] {
+        color: #cbd5e1 !important;
+    }
+
+    /* Keep chess navbar visible in dark mode */
+    .navbar {
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45) !important;
+    }
+
+    /* Chess board tiles in learn page */
+    .square.light {
+        background: #cbd5e1 !important;
+    }
+
+    .square.dark {
+        background: #475569 !important;
+    }
+}
