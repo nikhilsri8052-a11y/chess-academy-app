@@ -1462,10 +1462,10 @@ body {
     overflow: hidden;
     pointer-events: none;
     background-image:
-        linear-gradient(45deg, rgba(94, 62, 24, 0.08) 25%, transparent 25%),
-        linear-gradient(-45deg, rgba(94, 62, 24, 0.08) 25%, transparent 25%),
-        linear-gradient(45deg, transparent 75%, rgba(94, 62, 24, 0.08) 75%),
-        linear-gradient(-45deg, transparent 75%, rgba(94, 62, 24, 0.08) 75%);
+        linear-gradient(45deg, var(--bg-board-pattern-1) 25%, transparent 25%),
+        linear-gradient(-45deg, var(--bg-board-pattern-1) 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, var(--bg-board-pattern-1) 75%),
+        linear-gradient(-45deg, transparent 75%, var(--bg-board-pattern-1) 75%);
     background-size: 160px 160px;
     background-position: 0 0, 0 80px, 80px -80px, -80px 0;
     animation: board-shift 18s linear infinite;
@@ -1483,6 +1483,9 @@ body {
     --footer-bg: #333;
     --footer-text: #ffffff;
     --dropdown-bg: #ffffff;
+    --bg-board-pattern-1: rgba(94, 62, 24, 0.08);
+    --bg-piece-color: rgba(50, 34, 12, 0.2);
+    --bg-piece-shadow: rgba(0, 0, 0, 0.08);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -1497,6 +1500,9 @@ body {
         --footer-bg: #020617;
         --footer-text: #cbd5e1;
         --dropdown-bg: #111827;
+        --bg-board-pattern-1: rgba(148, 163, 184, 0.14);
+        --bg-piece-color: rgba(226, 232, 240, 0.28);
+        --bg-piece-shadow: rgba(2, 6, 23, 0.42);
     }
 }
 
@@ -1554,10 +1560,10 @@ footer {
 
 .chess-bg-animation .piece {
     position: absolute;
-    color: rgba(50, 34, 12, 0.2);
+    color: var(--bg-piece-color);
     font-size: clamp(2rem, 5vw, 4rem);
     animation: float-piece 13s ease-in-out infinite;
-    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    text-shadow: 0 4px 10px var(--bg-piece-shadow);
 }
 
 .chess-bg-animation .piece-1 { left: 8%; top: 76%; animation-delay: -3s; }
