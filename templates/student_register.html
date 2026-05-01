@@ -1,75 +1,19 @@
 {% extends "base.html" %}
-{% block title %}Register - SS Chess Academy{% endblock %}
-
+{% block title %}Register{% endblock %}
 {% block content %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
-<div class="registration-container" style="margin: 2rem auto; max-width: 600px; width: 90%;">
-    
-    <h2 style="text-align: center; margin-bottom: 2rem; color: var(--text-dark); font-size: 2rem; font-weight: 800; position: relative; padding-bottom: 0.8rem;">
-        Sign Up today!
-        <div style="content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 80px; height: 3px; background: linear-gradient(90deg, var(--primary-gold) 0%, var(--dark-gold) 100%); border-radius: 2px;"></div>
-    </h2>
-    
-    <div id="error-box" class="form-message form-error" style="display: none;"></div>
-    <div id="success-box" class="form-message form-success" style="display: none;"></div>
-
-    <form id="register-form" class="registration-form" novalidate>
-        <div class="form-group">
-            <label for="name">Full Name *</label>
-            <input type="text" id="name" name="name" placeholder="Enter your full name" required>
-            <small class="field-hint">Letters and spaces only</small>
-        </div>
-        
-        <div class="form-group">
-            <label for="email">Email Address *</label>
-            <input type="email" id="email" name="email" placeholder="your.email@example.com" required>
-            <small class="field-hint">We'll use this for login and communication</small>
-        </div>
-        
-        <div class="form-group">
-            <label for="password">Password *</label>
-            <input type="password" id="password" name="password" placeholder="Create a strong password" required>
-            <small class="field-hint">Minimum 8 characters with uppercase, number, and special character</small>
-        </div>
-        
-        <div class="form-group">
-            <label for="phone">Phone Number *</label>
-            <input type="tel" id="phone" name="phone" placeholder="123-456-7890" required>
-            <small class="field-hint">10-digit number</small>
-        </div>
-        
-        <div class="form-group">
-            <label for="age">Age *</label>
-            <input type="number" id="age" name="age" placeholder="Enter your age" min="5" max="25" required>
-            <small class="field-hint">Must be between 5 and 25 years</small>
-        </div>
-        
-        <div class="form-group">
-            <label for="parent_name">Parent/Guardian Name *</label>
-            <input type="text" id="parent_name" name="parent_name" placeholder="Parent/Guardian full name" required>
-        </div>
-        
-        <div class="form-group">
-            <label for="rating">Current Chess Rating <span class="optional">(Optional)</span></label>
-            <input type="number" id="rating" name="rating" placeholder="e.g., 1200" min="0" max="3000" step="1">
-        </div>
-        
-        <div class="required-note">
-            <small>* Required fields</small>
-        </div>
-        
-        <button type="submit" id="register-btn" class="register-btn">
-            <span id="btn-text">Create Account</span>
-            <div id="btn-spinner" class="spinner"></div>
-        </button>
-        
-        <div class="form-footer">
-            <p>Already have an account? <a href="/student/login">Login here</a></p>
-        </div>
-    </form>
+<div class="auth-card">
+<h2>Create your account</h2>
+<div id="error-box" class="form-error" style="display:none"></div><div id="success-box" class="form-success" style="display:none"></div>
+<form id="register-form" class="auth-form" novalidate>
+<input type="text" id="name" name="name" placeholder="Full name" required>
+<input type="email" id="email" name="email" placeholder="Email" required>
+<input type="password" id="password" name="password" placeholder="Password" required>
+<input type="tel" id="phone" name="phone" placeholder="Phone" required>
+<input type="number" id="age" name="age" placeholder="Age" required>
+<input type="text" id="parent_name" name="parent_name" placeholder="Parent name" required>
+<input type="number" id="rating" name="rating" placeholder="Rating (optional)">
+<button type="submit" id="register-btn" class="btn-submit"><span id="btn-text">Create Account</span><div id="btn-spinner" class="spinner"></div></button>
+</form>
 </div>
 {% endblock %}
-
-{% block scripts %}
-    <script type="module" src="{{ url_for('static', filename='js/student_register.js') }}"></script>
-{% endblock %}
+{% block scripts %}<script type="module" src="{{ url_for('static', filename='js/student_register.js') }}"></script>{% endblock %}

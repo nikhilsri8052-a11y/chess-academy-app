@@ -12,19 +12,9 @@ def home():
     return render_template("home.html")
 
 
-@bp.route("/about")
-def about():
-    return render_template("about.html")
-
-
 @bp.route("/learn")
 def learn():
     return render_template("learn.html")
-
-
-@bp.route("/home-batches")
-def home_batches():
-    return render_template("home_batches.html")
 
 
 @bp.route("/assets/<path:filename>")
