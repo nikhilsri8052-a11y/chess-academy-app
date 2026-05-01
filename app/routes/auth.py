@@ -51,7 +51,7 @@ def enquiry():
 
         return jsonify({"success": True})
 
-    return render_template("enquiry_form.html")
+    return redirect("/#enquiry")
 
 
 # ---------------- ADMIN AUTH ----------------

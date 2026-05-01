@@ -6,139 +6,38 @@
       <meta name="color-scheme" content="light dark">
       <title>{% block title %}My Website{% endblock %}</title>
       <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-      <!-- Chat CSS for all pages -->
       <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
-      {% block extra_head %}{% endblock %}
       <link rel="stylesheet" href="{{ url_for('static', filename='css/dark-mode.css') }}">
+      {% block extra_head %}{% endblock %}
   </head>
   <body>
-      <div class="chess-bg-animation" aria-hidden="true">
-          <span class="piece piece-1">♞</span>
-          <span class="piece piece-2">♛</span>
-          <span class="piece piece-3">♝</span>
-          <span class="piece piece-4">♜</span>
-          <span class="piece piece-5">♟</span>
-          <span class="piece piece-6">♚</span>
-      </div>
+      <div class="chess-rain" aria-hidden="true"></div>
 
       <nav class="navbar">
-          <div class="left">
+          <a href="{{ url_for('main.home') }}" class="nav-logo"><img class="logo-img" src="{{ url_for('static', filename='images/logo.png') }}" alt="Chess logo"></a>
+          <button class="mobile-nav-toggle" aria-label="Open menu" aria-expanded="false">☰</button>
+
+          <div class="nav-links" id="siteNav">
+            <a href="{{ url_for('main.home') }}#about" class="nav-button2">About</a>
+            <a href="{{ url_for('main.home') }}#batches" class="nav-button2">Batches</a>
+            <a href="{{ url_for('main.home') }}#enquiry" class="nav-button2">Contact</a>
+            <a href="{{ url_for('main.learn') }}" class="nav-button2">Learn</a>
+
             {% if is_admin %}
               <a href="{{ url_for('admin.admin_dashboard') }}" class="nav-button">Admin Dashboard</a>
               <a href="{{ url_for('auth.admin_logout') }}" class="nav-button">Logout</a>
-
             {% elif is_student %}
               <a href="{{ url_for('student.student_dashboard') }}" class="nav-button">Dashboard</a>
               <a href="{{ url_for('auth.student_logout') }}" class="nav-button">Logout</a>
-
             {% else %}
-              <div class="dropdown">
-                <a href="{{ url_for('auth.student_login')}}" class="nav-button">Login</a>
-                <div class="dropdown-menu">
-                  <a href="{{ url_for('auth.student_login') }}">Student Login</a>
-                  <a href="{{ url_for('auth.admin_login') }}">Admin Login</a>
-                </div>
-              </div>
+              <a href="{{ url_for('auth.student_login') }}" class="nav-button">Login</a>
+              <a href="{{ url_for('auth.student_register_page') }}" class="nav-button">Sign Up</a>
             {% endif %}
           </div>
-
-          <div class="center">
-            <a href="{{ url_for('main.about') }}" class="nav-button2">About</a>
-            <a href="{{ url_for('main.learn') }}" class="nav-button2">Learn</a>
-            <a href="{{ url_for('main.home') }}" class="nav-logo"><img class="logo-img" src="{{ url_for('static', filename='images/logo.png') }}" alt="Chess logo"></a>
-            <a href="{{ url_for('main.home_batches') }}" class="nav-button2">Batches</a>
-            <a href="{{ url_for('auth.enquiry') }}" class="nav-button2">Contact</a>
-          </div>
-          <div class="right">
-            <a href="{{ url_for('auth.student_register_page') }}" class="nav-button">Sign Up</a>
-          </div>
       </nav>
-      
-      <main>
-          {% block content %}
-          {% endblock %}
-      </main>
-      
-      <!-- Chat Widget (Floating on all pages) -->
-      <button class="chat-toggle-btn" onclick="toggleChat()">
-          <div class="chat-icon">
-              <div class="chess-icon">♟️</div>
-              <div class="pulse-ring"></div>
-          </div>
-      </button>
-
-      <div id="chat-box" class="chat-hidden">
-          <div id="chat-header">
-              <div class="ai-status">
-                  <div class="status-indicator"></div>
-                  <span class="ai-name">♟️ Chess AI Assistant</span>
-              </div>
-              <div class="header-controls">
-                  <button class="header-btn" onclick="clearChat()" title="Clear chat">
-                      🗑️
-                  </button>
-                  <button class="header-btn close-btn" onclick="toggleChat()" title="Close">
-                      ✕
-                  </button>
-              </div>
-          </div>
-          
-          <div id="chat-body">
-              <div class="welcome-message">
-                  <div class="message bot-msg typing-animation">
-                      <div class="message-header">
-                          <div class="bot-avatar">AI</div>
-                          <div class="message-info">
-                              <span class="sender-name">Chess Assistant</span>
-                              <span class="message-time">Just now</span>
-                          </div>
-                      </div>
-                      <div class="message-content">
-                          <div class="typing-indicator">
-                              <span></span>
-                              <span></span>
-                              <span></span>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-
-          <div id="chat-input-area">
-              <div class="suggestion-chips">
-                  <button class="chip" onclick="quickAction('batches')">📅 Batches & Timing</button>
-                  <button class="chip" onclick="quickAction('fees')">💰 Fee Structure</button>
-                  <button class="chip" onclick="quickAction('enroll')">📝 How to Join</button>
-                  <button class="chip" onclick="quickAction('contact')">📞 Contact Info</button>
-              </div>
-              <div class="input-wrapper">
-                  <input type="text" id="user-input" 
-                         placeholder="Ask about chess coaching..." 
-                         onkeypress="handleEnter(event)"
-                         autocomplete="off">
-                  <button class="send-btn" onclick="sendMessage()" id="send-button">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                          <path d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13" 
-                                stroke="currentColor" stroke-width="2" 
-                                stroke-linecap="round" stroke-linejoin="round"/>
-                      </svg>
-                  </button>
-                  <button class="mic-btn" onclick="toggleVoice()" title="Voice input">
-                      🎤
-                  </button>
-              </div>
-              <div class="input-footer">
-                  <small>Chess AI • Ask about batches, fees, or tournaments</small>
-              </div>
-          </div>
-      </div>
-      
-      <footer>
-          <p>&copy; </p>
-      </footer>
-      
-      <!-- Scripts -->
+      <main>{% block content %}{% endblock %}</main>
       <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+      <script src="{{ url_for('static', filename='js/site.js') }}"></script>
       {% block scripts %}{% endblock %}
   </body>
 </html>
