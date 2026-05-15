@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}Login | Chess Class (Srivastava){% endblock %}
+
+{% block extra_head %}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="login-page-wrapper">
+  <div class="login-container">
+    
+    <div class="login-header">
+      <div class="login-logo">♔</div>
+      <h2>Welcome Back</h2>
+      <p>Select your portal to continue</p>
+    </div>
+
+    <!-- Toggle Tabs -->
+    <div class="login-tabs">
+      <button class="tab-btn active" data-tab="student-tab">
+        <i class="fas fa-user-graduate"></i> Student
+      </button>
+      <button class="tab-btn" data-tab="admin-tab">
+        <i class="fas fa-user-shield"></i> Admin
+      </button>
+    </div>
+
+    <div class="form-error" id="global-error" style="display: none;"></div>
+
+    <!-- Student Login Form -->
+    <div class="tab-content active" id="student-tab">
+      <form id="student-login-form" class="auth-form">
+        <div class="input-group">
+          <label for="student-email"><i class="fas fa-envelope"></i> Email</label>
+          <div class="input-wrapper">
+            <input id="student-email" type="email" placeholder="student@example.com" required autocomplete="username">
+            <i class="fas fa-at input-icon"></i>
+          </div>
+        </div>
+        <div class="input-group">
+          <label for="student-password"><i class="fas fa-lock"></i> Password</label>
+          <div class="input-wrapper">
+            <input id="student-password" type="password" placeholder="••••••••" required autocomplete="current-password">
+            <button type="button" class="password-toggle"><i class="fas fa-eye"></i></button>
+          </div>
+        </div>
+        <div class="form-actions">
+          <a href="#" class="forgot-link">Forgot Password?</a>
+        </div>
+        <button type="submit" class="btn-submit login-btn student-btn">
+          <span>Student Login</span> <i class="fas fa-arrow-right"></i>
+          <div class="loading-spinner"></div>
+        </button>
+      </form>
+      <div class="register-prompt">
+        <p>New here? <a href="{{ url_for('auth.student_register_page') }}">Create an account</a></p>
+      </div>
+    </div>
+
+    <!-- Admin Login Form -->
+    <div class="tab-content" id="admin-tab">
+      <form id="admin-login-form" class="auth-form">
+        <div class="input-group">
+          <label for="admin-email"><i class="fas fa-envelope"></i> Admin Email</label>
+          <div class="input-wrapper">
+            <input id="admin-email" type="email" placeholder="admin@example.com" required autocomplete="username">
+            <i class="fas fa-user-tie input-icon"></i>
+          </div>
+        </div>
+        <div class="input-group">
+          <label for="admin-password"><i class="fas fa-key"></i> Password</label>
+          <div class="input-wrapper">
+            <input id="admin-password" type="password" placeholder="••••••••" required autocomplete="current-password">
+            <button type="button" class="password-toggle"><i class="fas fa-eye"></i></button>
+          </div>
+        </div>
+        <button type="submit" class="btn-submit login-btn admin-btn">
+          <span>Admin Login</span> <i class="fas fa-arrow-right"></i>
+          <div class="loading-spinner"></div>
+        </button>
+      </form>
+    </div>
+    
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="module" src="{{ url_for('static', filename='js/login.js') }}"></script>
+{% endblock %}

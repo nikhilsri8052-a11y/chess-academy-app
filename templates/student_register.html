@@ -1,19 +1,138 @@
 {% extends "base.html" %}
-{% block title %}Register{% endblock %}
+
+{% block title %}Register | Chess Class (Srivastava){% endblock %}
+
+{% block extra_head %}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+  <style>
+    /* Registration specific tweaks */
+    .register-container {
+        max-width: 500px;
+    }
+    .password-strength-container {
+        margin-top: 0.5rem;
+        font-size: 0.8rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .strength-bar-bg {
+        flex: 1;
+        height: 6px;
+        background: var(--border-color);
+        border-radius: 3px;
+        overflow: hidden;
+    }
+    .strength-bar {
+        height: 100%;
+        width: 0%;
+        background: transparent;
+        transition: width 0.3s ease, background-color 0.3s ease;
+    }
+    .strength-label {
+        font-weight: 700;
+        width: 50px;
+        text-align: right;
+    }
+    .two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+  </style>
+{% endblock %}
+
 {% block content %}
-<div class="auth-card">
-<h2>Create your account</h2>
-<div id="error-box" class="form-error" style="display:none"></div><div id="success-box" class="form-success" style="display:none"></div>
-<form id="register-form" class="auth-form" novalidate>
-<input type="text" id="name" name="name" placeholder="Full name" required>
-<input type="email" id="email" name="email" placeholder="Email" required>
-<input type="password" id="password" name="password" placeholder="Password" required>
-<input type="tel" id="phone" name="phone" placeholder="Phone" required>
-<input type="number" id="age" name="age" placeholder="Age" required>
-<input type="text" id="parent_name" name="parent_name" placeholder="Parent name" required>
-<input type="number" id="rating" name="rating" placeholder="Rating (optional)">
-<button type="submit" id="register-btn" class="btn-submit"><span id="btn-text">Create Account</span><div id="btn-spinner" class="spinner"></div></button>
-</form>
+<div class="login-page-wrapper">
+  <div class="login-container register-container">
+    
+    <div class="login-header">
+      <div class="login-logo">♙</div>
+      <h2>Join the Academy</h2>
+      <p>Create your student account to get started</p>
+    </div>
+
+    <div class="form-error" id="error-box" style="display: none;"></div>
+    <div class="form-error" id="success-box" style="display: none; background: rgba(40, 167, 69, 0.1); color: #28a745; border-left-color: #28a745;"></div>
+
+    <form id="register-form" class="auth-form" novalidate>
+      
+      <div class="input-group">
+        <label for="name"><i class="fas fa-user"></i> Full Name</label>
+        <div class="input-wrapper">
+          <input type="text" id="name" name="name" placeholder="John Doe" required>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="email"><i class="fas fa-envelope"></i> Email</label>
+        <div class="input-wrapper">
+          <input type="email" id="email" name="email" placeholder="student@example.com" required>
+          <i class="fas fa-at input-icon"></i>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="password"><i class="fas fa-lock"></i> Password</label>
+        <div class="input-wrapper">
+          <input type="password" id="password" name="password" placeholder="Min. 8 characters" required>
+          <button type="button" class="password-toggle"><i class="fas fa-eye"></i></button>
+        </div>
+        <div class="password-strength-container">
+          <span>Strength:</span>
+          <div class="strength-bar-bg">
+            <div id="password-strength" class="strength-bar"></div>
+          </div>
+          <span id="strength-label" class="strength-label"></span>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="phone"><i class="fas fa-phone"></i> Phone Number</label>
+        <div class="input-wrapper">
+          <input type="tel" id="phone" name="phone" placeholder="(123) 456-7890" required>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="input-group">
+          <label for="age"><i class="fas fa-birthday-cake"></i> Age</label>
+          <div class="input-wrapper">
+            <input type="number" id="age" name="age" placeholder="e.g. 12" required min="5" max="99">
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label for="rating"><i class="fas fa-star"></i> FIDE Rating</label>
+          <div class="input-wrapper">
+            <input type="number" id="rating" name="rating" placeholder="Optional">
+          </div>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="parent_name"><i class="fas fa-user-friends"></i> Parent/Guardian Name</label>
+        <div class="input-wrapper">
+          <input type="text" id="parent_name" name="parent_name" placeholder="Required" required>
+        </div>
+      </div>
+
+      <button type="submit" id="register-btn" class="btn-submit login-btn student-btn" style="margin-top: 1rem;">
+        <span id="btn-text">Create Account</span> <i class="fas fa-arrow-right"></i>
+        <div id="btn-spinner" class="loading-spinner"></div>
+      </button>
+
+    </form>
+
+    <div class="register-prompt">
+      <p>Already have an account? <a href="{{ url_for('auth.login_page') }}">Log in here</a></p>
+    </div>
+    
+  </div>
 </div>
 {% endblock %}
-{% block scripts %}<script type="module" src="{{ url_for('static', filename='js/student_register.js') }}"></script>{% endblock %}
+
+{% block scripts %}
+<script type="module" src="{{ url_for('static', filename='js/student_register.js') }}"></script>
+{% endblock %}

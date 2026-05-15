@@ -1,6 +1,0 @@
-@media (prefers-color-scheme: dark){
-  body{background:#020617!important;color:#e2e8f0!important}
-  .hero,.about-us,.batches-container,.enquiry-container,.auth-card{background:#111827!important;color:#e2e8f0!important}
-  input,textarea,select{background:#0f172a!important;color:#e2e8f0!important;border-color:#334155!important}
-  .nav-button2{border-color:#64748b}
-}

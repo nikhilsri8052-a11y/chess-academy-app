@@ -1,20 +1,437 @@
 {% extends "base.html" %}
-{% block title %}Home Page{% endblock %}
-{% block content %}
-<section class="hero"><h1>Welcome to Our Chess Learning Platform</h1><p>Learn and improve with guided chess coaching.</p></section>
-<section id="about" class="about-us"><div class="about-container"><h2>About Chess Class (Srivastava)</h2><p>Structured chess learning with personal mentorship and measurable progress.</p></div></section>
-<section id="batches" class="batches-container"><h2>Class Batches & Fees</h2><div class="batches-grid"><div class="batch-card"><h3>Offline (MWF)</h3><p>5:00 PM — 8:00 PM</p></div><div class="batch-card"><h3>Online (TTS)</h3><p>4:00 PM — 5:00 PM</p></div></div></section>
-<section id="enquiry" class="enquiry-container">
-  <h2>Contact Us</h2>
-  <form class="enquiry-form" id="enquiryForm">
-    <input type="text" id="name" name="name" required placeholder="Full name">
-    <input type="email" id="email" name="email" required placeholder="Email">
-    <input type="tel" id="phone" name="phone" required placeholder="Phone">
-    <select id="batch" name="batch"><option value="">Select batch</option><option value="offline">Offline</option><option value="online">Online</option></select>
-    <textarea id="message" name="message" required placeholder="Message"></textarea>
-    <button type="submit" class="btn-submit">Submit Enquiry</button>
-  </form>
-  <div id="formMessage" class="form-message" style="display:none"></div>
-</section>
+
+{% block title %}Chess Class (Srivastava) — Master Chess in Nagpur{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
 {% endblock %}
-{% block scripts %}<script src="{{ url_for('static', filename='js/enquiry_form.js') }}"></script>{% endblock %}
+
+{% block content %}
+
+<!-- ═══════════════════════════════════════════════
+     HERO SECTION
+═══════════════════════════════════════════════ -->
+<section class="hp-hero hp-hero-fullbleed">
+  <!-- Image Slider Background -->
+  <div class="hp-hero-slider" aria-hidden="true">
+    <div class="slide active"
+      style="background-image: url('{{ url_for('static', filename='images/front-images/1.webp') }}');"></div>
+    <div class="slide" style="background-image: url('{{ url_for('static', filename='images/front-images/2.webp') }}');">
+    </div>
+    <div class="slide" style="background-image: url('{{ url_for('static', filename='images/front-images/3.webp') }}');">
+    </div>
+    <div class="slide" style="background-image: url('{{ url_for('static', filename='images/front-images/4.webp') }}');">
+    </div>
+    <div class="slide" style="background-image: url('{{ url_for('static', filename='images/front-images/5.webp') }}');">
+    </div>
+    <div class="slide" style="background-image: url('{{ url_for('static', filename='images/front-images/6.webp') }}');">
+    </div>
+    <div class="slide" style="background-image: url('{{ url_for('static', filename='images/front-images/7.webp') }}');">
+    </div>
+    <div class="slider-overlay"></div>
+  </div>
+
+  <!-- Optional Slider Controls -->
+  <div class="slider-dots">
+    <span class="dot active" data-slide="0"></span>
+    <span class="dot" data-slide="1"></span>
+    <span class="dot" data-slide="2"></span>
+    <span class="dot" data-slide="3"></span>
+    <span class="dot" data-slide="4"></span>
+    <span class="dot" data-slide="5"></span>
+    <span class="dot" data-slide="6"></span>
+  </div>
+
+  <div class="hp-hero-inner">
+    <!-- Floating badge -->
+    <div class="hp-hero-badge reveal">
+      <span class="hp-badge-dot"></span>
+      Nagpur's #1 Rated Chess Academy
+    </div>
+
+    <h1 class="hp-hero-title reveal">
+      Where <em class="hp-gold-italic">Champions</em><br>
+      Are Born
+    </h1>
+
+    <p class="hp-hero-sub reveal">
+      Expert chess coaching for all levels — from first moves to tournament glory.
+      Join 800+ students who've transformed their game under Coach Srivastava.
+    </p>
+
+    <div class="hp-hero-cta reveal">
+      <a href="{{ url_for('auth.student_register_page') }}" class="hp-btn-primary">
+        <span>Start Your Journey</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M5 12h14M12 5l7 7-7 7" />
+        </svg>
+      </a>
+      <a href="/#batches-section" class="hp-btn-ghost scroll-link">View Batches</a>
+    </div>
+
+    <!-- Floating stat chips -->
+    <div class="hp-hero-stats reveal">
+      <div class="hp-stat-chip">
+        <span class="hp-stat-num" data-count="4.9">0</span><span class="hp-stat-unit">★</span>
+        <span class="hp-stat-lbl">Google Rating</span>
+      </div>
+      <div class="hp-stat-chip">
+        <span class="hp-stat-num" data-count="800">0</span><span class="hp-stat-unit">+</span>
+        <span class="hp-stat-lbl">Students Trained</span>
+      </div>
+      <div class="hp-stat-chip">
+        <span class="hp-stat-num" data-count="10">0</span><span class="hp-stat-unit">+</span>
+        <span class="hp-stat-lbl">Years Excellence</span>
+      </div>
+      <div class="hp-stat-chip">
+        <span class="hp-stat-num" data-count="41">0</span><span class="hp-stat-unit">+</span>
+        <span class="hp-stat-lbl">Reviews</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Decorative chess piece -->
+  <div class="hp-hero-piece-deco" aria-hidden="true">♛</div>
+
+  <div class="hp-hero-scroll-hint">
+    <div class="hp-scroll-arrow"></div>
+    <span>Scroll to explore</span>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════
+     ABOUT SECTION
+═══════════════════════════════════════════════ -->
+<section id="about-section" class="hp-about">
+  <div class="hp-container">
+
+    <div class="hp-about-grid">
+      <!-- Left: Text -->
+      <div class="hp-about-text reveal-left">
+        <span class="hp-eyebrow">Who We Are</span>
+        <h2 class="hp-section-title">More Than a Class — <br><em class="hp-gold-italic">A Community</em></h2>
+        <p class="hp-about-desc">Chess Class (Srivastava) has been shaping champions in Nagpur for over a decade. We
+          believe chess is not just a game — it builds patience, sharp thinking, and resilience that carries students
+          far beyond the board.</p>
+
+        <div class="hp-about-pillars">
+          <div class="hp-pillar">
+            <div class="hp-pillar-icon">♟</div>
+            <div>
+              <h4>Structured Learning</h4>
+              <p>Progressively designed curriculum from beginner moves to advanced strategies.</p>
+            </div>
+          </div>
+          <div class="hp-pillar">
+            <div class="hp-pillar-icon">🏆</div>
+            <div>
+              <h4>Tournament Ready</h4>
+              <p>Weekly Swiss format tournaments to build real competitive experience.</p>
+            </div>
+          </div>
+          <div class="hp-pillar">
+            <div class="hp-pillar-icon">📖</div>
+            <div>
+              <h4>Personal Guidance</h4>
+              <p>Curated PDFs and one-on-one strategy sessions tailored to each student.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="hp-about-actions">
+          <a href="/#contact-section" class="hp-btn-primary scroll-link">Get In Touch</a>
+          <a href="/#batches-section" class="hp-btn-outline scroll-link">View Schedule</a>
+        </div>
+      </div>
+
+      <!-- Right: Cards -->
+      <div class="hp-about-cards reveal-right">
+        <div class="hp-info-card hp-card-dark">
+          <div class="hp-card-icon">♔</div>
+          <blockquote>"Chess teaches patience, strategic thinking, and the discipline to keep improving — lessons that
+            last a lifetime."</blockquote>
+          <cite>— Coach Srivastava</cite>
+        </div>
+        <div class="hp-info-card hp-card-gold">
+          <div class="hp-mini-stat"><span>4.9</span> Stars</div>
+          <p>Rated by 41+ verified students on Google</p>
+        </div>
+        <div class="hp-info-card hp-card-glass">
+          <div class="hp-mini-stat"><span>800+</span></div>
+          <p>Students trained across Nagpur & online</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════
+     BATCHES SECTION
+═══════════════════════════════════════════════ -->
+<section id="batches-section" class="hp-batches">
+  <div class="hp-container">
+
+    <div class="hp-section-header reveal">
+      <span class="hp-eyebrow">Schedule & Fees</span>
+      <h2 class="hp-section-title">Class Batches <em class="hp-gold-italic">&amp; Pricing</em></h2>
+      <p class="hp-section-sub">Expert-led coaching for every level. We assign you the ideal batch after a professional
+        skill assessment.</p>
+    </div>
+
+    <div class="hp-batches-grid">
+      <!-- Offline -->
+      <div class="hp-batch-block reveal">
+        <div class="hp-batch-block-header">
+          <span class="hp-batch-icon">🏛️</span>
+          <h3>Offline Classes</h3>
+          <span class="hp-batch-tag">In-Person</span>
+        </div>
+        <div class="hp-batch-cards">
+          <div class="hp-schedule-card hp-schedule-featured">
+            <div class="hp-schedule-badge">Intensive</div>
+            <h4>Advance Batch</h4>
+            <div class="hp-schedule-days">
+              <span>Tue</span><span>Thu</span><span>Sat</span>
+            </div>
+            <div class="hp-schedule-time">5:00 PM — 8:00 PM</div>
+          </div>
+          <div class="hp-schedule-card">
+            <h4>Intermediate / Basic</h4>
+            <div class="hp-schedule-days">
+              <span>Mon</span><span>Wed</span><span>Fri</span>
+            </div>
+            <div class="hp-schedule-time">5:00 PM — 8:00 PM</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Online -->
+      <div class="hp-batch-block reveal">
+        <div class="hp-batch-block-header">
+          <span class="hp-batch-icon">💻</span>
+          <h3>Online Classes</h3>
+          <span class="hp-batch-tag">Remote</span>
+        </div>
+        <div class="hp-batch-cards">
+          <div class="hp-schedule-card">
+            <h4>Online Batch 1</h4>
+            <div class="hp-schedule-days">
+              <span>Tue</span><span>Thu</span><span>Sat</span>
+            </div>
+            <div class="hp-schedule-time">4:00 PM — 5:00 PM</div>
+          </div>
+          <div class="hp-schedule-card">
+            <h4>Online Batch 2</h4>
+            <div class="hp-schedule-days">
+              <span>Mon</span><span>Wed</span><span>Fri</span>
+            </div>
+            <div class="hp-schedule-time">6:00 PM — 7:00 PM</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tournament -->
+      <div class="hp-batch-block hp-tournament-block reveal">
+        <div class="hp-tournament-inner">
+          <div class="hp-t-icon">🏆</div>
+          <div>
+            <h3>Weekly Swiss Tournament</h3>
+            <p>Every Sunday — students compete in internationally formatted tournaments, sharpening their edge in real
+              match conditions.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pricing -->
+    <div class="hp-pricing reveal">
+      <h3 class="hp-pricing-title">Flexible Pricing</h3>
+      <div class="hp-pricing-cards">
+        <div class="hp-price-card">
+          <span class="hp-price-plan">Monthly</span>
+          <div class="hp-price-amount">₹3,000<span>/month</span></div>
+          <p>Standard billing per student</p>
+          <a href="{{ url_for('auth.student_register_page') }}" class="hp-price-btn">Enroll</a>
+        </div>
+        <div class="hp-price-card hp-price-featured">
+          <div class="hp-price-save">💰 Save ₹1,500</div>
+          <span class="hp-price-plan">Quarterly</span>
+          <div class="hp-price-amount">₹7,500<span>/3 months</span></div>
+          <p>One-time payment — best value</p>
+          <a href="{{ url_for('auth.student_register_page') }}" class="hp-price-btn">Enroll</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════
+     TESTIMONIALS
+═══════════════════════════════════════════════ -->
+<section class="hp-testimonials">
+  <div class="hp-container">
+    <div class="hp-section-header reveal">
+      <span class="hp-eyebrow">Testimonials</span>
+      <h2 class="hp-section-title">What Our <em class="hp-gold-italic">Students Say</em></h2>
+    </div>
+
+    <div class="hp-reviews-track">
+      <div class="hp-review-card reveal">
+        <div class="hp-review-stars">★★★★★</div>
+        <p>"I am so grateful to be a student of this Coaching. Teachers are so kind and generous. Best in Nagpur for
+          Chess — they provide PDFs, tournaments, tests and many activities. Very supportive."</p>
+        <div class="hp-reviewer">
+          <div class="hp-reviewer-av">AN</div>
+          <div>
+            <strong>Alfiya Nafeesh</strong>
+            <span>Student</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hp-review-card reveal">
+        <div class="hp-review-stars">★★★★★</div>
+        <p>"This is a really good class. I used to play years ago but had a break. After joining, my game got even
+          better than before. I would recommend this class to everyone who wants to improve."</p>
+        <div class="hp-reviewer">
+          <div class="hp-reviewer-av">KM</div>
+          <div>
+            <strong>Kirti Maniyar</strong>
+            <span>Student</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hp-review-card reveal">
+        <div class="hp-review-stars">★★★★★</div>
+        <p>"I am a very old student and I can say this is the best chess class in Nagpur. Sir and ma'am always supported
+          me and due to their guidance I was able to get my FIDE rating. Truly grateful."</p>
+        <div class="hp-reviewer">
+          <div class="hp-reviewer-av">PD</div>
+          <div>
+            <strong>Pradipt Dongre</strong>
+            <span>Rated Player</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════
+     CONTACT SECTION
+═══════════════════════════════════════════════ -->
+<section id="contact-section" class="hp-contact">
+  <div class="hp-container">
+
+    <div class="hp-contact-grid">
+      <!-- Left -->
+      <div class="hp-contact-info reveal-left">
+        <span class="hp-eyebrow">Reach Us</span>
+        <h2 class="hp-section-title">Get In <em class="hp-gold-italic">Touch</em></h2>
+        <p>Have questions about our classes or want to know which batch is right for you? Fill out the form and we'll
+          respond promptly.</p>
+
+        <div class="hp-contact-details">
+          <div class="hp-contact-item">
+            <div class="hp-contact-ico">📍</div>
+            <div>
+              <strong>Address</strong>
+              <span>Flat No. 104, Vithal Rukmini Apartments, Nagpur, Maharashtra</span>
+            </div>
+          </div>
+          <div class="hp-contact-item">
+            <div class="hp-contact-ico">📱</div>
+            <div>
+              <strong>Phone / WhatsApp</strong>
+              <span><a href="tel:8830435532">8830435532</a> &nbsp;|&nbsp; <a href="tel:09422149220">094221
+                  49220</a></span>
+            </div>
+          </div>
+          <div class="hp-contact-item">
+            <div class="hp-contact-ico">⏰</div>
+            <div>
+              <strong>Class Timing</strong>
+              <span>Classes start from 5:00 PM onwards</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Form -->
+      <div class="hp-contact-form-wrap reveal-right">
+        <form class="hp-contact-form" id="enquiryForm">
+          <div class="hp-form-row">
+            <div class="hp-form-group">
+              <label for="enq-name">Full Name *</label>
+              <input type="text" id="enq-name" name="name" placeholder="John Doe" required>
+            </div>
+            <div class="hp-form-group">
+              <label for="enq-phone">Phone *</label>
+              <input type="tel" id="enq-phone" name="phone" placeholder="10-digit number" required>
+            </div>
+          </div>
+          <div class="hp-form-group">
+            <label for="enq-email">Email *</label>
+            <input type="email" id="enq-email" name="email" placeholder="your@email.com" required>
+          </div>
+          <div class="hp-form-group">
+            <label for="enq-batch">Interested Batch</label>
+            <select id="enq-batch" name="batch">
+              <option value="">Select a batch</option>
+              <option value="offline-advance">Offline — Advance (Tue/Thu/Sat)</option>
+              <option value="offline-basic">Offline — Intermediate/Basic (Mon/Wed/Fri)</option>
+              <option value="online-batch1">Online — Batch 1 (Tue/Thu/Sat)</option>
+              <option value="online-batch2">Online — Batch 2 (Mon/Wed/Fri)</option>
+            </select>
+          </div>
+          <div class="hp-form-group">
+            <label for="enq-message">Message *</label>
+            <textarea id="enq-message" name="message" rows="4"
+              placeholder="Tell us about your interest in chess classes..." required></textarea>
+          </div>
+          <button type="submit" class="hp-btn-primary hp-form-submit">
+            <span>Send Message</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13" />
+            </svg>
+          </button>
+          <div id="formMessage" class="hp-form-msg" style="display:none;"></div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════
+     FINAL CTA BANNER
+═══════════════════════════════════════════════ -->
+<section class="hp-cta-banner">
+  <div class="hp-cta-banner-inner">
+    <div class="hp-cta-piece" aria-hidden="true">♟</div>
+    <div class="hp-cta-text">
+      <h2 style="color:bisque;">Ready to make your first move?</h2>
+      <p>Join hundreds of students who've transformed their game at Chess Class (Srivastava).</p>
+    </div>
+    <div class="hp-cta-actions">
+      <a href="{{ url_for('auth.student_register_page') }}" class="hp-btn-primary">Enroll Now</a>
+      <a href="/#contact-section" class="hp-btn-ghost scroll-link">Talk to Us</a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/enquiry_form.js') }}"></script>
+<script src="{{ url_for('static', filename='js/home.js') }}"></script>
+{% endblock %}

@@ -4,40 +4,224 @@
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="color-scheme" content="light dark">
-      <title>{% block title %}My Website{% endblock %}</title>
-      <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-      <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
-      <link rel="stylesheet" href="{{ url_for('static', filename='css/dark-mode.css') }}">
+      <title>{% block title %}Chess Class (Srivastava){% endblock %}</title>
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/combined.css') }}">
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
       {% block extra_head %}{% endblock %}
   </head>
   <body>
-      <div class="chess-rain" aria-hidden="true"></div>
+      <div class="chess-bg-animation" aria-hidden="true">
+          <span class="piece">♔</span>
+          <span class="piece">♕</span>
+          <span class="piece">♖</span>
+          <span class="piece">♗</span>
+          <span class="piece">♘</span>
+          <span class="piece">♙</span>
+          <span class="piece">♔</span>
+          <span class="piece">♕</span>
+          <span class="piece">♖</span>
+          <span class="piece">♗</span>
+          <span class="piece">♘</span>
+          <span class="piece">♙</span>
+          <span class="piece">♔</span>
+          <span class="piece">♕</span>
+          <span class="piece">♖</span>
+          <span class="piece">♗</span>
+          <span class="piece">♘</span>
+          <span class="piece">♙</span>
+          <span class="piece">♔</span>
+          <span class="piece">♕</span>
+      </div>
 
       <nav class="navbar">
-          <a href="{{ url_for('main.home') }}" class="nav-logo"><img class="logo-img" src="{{ url_for('static', filename='images/logo.png') }}" alt="Chess logo"></a>
-          <button class="mobile-nav-toggle" aria-label="Open menu" aria-expanded="false">☰</button>
+          <div class="nav-container">
+            <div class="left">
+              {% if is_admin %}
+                <a href="{{ url_for('admin.admin_dashboard') }}" class="nav-button">Admin Dashboard</a>
+                <a href="{{ url_for('auth.admin_logout') }}" class="nav-button">Logout</a>
 
-          <div class="nav-links" id="siteNav">
-            <a href="{{ url_for('main.home') }}#about" class="nav-button2">About</a>
-            <a href="{{ url_for('main.home') }}#batches" class="nav-button2">Batches</a>
-            <a href="{{ url_for('main.home') }}#enquiry" class="nav-button2">Contact</a>
-            <a href="{{ url_for('main.learn') }}" class="nav-button2">Learn</a>
+              {% elif is_student %}
+                <a href="{{ url_for('student.student_dashboard') }}" class="nav-button">Dashboard</a>
+                <a href="{{ url_for('auth.student_logout') }}" class="nav-button">Logout</a>
 
-            {% if is_admin %}
-              <a href="{{ url_for('admin.admin_dashboard') }}" class="nav-button">Admin Dashboard</a>
-              <a href="{{ url_for('auth.admin_logout') }}" class="nav-button">Logout</a>
-            {% elif is_student %}
-              <a href="{{ url_for('student.student_dashboard') }}" class="nav-button">Dashboard</a>
-              <a href="{{ url_for('auth.student_logout') }}" class="nav-button">Logout</a>
-            {% else %}
-              <a href="{{ url_for('auth.student_login') }}" class="nav-button">Login</a>
-              <a href="{{ url_for('auth.student_register_page') }}" class="nav-button">Sign Up</a>
-            {% endif %}
+              {% else %}
+                <a href="/login" class="nav-button">Login</a>
+              {% endif %}
+            </div>
+
+            <div class="center">
+              <a href="/#about-section" class="nav-button2 scroll-link">About</a>
+              <a href="{{ url_for('main.learn') }}" class="nav-button2">Learn</a>
+              <a href="{{ url_for('main.home') }}" class="nav-logo"><img class="logo-img" src="{{ url_for('static', filename='images/logo.png') }}" alt="Chess logo"></a>
+              <a href="/#batches-section" class="nav-button2 scroll-link">Batches</a>
+              <a href="/#contact-section" class="nav-button2 scroll-link">Contact</a>
+            </div>
+
+            <div class="right">
+              <button id="dark-mode-toggle" class="nav-button dark-mode-btn" title="Toggle Dark Mode">
+                <span class="dark-mode-icon">🌙</span>
+              </button>
+              <a href="{{ url_for('auth.student_register_page') }}" class="nav-button nav-signup">Sign Up</a>
+            </div>
+
+            <!-- Mobile menu button -->
+            <button class="mobile-menu-btn" id="mobile-menu-btn">
+              <span class="hamburger-line"></span>
+              <span class="hamburger-line"></span>
+              <span class="hamburger-line"></span>
+            </button>
+          </div>
+
+          <!-- Mobile menu -->
+          <div class="mobile-menu" id="mobile-menu">
+            <div class="mobile-menu-content">
+              <a href="/#about-section" class="mobile-nav-item scroll-link">About</a>
+              <a href="{{ url_for('main.learn') }}" class="mobile-nav-item">Learn</a>
+              <a href="/#batches-section" class="mobile-nav-item scroll-link">Batches</a>
+              <a href="/#contact-section" class="mobile-nav-item scroll-link">Contact</a>
+              <div class="mobile-menu-divider"></div>
+              {% if is_admin %}
+                <a href="{{ url_for('admin.admin_dashboard') }}" class="mobile-nav-item">Admin Dashboard</a>
+                <a href="{{ url_for('auth.admin_logout') }}" class="mobile-nav-item">Logout</a>
+              {% elif is_student %}
+                <a href="{{ url_for('student.student_dashboard') }}" class="mobile-nav-item">Dashboard</a>
+                <a href="{{ url_for('auth.student_logout') }}" class="mobile-nav-item">Logout</a>
+              {% else %}
+                <button id="dark-mode-toggle-mobile" class="mobile-nav-item dark-mode-btn" title="Toggle Dark Mode">
+                  <span class="dark-mode-icon">🌙</span> Dark Mode
+                </button>
+                <a href="/login" class="mobile-nav-item">Login</a>
+                <a href="{{ url_for('auth.student_register_page') }}" class="mobile-nav-item mobile-signup">Sign Up</a>
+              {% endif %}
+            </div>
           </div>
       </nav>
-      <main>{% block content %}{% endblock %}</main>
+      
+      <main>
+          {% block content %}
+          {% endblock %}
+      </main>
+      
+      <!-- Chat Widget -->
+      <button class="chat-toggle-btn" onclick="toggleChat()">
+          <div class="chat-icon">
+              <div class="chess-icon">♟️</div>
+              <div class="pulse-ring"></div>
+          </div>
+      </button>
+
+      <div id="chat-box" class="chat-hidden">
+          <div id="chat-header">
+              <div class="ai-status">
+                  <div class="status-indicator"></div>
+                  <span class="ai-name">♟️ Chess AI Assistant</span>
+              </div>
+              <div class="header-controls">
+                  <button class="header-btn" onclick="clearChat()" title="Clear chat">🗑️</button>
+                  <button class="header-btn close-btn" onclick="toggleChat()" title="Close">✕</button>
+              </div>
+          </div>
+          
+          <div id="chat-body">
+              <div class="welcome-message">
+                  <div class="message bot-msg typing-animation">
+                      <div class="message-header">
+                          <div class="bot-avatar">AI</div>
+                          <div class="message-info">
+                              <span class="sender-name">Chess Assistant</span>
+                              <span class="message-time">Just now</span>
+                          </div>
+                      </div>
+                      <div class="message-content">
+                          <div class="typing-indicator">
+                              <span></span><span></span><span></span>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+          <div id="chat-input-area">
+              <div class="suggestion-chips">
+                  <button class="chip" onclick="quickAction('batches')">📅 Batches & Timing</button>
+                  <button class="chip" onclick="quickAction('fees')">💰 Fee Structure</button>
+                  <button class="chip" onclick="quickAction('enroll')">📝 How to Join</button>
+                  <button class="chip" onclick="quickAction('contact')">📞 Contact Info</button>
+              </div>
+              <div class="input-wrapper">
+                  <input type="text" id="user-input" 
+                         placeholder="Ask about chess coaching..." 
+                         onkeypress="handleEnter(event)"
+                         autocomplete="off">
+                  <button class="send-btn" onclick="sendMessage()" id="send-button">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                          <path d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13" 
+                                stroke="currentColor" stroke-width="2" 
+                                stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                  </button>
+                  <button class="mic-btn" onclick="toggleVoice()" title="Voice input">🎤</button>
+              </div>
+              <div class="input-footer">
+                  <small>Chess AI • Ask about batches, fees, or tournaments</small>
+              </div>
+          </div>
+      </div>
+      
+      <footer class="modern-footer">
+    <div class="footer-top-accent"></div>
+    <div class="footer-container">
+        <div class="footer-grid">
+            <div class="footer-column brand-col">
+                <div class="footer-logo">
+                    <span class="chess-icon-gold">♔</span>
+                    <h3 class="academy-name" style="color: white;">Chess Class <span>(Srivastava)</span></h3>
+                </div>
+                <p class="academy-description">
+                    Empowering minds through the art of strategy. Join Nagpur's premier chess academy and master the board.
+                </p>
+            </div>
+
+            <div class="footer-column">
+                <h4>Navigation</h4>
+                <ul class="footer-links">
+                    <li><a href="/#about-section"><i class="fas fa-chevron-right"></i> About Our Academy</a></li>
+                    <li><a href="/#batches-section"><i class="fas fa-chevron-right"></i> Training Batches</a></li>
+                    <li><a href="/#contact-section"><i class="fas fa-chevron-right"></i> Reach Out</a></li>
+                    <li><a href="{{ url_for('main.learn') }}"><i class="fas fa-chevron-right"></i> Learn Chess</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column">
+                <h4>Student Portal</h4>
+                <ul class="footer-links">
+                    <li><a href="/login"><i class="fas fa-lock"></i> Student Login</a></li>
+                    <li><a href="{{ url_for('auth.student_register_page') }}"><i class="fas fa-user-plus"></i> New Registration</a></li>
+                    <li><a href="#"><i class="fas fa-trophy"></i> Tournament Info</a></li>
+                    <li><a href="#"><i class="fas fa-book"></i> Study Material</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column">
+                <h4>Contact Us</h4>
+                    <ul class="footer-links">
+                        <li>Flat 104, Vithal Rukmini Apts, Nagpur</li>
+                        <li>
+                            <a href="tel:8830435532">8830435532</a>
+                        </li>
+                    </ul>
+            </div>
+        </div>
+    </div>
+</footer>
+      
+      <!-- Scripts -->
+      <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
       <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
-      <script src="{{ url_for('static', filename='js/site.js') }}"></script>
+      <script src="{{ url_for('static', filename='js/scroll.js') }}"></script>
       {% block scripts %}{% endblock %}
   </body>
 </html>

@@ -58,6 +58,22 @@ if (passwordInput) {
             label.style.color = colors[strength];
         }
     });
+
+    const toggleBtn = document.querySelector('.password-toggle');
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', (e) => {
+            const icon = e.currentTarget.querySelector('i');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+    }
 }
 
 // --- FORM SUBMISSION (FIREBASE + BACKEND) ---
