@@ -38,37 +38,43 @@
 
       <nav class="navbar">
           <div class="nav-container">
-            <div class="left">
+            <div class="nav-brand">
+              <a href="{{ url_for('main.home') }}" class="nav-logo">
+                <img class="logo-img" src="{{ url_for('static', filename='images/logo.png') }}" alt="Chess logo">
+                <span class="brand-text">Chess Class</span>
+              </a>
+            </div>
+
+            <div class="nav-links-desktop">
+              <a href="/#about-section" class="nav-link scroll-link">About</a>
+              <a href="{{ url_for('main.learn') }}" class="nav-link">Learn</a>
+              <a href="/#batches-section" class="nav-link scroll-link">Batches</a>
+              <a href="/#contact-section" class="nav-link scroll-link">Contact</a>
+            </div>
+
+            <div class="nav-actions-desktop">
+              <button id="dark-mode-toggle" class="action-icon-btn dark-mode-btn" title="Toggle Dark Mode">
+                <span class="dark-mode-icon">🌙</span>
+              </button>
+              
               {% if is_admin %}
-                <a href="{{ url_for('admin.admin_dashboard') }}" class="nav-button">Admin Dashboard</a>
-                <a href="{{ url_for('auth.admin_logout') }}" class="nav-button">Logout</a>
-
+                <div class="user-menu">
+                  <a href="{{ url_for('admin.admin_dashboard') }}" class="btn-primary">Dashboard</a>
+                  <a href="{{ url_for('auth.admin_logout') }}" class="btn-outline">Logout</a>
+                </div>
               {% elif is_student %}
-                <a href="{{ url_for('student.student_dashboard') }}" class="nav-button">Dashboard</a>
-                <a href="{{ url_for('auth.student_logout') }}" class="nav-button">Logout</a>
-
+                <div class="user-menu">
+                  <a href="{{ url_for('student.student_dashboard') }}" class="btn-primary">Dashboard</a>
+                  <a href="{{ url_for('auth.student_logout') }}" class="btn-outline">Logout</a>
+                </div>
               {% else %}
-                <a href="/login" class="nav-button">Login</a>
+                <a href="/login" class="nav-link">Login</a>
+                <a href="{{ url_for('auth.student_register_page') }}" class="btn-primary">Sign Up</a>
               {% endif %}
             </div>
 
-            <div class="center">
-              <a href="/#about-section" class="nav-button2 scroll-link">About</a>
-              <a href="{{ url_for('main.learn') }}" class="nav-button2">Learn</a>
-              <a href="{{ url_for('main.home') }}" class="nav-logo"><img class="logo-img" src="{{ url_for('static', filename='images/logo.png') }}" alt="Chess logo"></a>
-              <a href="/#batches-section" class="nav-button2 scroll-link">Batches</a>
-              <a href="/#contact-section" class="nav-button2 scroll-link">Contact</a>
-            </div>
-
-            <div class="right">
-              <button id="dark-mode-toggle" class="nav-button dark-mode-btn" title="Toggle Dark Mode">
-                <span class="dark-mode-icon">🌙</span>
-              </button>
-              <a href="{{ url_for('auth.student_register_page') }}" class="nav-button nav-signup">Sign Up</a>
-            </div>
-
             <!-- Mobile menu button -->
-            <button class="mobile-menu-btn" id="mobile-menu-btn">
+            <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle Navigation">
               <span class="hamburger-line"></span>
               <span class="hamburger-line"></span>
               <span class="hamburger-line"></span>
@@ -82,20 +88,25 @@
               <a href="{{ url_for('main.learn') }}" class="mobile-nav-item">Learn</a>
               <a href="/#batches-section" class="mobile-nav-item scroll-link">Batches</a>
               <a href="/#contact-section" class="mobile-nav-item scroll-link">Contact</a>
+              
               <div class="mobile-menu-divider"></div>
-              {% if is_admin %}
-                <a href="{{ url_for('admin.admin_dashboard') }}" class="mobile-nav-item">Admin Dashboard</a>
-                <a href="{{ url_for('auth.admin_logout') }}" class="mobile-nav-item">Logout</a>
-              {% elif is_student %}
-                <a href="{{ url_for('student.student_dashboard') }}" class="mobile-nav-item">Dashboard</a>
-                <a href="{{ url_for('auth.student_logout') }}" class="mobile-nav-item">Logout</a>
-              {% else %}
-                <button id="dark-mode-toggle-mobile" class="mobile-nav-item dark-mode-btn" title="Toggle Dark Mode">
-                  <span class="dark-mode-icon">🌙</span> Dark Mode
+              
+              <div class="mobile-actions">
+                <button id="dark-mode-toggle-mobile" class="mobile-nav-item dark-mode-btn">
+                  <span class="dark-mode-icon">🌙</span> Toggle Theme
                 </button>
-                <a href="/login" class="mobile-nav-item">Login</a>
-                <a href="{{ url_for('auth.student_register_page') }}" class="mobile-nav-item mobile-signup">Sign Up</a>
-              {% endif %}
+                
+                {% if is_admin %}
+                  <a href="{{ url_for('admin.admin_dashboard') }}" class="mobile-nav-item">Admin Dashboard</a>
+                  <a href="{{ url_for('auth.admin_logout') }}" class="mobile-nav-item">Logout</a>
+                {% elif is_student %}
+                  <a href="{{ url_for('student.student_dashboard') }}" class="mobile-nav-item">Dashboard</a>
+                  <a href="{{ url_for('auth.student_logout') }}" class="mobile-nav-item">Logout</a>
+                {% else %}
+                  <a href="/login" class="mobile-nav-item">Login</a>
+                  <a href="{{ url_for('auth.student_register_page') }}" class="mobile-nav-item signup-mobile">Sign Up</a>
+                {% endif %}
+              </div>
             </div>
           </div>
       </nav>

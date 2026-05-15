@@ -22,9 +22,17 @@ document.addEventListener('DOMContentLoaded', () => {
                         mobileMenu.classList.remove('active');
                         const btn = document.getElementById('mobile-menu-btn');
                         if (btn) btn.classList.remove('active');
+                        document.body.style.overflow = ''; // Restore scroll
                     }
                     
-                    targetElement.scrollIntoView({
+                    const offset = 90; // Fixed navbar height + padding
+                    const bodyRect = document.body.getBoundingClientRect().top;
+                    const elementRect = targetElement.getBoundingClientRect().top;
+                    const elementPosition = elementRect - bodyRect;
+                    const offsetPosition = elementPosition - offset;
+
+                    window.scrollTo({
+                        top: offsetPosition,
                         behavior: 'smooth'
                     });
                     

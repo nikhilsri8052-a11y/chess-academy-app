@@ -365,3 +365,33 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+
+/**
+ * Mobile Sidebar Toggle Logic
+ */
+function toggleMobileSidebar() {
+    const sidebar = document.getElementById('dashboardSidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    
+    if (sidebar && overlay) {
+        sidebar.classList.toggle('open');
+        overlay.classList.toggle('visible');
+    }
+}
+
+function closeMobileSidebar() {
+    const sidebar = document.getElementById('dashboardSidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    
+    if (sidebar && overlay) {
+        sidebar.classList.remove('open');
+        overlay.classList.remove('visible');
+    }
+}
+
+// Close sidebar on escape key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closeMobileSidebar();
+    }
+});

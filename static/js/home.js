@@ -75,24 +75,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 
-  /* ════════════════════════════
-     MOBILE MENU TOGGLE
-  ════════════════════════════ */
-  const mobileBtn  = document.getElementById('mobile-menu-btn');
-  const mobileMenu = document.getElementById('mobile-menu');
-  if (mobileBtn && mobileMenu) {
-    mobileBtn.addEventListener('click', () => {
-      mobileMenu.classList.toggle('active');
-      mobileBtn.classList.toggle('active');
-    });
-    // Close on link click
-    mobileMenu.querySelectorAll('a, button').forEach(el => {
-      el.addEventListener('click', () => {
-        mobileMenu.classList.remove('active');
-        mobileBtn.classList.remove('active');
-      });
-    });
-  }
 
 
   /* ════════════════════════════

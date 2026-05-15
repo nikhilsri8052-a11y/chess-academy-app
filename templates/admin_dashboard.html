@@ -21,6 +21,15 @@
                 </p>
             </div>
             <div class="header-actions">
+                <!-- Mobile sidebar toggle -->
+                <button class="sidebar-toggle-btn" id="sidebarToggleBtn" onclick="toggleMobileSidebar()" title="Quick Actions" aria-label="Toggle Quick Actions">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                    <span>Quick Actions</span>
+                </button>
                 <button class="refresh-btn" onclick="refreshDashboard()" title="Refresh Dashboard">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M23 4v6h-6"></path>
@@ -191,108 +200,114 @@
         </div>
     </div>
 
+    <!-- Mobile sidebar overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeMobileSidebar()"></div>
+
     <!-- Main Content Grid -->
     <div class="dashboard-grid">
-        <!-- Quick Actions -->
-        <div class="dashboard-card quick-actions" data-animate="fade-in">
-            <div class="card-header">
-                <h2 class="card-title">Quick Actions</h2>
-                <span class="card-subtitle">Most used admin functions</span>
+        <aside class="dashboard-sidebar" id="dashboardSidebar">
+            <!-- Quick Actions (moved to sidebar) -->
+            <div class="dashboard-card quick-actions" data-animate="fade-in">
+                <div class="card-header">
+                    <h2 class="card-title">Quick Actions</h2>
+                    <span class="card-subtitle">Most used admin functions</span>
+                </div>
+                <div class="action-buttons">
+                    <a href="{{ url_for('admin.admin_enquiries') }}" class="action-btn" data-tooltip="View and respond to enquiries">
+                        <div class="action-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                        </div>
+                        <div class="action-content">
+                            <span class="action-title">Enquiries</span>
+                            <span class="action-desc">Manage student queries</span>
+                        </div>
+                        {% if stats.new_enquiry_count > 0 %}
+                            <span class="action-badge new">{{ stats.new_enquiry_count }} new</span>
+                        {% endif %}
+                    </a>
+
+                    <a href="{{ url_for('admin.new_applicants') }}" class="action-btn" data-tooltip="Review new student applications">
+                        <div class="action-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="8.5" cy="7" r="4"></circle>
+                                <line x1="20" y1="8" x2="20" y2="14"></line>
+                                <line x1="23" y1="11" x2="17" y2="11"></line>
+                            </svg>
+                        </div>
+                        <div class="action-content">
+                            <span class="action-title">New Applicants</span>
+                            <span class="action-desc">Approve student registrations</span>
+                        </div>
+                        {% if stats.new_applicant_count > 0 %}
+                            <span class="action-badge new">{{ stats.new_applicant_count }} pending</span>
+                        {% endif %}
+                    </a>
+
+                    <a href="{{ url_for('admin.admin_payments_view') }}" class="action-btn" data-tooltip="Verify and manage fee payments">
+                        <div class="action-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                                <line x1="1" y1="10" x2="23" y2="10"></line>
+                            </svg>
+                        </div>
+                        <div class="action-content">
+                            <span class="action-title">Fee Payments</span>
+                            <span class="action-desc">Verify payment submissions</span>
+                        </div>
+                        {% if stats.new_payment_count > 0 %}
+                            <span class="action-badge new">{{ stats.new_payment_count }} pending</span>
+                        {% endif %}
+                    </a>
+
+                    <a href="{{ url_for('admin.admin_students') }}" class="action-btn" data-tooltip="View and manage all students">
+                        <div class="action-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        </div>
+                        <div class="action-content">
+                            <span class="action-title">Manage Students</span>
+                            <span class="action-desc">Edit student details</span>
+                        </div>
+                    </a>
+
+                    <a href="{{ url_for('admin.admin_notices') }}" class="action-btn" data-tooltip="Create and publish notices">
+                        <div class="action-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="16" x2="12" y2="12"></line>
+                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                            </svg>
+                        </div>
+                        <div class="action-content">
+                            <span class="action-title">Manage Notices</span>
+                            <span class="action-desc">Post announcements</span>
+                        </div>
+                    </a>
+
+                    <a href="{{ url_for('admin.admin_study_materials') }}" class="action-btn" data-tooltip="Upload and manage study materials">
+                        <div class="action-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                            </svg>
+                        </div>
+                        <div class="action-content">
+                            <span class="action-title">Study Materials</span>
+                            <span class="action-desc">Upload course content</span>
+                        </div>
+                    </a>
+                </div>
             </div>
-            <div class="action-buttons">
-                <a href="{{ url_for('admin.admin_enquiries') }}" class="action-btn" data-tooltip="View and respond to enquiries">
-                    <div class="action-icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                        </svg>
-                    </div>
-                    <div class="action-content">
-                        <span class="action-title">Enquiries</span>
-                        <span class="action-desc">Manage student queries</span>
-                    </div>
-                    {% if stats.new_enquiry_count > 0 %}
-                        <span class="action-badge new">{{ stats.new_enquiry_count }} new</span>
-                    {% endif %}
-                </a>
+        </aside>
 
-                <a href="{{ url_for('admin.new_applicants') }}" class="action-btn" data-tooltip="Review new student applications">
-                    <div class="action-icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="8.5" cy="7" r="4"></circle>
-                            <line x1="20" y1="8" x2="20" y2="14"></line>
-                            <line x1="23" y1="11" x2="17" y2="11"></line>
-                        </svg>
-                    </div>
-                    <div class="action-content">
-                        <span class="action-title">New Applicants</span>
-                        <span class="action-desc">Approve student registrations</span>
-                    </div>
-                    {% if stats.new_applicant_count > 0 %}
-                        <span class="action-badge new">{{ stats.new_applicant_count }} pending</span>
-                    {% endif %}
-                </a>
-
-                <a href="{{ url_for('admin.admin_payments_view') }}" class="action-btn" data-tooltip="Verify and manage fee payments">
-                    <div class="action-icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
-                            <line x1="1" y1="10" x2="23" y2="10"></line>
-                        </svg>
-                    </div>
-                    <div class="action-content">
-                        <span class="action-title">Fee Payments</span>
-                        <span class="action-desc">Verify payment submissions</span>
-                    </div>
-                    {% if stats.new_payment_count > 0 %}
-                        <span class="action-badge new">{{ stats.new_payment_count }} pending</span>
-                    {% endif %}
-                </a>
-
-                <a href="{{ url_for('admin.admin_students') }}" class="action-btn" data-tooltip="View and manage all students">
-                    <div class="action-icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="9" cy="7" r="4"></circle>
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                        </svg>
-                    </div>
-                    <div class="action-content">
-                        <span class="action-title">Manage Students</span>
-                        <span class="action-desc">Edit student details</span>
-                    </div>
-                </a>
-
-                <a href="{{ url_for('admin.admin_notices') }}" class="action-btn" data-tooltip="Create and publish notices">
-                    <div class="action-icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <line x1="12" y1="16" x2="12" y2="12"></line>
-                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                        </svg>
-                    </div>
-                    <div class="action-content">
-                        <span class="action-title">Manage Notices</span>
-                        <span class="action-desc">Post announcements</span>
-                    </div>
-                </a>
-
-                <a href="{{ url_for('admin.admin_study_materials') }}" class="action-btn" data-tooltip="Upload and manage study materials">
-                    <div class="action-icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-                        </svg>
-                    </div>
-                    <div class="action-content">
-                        <span class="action-title">Study Materials</span>
-                        <span class="action-desc">Upload course content</span>
-                    </div>
-                </a>
-            </div>
-        </div>
-
+        <div class="dashboard-main">
         <!-- Batch Distribution -->
         <div class="dashboard-card batch-distribution" data-animate="fade-in">
             <div class="card-header">
@@ -338,7 +353,7 @@
             <div class="recent-list">
                 {% for student in stats.recent_registrations %}
                 <div class="recent-item" data-date="{{ student.date }}">
-                    <div class="recent-avatar" style="background: linear-gradient(135deg, hsl({{ loop.index * 60 }}, 70%, 50%), hsl({{ loop.index * 60 + 30 }}, 70%, 50%));">
+                    <div class="recent-avatar" style="background: {{ 'linear-gradient(135deg, hsl(' ~ (loop.index * 60) ~ ' 70% 50%), hsl(' ~ (loop.index * 60 + 30) ~ ' 70% 50%))' }};">
                         {{ student.name[0] }}
                     </div>
                     <div class="recent-info">
@@ -432,6 +447,9 @@
         </div>
     </div>
 
+        </div>
+    </div>
+
     <!-- Dashboard Footer -->
     <div class="dashboard-footer">
         <div class="footer-item">
@@ -459,67 +477,5 @@
 
 <script src="{{ url_for('static', filename='js/admin_dashboard.js') }}"></script>
 
-<style>
-    /* Fix for stat card links */
-    .stat-card-link {
-        display: block;
-        text-decoration: none;
-        color: inherit;
-        height: 100%;
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    
-    .stat-card-link:hover {
-        transform: translateY(-4px);
-    }
-    
-    .stat-card-link:hover .stat-card {
-        transform: none !important;
-        box-shadow: 0 12px 24px -4px rgba(0, 0, 0, 0.08), 0 6px 12px -2px rgba(0, 0, 0, 0.03);
-    }
-    
-    .stat-card-link .stat-card {
-        height: 100%;
-        margin: 0;
-    }
-    
-    /* Ensure proper grid alignment */
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 1.5rem;
-        margin-bottom: 2rem;
-    }
-    
-    .stats-grid > * {
-        min-height: 0;
-    }
-    
-    /* Remove hover transform from linked stat cards since parent handles it */
-    .stat-card-link .stat-card:hover {
-        transform: none;
-    }
-    
-    /* Add cursor pointer to linked cards */
-    .stat-card-link {
-        cursor: pointer;
-    }
-    
-    /* Make sure pending actions card stays same height */
-    .stat-card.warning {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-    }
-    
-    .stat-card.warning .stat-content {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-    }
-    
-    .stat-card.warning .pending-actions {
-        flex: 1;
-    }
-</style>
+
 {% endblock %}
