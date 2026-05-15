@@ -6,14 +6,14 @@
    Global / Base
 ========================= */
 :root {
-  --gold: #d3ae55;
-  --gold-dark: #a9822f;
-  --text-primary: #141414;
-  --text-secondary: #5c5c5c;
-  --border-color: #e7e1d5;
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8f6f1;
-  --card-bg: rgba(255, 255, 255, 0.85);
+  --gold: var(--gold);
+  --gold-dark: var(--gold-deep);
+  --text-primary: var(--text-main);
+  --text-secondary: var(--text-muted);
+  --border-color: var(--border-main);
+  --bg-primary: var(--bg-app);
+  --bg-secondary: var(--bg-surface-alt);
+  --card-bg: var(--card-bg);
 }
 
 html,

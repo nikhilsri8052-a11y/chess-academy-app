@@ -2,6 +2,16 @@
    UNIFIED LOGIN CSS
    ============================================================ */
 
+:root {
+    --text-primary: var(--text-main);
+    --text-secondary: var(--text-muted);
+    --card-bg: var(--bg-surface);
+    --bg-secondary: var(--bg-surface-alt);
+    --border-color: var(--border-main);
+    --gold: var(--gold);
+    --gold-deep: var(--gold-deep);
+}
+
 .login-page-wrapper {
     min-height: calc(100vh - 160px);
     display: flex;
