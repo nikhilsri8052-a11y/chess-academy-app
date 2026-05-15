@@ -82,9 +82,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Send to backend
             const endpoint = role === 'admin' ? '/admin/session' : '/student/session';
-            const redirectUrl = role === 'admin' ? '/admin/' : '/student/dashboard';
+            const defaultRedirectUrl = role === 'admin' ? '/admin/' : '/student/dashboard';
 
             const res = await fetch(endpoint, {
+                credentials: "same-origin",
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ token })
@@ -92,14 +93,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
             console.log(`[${role}] Response status:`, res.status, res.ok);
 
+            const payload = await res.json().catch(() => ({}));
+
             if (res.ok) {
-                // Success! Add a small delay to ensure cookie is set, then redirect
+                const redirectUrl = payload.redirect_url || defaultRedirectUrl;
                 console.log(`[${role}] Redirecting to ${redirectUrl}`);
-                setTimeout(() => {
-                    window.location.replace(redirectUrl);
-                }, 500);
+                window.location.assign(redirectUrl);
             } else {
-                const err = await res.json();
+                const err = payload;
                 console.error(`[${role}] Server error:`, err);
                 throw new Error(err.error || "Login failed");
             }

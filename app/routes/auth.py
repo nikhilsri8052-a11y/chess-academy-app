@@ -99,7 +99,7 @@ def admin_session():
         session_cookie = auth.create_session_cookie(token, expires_in=expires)
         print(f"[ADMIN_SESSION] Session cookie created")
 
-        resp = make_response(jsonify({"success": True}))
+        resp = make_response(jsonify({"success": True, "redirect_url": "/admin/"}))
         resp.set_cookie("session", session_cookie, max_age=expires.total_seconds(), httponly=True, path="/", samesite="Lax")
         print(f"[ADMIN_SESSION] Cookie set and response prepared")
         return resp
@@ -187,7 +187,7 @@ def student_session():
         session_cookie = auth.create_session_cookie(token, expires_in=expires)
         print(f"[STUDENT_SESSION] Session cookie created")
 
-        resp = make_response(jsonify({"success": True}))
+        resp = make_response(jsonify({"success": True, "redirect_url": "/student/dashboard"}))
         resp.set_cookie("session", session_cookie, max_age=expires.total_seconds(), httponly=True, path="/", samesite="Lax")
         print(f"[STUDENT_SESSION] Cookie set and response prepared")
         return resp
