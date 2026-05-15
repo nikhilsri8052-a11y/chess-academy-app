@@ -2021,7 +2021,8 @@ input, textarea, select {
     font-family: var(--font-stack);
     font-size: 0.95rem;
     transition: all 0.2s ease;
-    background: #f9fafb;
+    background: var(--bg-surface-alt);
+    color: var(--text-main);
     box-sizing: border-box; /* Fixes padding issues */
 }
 
@@ -2071,7 +2072,8 @@ select { appearance: none; cursor: pointer; }
 }
 
 .kanban-column {
-    background: #eef2f6; /* Slightly darker than body */
+    background: var(--bg-app); /* Use app background for column depth */
+    border: 1px solid var(--border-soft);
     min-width: 320px;
     max-width: 320px;
     border-radius: var(--radius-lg);
@@ -2085,7 +2087,7 @@ select { appearance: none; cursor: pointer; }
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid rgba(0,0,0,0.05);
+    border-bottom: 1px solid var(--border-soft);
 }
 
 .header-left {
@@ -2105,7 +2107,7 @@ select { appearance: none; cursor: pointer; }
 }
 
 .count-pill {
-    background: rgba(0,0,0,0.06);
+    background: var(--bg-surface-alt);
     color: var(--text-main);
     padding: 2px 8px;
     border-radius: 12px;
@@ -2289,7 +2291,8 @@ select { appearance: none; cursor: pointer; }
 /* 5) columns: don't force huge fixed height on the column which causes vertical overflow.
    Instead, allow column to size and let the column body scroll internally. */
 .kanban-column {
-  background: #eef2f6;
+  background: var(--bg-app);
+  border: 1px solid var(--border-soft);
   min-width: 320px;
   max-width: 320px;
   border-radius: var(--radius-lg);
@@ -2351,35 +2354,35 @@ select { appearance: none; cursor: pointer; }
     gap: 4px;
 }
 
-/* Specific Colors for Types */
-/* Notes: Blue (Information) */
+/* Specific Colors for Types (RGBA for theme compatibility) */
+/* Notes: Blue */
 .type-badge.type-notes { 
-    background-color: #e0f2fe; 
-    color: #0369a1; 
+    background-color: rgba(14, 165, 233, 0.15); 
+    color: #0ea5e9; 
 }
 
-/* Assignment: Amber (Action Item) */
+/* Assignment: Amber */
 .type-badge.type-assignment { 
-    background-color: #fff7ed; 
-    color: #c2410c; 
+    background-color: rgba(245, 158, 11, 0.15); 
+    color: #f59e0b; 
 }
 
-/* Video: Red (YouTube style) */
+/* Video: Red */
 .type-badge.type-video { 
-    background-color: #fee2e2; 
-    color: #991b1b; 
+    background-color: rgba(239, 68, 68, 0.15); 
+    color: #ef4444; 
 }
 
-/* Practice: Green (Growth) */
+/* Practice: Green */
 .type-badge.type-practice { 
-    background-color: #dcfce7; 
-    color: #15803d; 
+    background-color: rgba(16, 185, 129, 0.15); 
+    color: #10b981; 
 }
 
-/* Other: Gray (Neutral) */
+/* Other: Gray */
 .type-badge.type-other { 
-    background-color: #f3f4f6; 
-    color: #374151; 
+    background-color: rgba(107, 114, 128, 0.15); 
+    color: #94a3b8; 
 }
 /* Main Container */
 .students-container {
@@ -4751,7 +4754,7 @@ html.dark-mode,
     justify-content: space-between;
     align-items: center;
     margin-bottom: 15px;
-    border-bottom: 2px solid #f0f0f0;
+    border-bottom: 2px solid var(--border-soft);
     padding-bottom: 10px;
 }
 
@@ -4786,11 +4789,11 @@ html.dark-mode,
 }
 
 .payment-details {
-    background: #f8f9fa;
+    background: var(--bg-app);
     padding: 15px;
-    border-radius: 5px;
+    border-radius: 8px;
     margin-top: 15px;
-    border-left: 4px solid #007bff;
+    border-left: 4px solid var(--primary);
 }
 
 .payment-details.no-payment {
@@ -4818,11 +4821,12 @@ html.dark-mode,
 }
 
 .rejection-info {
-    background: #fff3cd;
+    background: rgba(255, 193, 7, 0.1);
     padding: 10px;
     border-radius: 5px;
     margin-top: 10px;
     border-left: 3px solid #ffc107;
+    color: #ffc107;
 }
 
 .payment-actions {
@@ -4832,16 +4836,20 @@ html.dark-mode,
 }
 
 .batch-assignment {
-    background: #e3f2fd;
+    background: rgba(33, 150, 243, 0.1);
     padding: 15px;
-    border-radius: 5px;
+    border-radius: 8px;
     margin-top: 15px;
     border-left: 4px solid #2196F3;
 }
 
 .batch-assignment h4 {
     margin-top: 0;
-    color: #1976D2;
+    color: #2196F3;
+}
+
+[data-theme="dark"] .batch-assignment h4 {
+    color: #64b5f6;
 }
 
 .batch-note {
@@ -4853,7 +4861,9 @@ html.dark-mode,
 .batch-select {
     padding: 8px 15px;
     border-radius: 5px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-main);
+    background: var(--bg-surface);
+    color: var(--text-main);
     margin-right: 10px;
     min-width: 250px;
 }

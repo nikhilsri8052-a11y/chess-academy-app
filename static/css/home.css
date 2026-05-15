@@ -1012,7 +1012,8 @@ a {
 .hp-form-group textarea {
   width: 100%;
   border: 1px solid var(--border-color);
-  background: #fff;
+  background: var(--bg-surface);
+  color: var(--text-main);
   border-radius: 10px;
   padding: 0.9rem 1rem;
   font: inherit;
@@ -1048,6 +1049,14 @@ a {
   border-bottom: 1px solid var(--border-soft);
 }
 
+.hp-cta-banner h2 {
+  color: var(--gold);
+}
+
+[data-theme="light"] .hp-cta-banner h2 {
+  color: var(--gold-deep);
+}
+
 .hp-cta-banner-inner {
   width: min(1440px, 94%);
   margin: 0 auto;
@@ -1056,9 +1065,10 @@ a {
   justify-content: space-between;
   gap: 2rem;
   padding: 2rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-soft);
   border-radius: 22px;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--card-bg);
+  box-shadow: var(--shadow-sm);
 }
 
 .hp-cta-piece {
