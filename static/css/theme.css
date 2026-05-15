@@ -63,7 +63,7 @@ body {
 }
 
 /* Base text overrides */
-h1, h2, h3, h4, h5, p, span {
+h1, h2, h3, h4, h5, p, span, strong {
     color: var(--text-main);
 }
 .section-subtext, .hero-subtext, .muted {
@@ -177,3 +177,19 @@ input:focus, select:focus, textarea:focus {
     0% { transform: translateY(-50px) rotate(0deg); }
     100% { transform: translateY(110vh) rotate(360deg); }
 }
+
+/* Student Dashboard Dark Mode Fixes */
+[data-theme="dark"] .locked-card {
+    background: linear-gradient(135deg, #1e293b, #0f172a) !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .fee-status-container {
+    background: linear-gradient(135deg, #1e293b, #0f172a) !important;
+    border-color: var(--gold-deep) !important;
+}
+
+[data-theme="dark"] .stat-card:hover {
+    border-color: var(--gold-deep) !important;
+}
+

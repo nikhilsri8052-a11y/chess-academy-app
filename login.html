@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <title>Login | Chess Class (Srivastava)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Theme Initialization -->
+    <script>
+      (function() {
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = savedTheme || (prefersDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
+    
+    <link rel="stylesheet" href="static/css/combined.css">
+    <link rel="stylesheet" href="static/css/theme.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="static/css/login.css">
+</head>
+<body>
+    <div class="chess-bg-animation" aria-hidden="true">
+        <span class="piece">♔</span><span class="piece">♕</span><span class="piece">♖</span><span class="piece">♗</span><span class="piece">♘</span><span class="piece">♙</span>
+        <span class="piece">♔</span><span class="piece">♕</span><span class="piece">♖</span><span class="piece">♗</span><span class="piece">♘</span><span class="piece">♙</span>
+    </div>
+
+    <nav class="navbar">
+        <div class="nav-container">
+          <div class="nav-brand">
+            <a href="index.html" class="nav-logo">
+              <img class="logo-img" src="static/images/logo.png" alt="Chess logo">
+              <span class="brand-text">Chess Class</span>
+            </a>
+          </div>
+
+          <div class="nav-links-desktop">
+            <a href="index.html#about-section" class="nav-link">About</a>
+            <a href="learn.html" class="nav-link">Learn</a>
+            <a href="index.html#batches-section" class="nav-link">Batches</a>
+            <a href="index.html#contact-section" class="nav-link">Contact</a>
+          </div>
+
+          <div class="nav-actions-desktop">
+            <button id="dark-mode-toggle" class="action-icon-btn dark-mode-btn" title="Toggle Dark Mode">
+              <span class="dark-mode-icon">🌙</span>
+            </button>
+            <div id="auth-nav-links">
+                <!-- Will be populated by JS -->
+                <a href="login.html" class="nav-link">Login</a>
+                <a href="register.html" class="btn-primary">Sign Up</a>
+            </div>
+          </div>
+        </div>
+    </nav>
+
+    <main>
+        <div class="login-page-wrapper">
+          <div class="login-container">
+            <div class="login-header">
+              <div class="login-logo">♔</div>
+              <h2>Welcome Back</h2>
+              <p>Select your portal to continue</p>
+            </div>
+
+            <!-- Toggle Tabs -->
+            <div class="login-tabs">
+              <button class="tab-btn active" data-tab="student-tab">
+                <i class="fas fa-user-graduate"></i> Student
+              </button>
+              <button class="tab-btn" data-tab="admin-tab">
+                <i class="fas fa-user-shield"></i> Admin
+              </button>
+            </div>
+
+            <div class="form-error" id="global-error" style="display: none;"></div>
+
+            <!-- Student Login Form -->
+            <div class="tab-content active" id="student-tab">
+              <form id="student-login-form" class="auth-form">
+                <div class="input-group">
+                  <label for="student-email"><i class="fas fa-envelope"></i> Email</label>
+                  <div class="input-wrapper">
+                    <input id="student-email" type="email" placeholder="student@example.com" required autocomplete="username">
+                    <i class="fas fa-at input-icon"></i>
+                  </div>
+                </div>
+                <div class="input-group">
+                  <label for="student-password"><i class="fas fa-lock"></i> Password</label>
+                  <div class="input-wrapper">
+                    <input id="student-password" type="password" placeholder="••••••••" required autocomplete="current-password">
+                    <button type="button" class="password-toggle"><i class="fas fa-eye"></i></button>
+                  </div>
+                </div>
+                <div class="form-actions">
+                  <a href="#" class="forgot-link">Forgot Password?</a>
+                </div>
+                <button type="submit" class="btn-submit login-btn student-btn">
+                  <span>Student Login</span> <i class="fas fa-arrow-right"></i>
+                  <div class="loading-spinner"></div>
+                </button>
+              </form>
+              <div class="register-prompt">
+                <p>New here? <a href="register.html">Create an account</a></p>
+              </div>
+            </div>
+
+            <!-- Admin Login Form -->
+            <div class="tab-content" id="admin-tab">
+              <form id="admin-login-form" class="auth-form">
+                <div class="input-group">
+                  <label for="admin-email"><i class="fas fa-envelope"></i> Admin Email</label>
+                  <div class="input-wrapper">
+                    <input id="admin-email" type="email" placeholder="admin@example.com" required autocomplete="username">
+                    <i class="fas fa-user-tie input-icon"></i>
+                  </div>
+                </div>
+                <div class="input-group">
+                  <label for="admin-password"><i class="fas fa-key"></i> Password</label>
+                  <div class="input-wrapper">
+                    <input id="admin-password" type="password" placeholder="••••••••" required autocomplete="current-password">
+                    <button type="button" class="password-toggle"><i class="fas fa-eye"></i></button>
+                  </div>
+                </div>
+                <button type="submit" class="btn-submit login-btn admin-btn">
+                  <span>Admin Login</span> <i class="fas fa-arrow-right"></i>
+                  <div class="loading-spinner"></div>
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+    </main>
+
+    <footer class="modern-footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-column brand-col">
+                    <div class="footer-logo">
+                        <span class="chess-icon-gold">♔</span>
+                        <h3 class="academy-name" style="color: white;">Chess Class <span>(Srivastava)</span></h3>
+                    </div>
+                    <p class="academy-description">Empowering minds through strategy.</p>
+                </div>
+                <div class="footer-column">
+                    <h4>Navigation</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html#about-section">About</a></li>
+                        <li><a href="index.html#batches-section">Batches</a></li>
+                        <li><a href="index.html#contact-section">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { auth } from "./static/js/firebase/firebase-config.js";
+        import { signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        // Handle Form Switches
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                tabBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const tabId = btn.getAttribute('data-tab');
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+        // Student Login
+        document.getElementById('student-login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('student-email').value;
+            const password = document.getElementById('student-password').value;
+            const btn = e.target.querySelector('.btn-submit');
+            btn.classList.add('loading');
+            
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                window.location.href = 'student_dashboard.html';
+            } catch (error) {
+                document.getElementById('global-error').textContent = error.message;
+                document.getElementById('global-error').style.display = 'block';
+            } finally {
+                btn.classList.remove('loading');
+            }
+        });
+
+        // Admin Login
+        document.getElementById('admin-login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('admin-email').value;
+            const password = document.getElementById('admin-password').value;
+            const btn = e.target.querySelector('.btn-submit');
+            btn.classList.add('loading');
+            
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                // In production, you'd check a custom claim or document for admin status
+                window.location.href = 'admin_dashboard.html';
+            } catch (error) {
+                document.getElementById('global-error').textContent = error.message;
+                document.getElementById('global-error').style.display = 'block';
+            } finally {
+                btn.classList.remove('loading');
+            }
+        });
+
+        // Auth state listener for Navbar
+        onAuthStateChanged(auth, (user) => {
+            const authNav = document.getElementById('auth-nav-links');
+            if (user) {
+                authNav.innerHTML = `
+                    <a href="dashboard_router.html" class="btn-primary">Dashboard</a>
+                    <button id="logout-btn" class="btn-outline">Logout</button>
+                `;
+                document.getElementById('logout-btn').addEventListener('click', () => auth.signOut());
+            } else {
+                authNav.innerHTML = `
+                    <a href="login.html" class="nav-link">Login</a>
+                    <a href="register.html" class="btn-primary">Sign Up</a>
+                `;
+            }
+        });
+    </script>
+    <script src="static/js/theme.js"></script>
+</body>
+</html>

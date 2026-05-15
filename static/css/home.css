@@ -102,7 +102,7 @@ a {
   border: none;
   cursor: pointer;
   background: linear-gradient(135deg, #e0bc65, #a9822f);
-  color: #111;
+  color: var(--text-main);
   font-weight: 800;
   font-size: 0.97rem;
   text-decoration: none;
@@ -539,12 +539,13 @@ a {
 }
 
 .hp-card-dark {
-  background: #111;
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-main);
+  box-shadow: var(--shadow-md);
 }
 
 .hp-card-dark blockquote {
-  color: rgba(255, 255, 255, 0.82);
+  color: var(--text-main);
   font-style: italic;
   font-size: 0.95rem;
   line-height: 1.7;
@@ -683,7 +684,7 @@ a {
   top: 0.75rem;
   right: 0.75rem;
   background: linear-gradient(135deg, #e0bc65, #a9822f);
-  color: #111;
+  color: var(--text-main);
   font-size: 0.65rem;
   font-weight: 800;
   letter-spacing: 0.08em;
@@ -799,7 +800,7 @@ a {
   transform: translateX(-50%);
   font-size: 0.72rem;
   font-weight: 800;
-  color: #111;
+  color: var(--text-main);
   background: linear-gradient(135deg, #e0bc65, #a9822f);
   padding: 0.35rem 0.9rem;
   border-radius: 999px;
@@ -846,7 +847,7 @@ a {
   padding: 0.85rem 2rem;
   border-radius: 10px;
   background: linear-gradient(135deg, #e0bc65, #a9822f);
-  color: #111;
+  color: var(--text-main);
   font-weight: 800;
   text-decoration: none;
   width: 100%;
@@ -906,7 +907,7 @@ a {
   background: linear-gradient(135deg, #e0bc65, #a9822f);
   display: grid;
   place-items: center;
-  color: #111;
+  color: var(--text-main);
   font-weight: 900;
   font-size: 0.9rem;
 }
@@ -1041,8 +1042,10 @@ a {
 ============================================================ */
 .hp-cta-banner {
   padding: 4.5rem 0;
-  background: linear-gradient(135deg, #111 0%, #1d1609 100%);
-  color: #fff;
+  background: var(--bg-surface-alt);
+  color: var(--text-main);
+  border-top: 1px solid var(--border-soft);
+  border-bottom: 1px solid var(--border-soft);
 }
 
 .hp-cta-banner-inner {
